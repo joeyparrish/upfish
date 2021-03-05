@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ UpFish - dynamically making fun of your movies
+ Copyright (C) 2021 Joey Parrish
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="320px" height="320px" viewBox="0 0 320 320">
+  <!--
+    Based on: "Linear Fish Icons" https://www.vecteezy.com/vector-art/157657-linear-fish-icons
+    By: "insanity100" https://www.vecteezy.com/members/insanity100
+    Fish Vectors by Vecteezy: https://www.vecteezy.com/free-vector/fish
+  -->
+  <g id="fish" transform="translate(-530 110)">
+    <path fill="#FFFFFF" d="M684.4,84.8c22.6,8.8,46.5,23,71.5,42.4l6.6-4.8C740.8,101.8,717.5,90.2,684.4,84.8z"/>
+    <path fill="#FFFFFF" d="M755.9,156.5c-25,19.4-48.9,33.6-71.5,42.4c33.1-5.3,56.4-16.9,78.1-37.6L755.9,156.5z"/>
+    <path fill="#FFFFFF" d="M762.4,141.9c-48.6-40.2-92.7-60.6-131.1-60.6l-0.9,0c-27.3,0.2-51,10.7-70.6,31 c-12.1,12.6-18.8,25.4-20.9,29.6c2,4.2,8.7,17,20.9,29.6c19.6,20.4,43.3,30.8,70.6,31l0.9,0C669.7,202.5,713.7,182.1,762.4,141.9z M575.8,143.6c-6.7,0-12.1-5.4-12.1-12.1s5.4-12.1,12.1-12.1c6.7,0,12.1,5.4,12.1,12.1S582.5,143.6,575.8,143.6z"/>
+    <path fill="#FFFFFF" d="M830.3,95.3c-13.5,2.9-24,14.9-34.1,26.6c-6.7,7.7-13.2,15.1-20.4,19.9c7.2,4.8,13.7,12.2,20.4,19.9 c10.2,11.7,20.6,23.7,34.1,26.6c-4.9-10.5-14.3-32.6-14.3-46.5C816,127.9,825.4,105.9,830.3,95.3z"/>
+    <path fill="#FFFFFF" d="M575.8,126.7c-2.6,0-4.8,2.1-4.8,4.8s2.1,4.8,4.8,4.8c2.6,0,4.8-2.1,4.8-4.8S578.5,126.7,575.8,126.7z"/>
+    <path fill="#48525E" d="M839.6,190.7c-1.7-3.5-16.3-33-16.3-48.9c0-16.7,16.3-48.9,16.4-49.2c0.6-1.1,0.5-2.5-0.1-3.6 c-0.7-1.1-1.8-1.7-3.1-1.7c-19.9,0-33.7,15.8-45.8,29.8c-7.4,8.5-14.4,16.6-22,20.5c-2.3-1.9-4.6-3.8-6.8-5.6l8.4-6.2 c0.9-0.6,1.4-1.6,1.5-2.7c0.1-1.1-0.3-2.1-1.1-2.9c-33.6-33.5-71.2-46.1-138.5-46.3c-0.3,0-0.6,0-0.8,0l-0.9,0 c-36.6,0.3-61.5,18.4-76,33.5c-15.6,16.3-22.5,32.4-22.8,33c-0.4,0.9-0.4,1.9,0,2.9c0.3,0.7,7.2,16.7,22.8,33 c14.5,15.1,39.4,33.2,76,33.5c0,0,0,0,0.1,0c0.1,0,0.3,0,0.4,0l0.5,0c0.1,0,0.3,0,0.4,0c67.5-0.2,105.3-12.8,138.9-46.3 c0.8-0.8,1.1-1.8,1.1-2.9c-0.1-1.1-0.6-2-1.5-2.7l-8.4-6.2c2.3-1.8,4.5-3.7,6.8-5.6c7.6,3.9,14.6,12,22,20.5 c12.1,14,25.9,29.8,45.8,29.8c0,0,0,0,0,0c2,0,3.7-1.6,3.7-3.7C840.1,192,839.9,191.3,839.6,190.7z M796.2,161.8 c-6.7-7.7-13.2-15.1-20.4-19.9c7.2-4.8,13.7-12.2,20.4-19.9c10.2-11.7,20.6-23.7,34.1-26.6c-4.9,10.5-14.3,32.6-14.3,46.5 c0,14,9.4,36,14.3,46.5C816.8,185.5,806.3,173.5,796.2,161.8z M755.9,156.5l6.6,4.8c-21.7,20.7-45,32.3-78.1,37.6 C707,190.1,730.8,175.9,755.9,156.5z M631.3,202.5l-0.9,0c-27.3-0.2-51-10.7-70.6-31c-12.1-12.6-18.8-25.4-20.9-29.6 c2-4.2,8.7-17,20.9-29.6c19.6-20.4,43.3-30.8,70.6-31l0.9,0c38.3,0,82.4,20.4,131.1,60.6C713.7,182.1,669.7,202.5,631.3,202.5z M684.4,84.8c33.1,5.3,56.4,16.9,78.1,37.6l-6.6,4.8C730.8,107.8,707,93.7,684.4,84.8z"/>
+    <path fill="#48525E" d="M575.8,119.4c-6.7,0-12.1,5.4-12.1,12.1s5.4,12.1,12.1,12.1c6.7,0,12.1-5.4,12.1-12.1 S582.5,119.4,575.8,119.4z M575.8,136.2c-2.6,0-4.8-2.1-4.8-4.8s2.1-4.8,4.8-4.8c2.6,0,4.8,2.1,4.8,4.8S578.5,136.2,575.8,136.2z" />
+  </g>
+  <!--
+    Based on: "Arrow Icon" https://www.vecteezy.com/vector-art/553925-arrow-icon
+    By: "goff.brian" https://www.vecteezy.com/members/goff-brian
+    Web Vectors by Vecteezy: https://www.vecteezy.com/free-vector/web
+  -->
+  <g id="arrow" transform="translate(72, 40) scale(0.55) rotate(-90 160 100)">
+    <path fill="none" stroke="#48525E" stroke-linecap="round" stroke-width="12.5" d="M 320,102.749 146.682,205.494 162.716,135.898 0,149.566 V 55.9285 L 162.715,69.5957 146.681,0 320,102.749" />
+  </g>
+</svg>

@@ -1,0 +1,39 @@
+digraph {
+  label = "Surround Sound Filtering"
+  labelloc = "t"
+  rankdir = "LR"
+
+  original -> split;
+
+  gain0 [label="gain"];
+  gain1 [label="gain"];
+  gain2 [label="gain"];
+  gain3 [label="gain"];
+  gain4 [label="gain"];
+  gain5 [label="gain"];
+  gain6 [label="gain"];
+  gain7 [label="gain"];
+
+  split -> gain0 [label="front-left"];
+  split -> gain1 [label="front-right"];
+  split -> gain2 [label="center"];
+  split -> gain3 [label="lfe"];
+  split -> gain4 [label="side-left"];
+  split -> gain5 [label="side-right"];
+
+  split2 [label="split"];
+  extra -> split2;
+  split2 -> gain6 [label="left"];
+  split2 -> gain7 [label="right"];
+
+  gain0 -> mix;
+  gain1 -> mix;
+  gain2 -> mix;
+  gain3 -> mix;
+  gain4 -> mix;
+  gain5 -> mix;
+  gain6 -> mix;
+  gain7 -> mix;
+
+  mix -> output;
+}

@@ -1,0 +1,52 @@
+digraph {
+  label = "Stereo Sound Filtering"
+  labelloc = "t"
+  rankdir = "LR"
+
+  original -> split;
+
+  gain0 [label="gain"];
+  gain1 [label="gain"];
+
+  split -> gain0 [label="left"];
+  split -> gain1 [label="right"];
+
+  gain0 -> karaoke;
+  gain1 -> karaoke;
+
+  gain2 [label="gain"];
+  gain3 [label="gain"];
+
+  karaoke -> duplicate;
+  duplicate -> gain2 [label="left"];
+  duplicate -> gain3 [label="right"];
+
+  gain2 -> mix;
+  gain3 -> mix;
+
+  split2 [label="split"];
+  original -> split2;
+
+  gain4 [label="gain"];
+  gain5 [label="gain"];
+
+  split2 -> gain4 [label="left"];
+  split2 -> gain5 [label="right"];
+
+  gain4 -> mix;
+  gain5 -> mix;
+
+  split3 [label="split"];
+  extra -> split3;
+
+  gain6 [label="gain"];
+  gain7 [label="gain"];
+
+  split3 -> gain6 [label="left"];
+  split3 -> gain7 [label="right"];
+
+  gain6 -> mix;
+  gain7 -> mix;
+
+  mix -> output;
+}

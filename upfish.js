@@ -43,7 +43,6 @@ class UpFish {
 
     // Nodes, organized by name, for debugging.
     this.nodes = {};
-    // TODO: Do we need this?  Either use it everywhere or nowhere.
 
     this.extraAudio = [];
 
@@ -74,7 +73,7 @@ class UpFish {
           this.context, channelConfig.karaokeCompression);
       karaoke.connect(compression);
 
-      const duplicate = this.nodes.duplicate = new Duplicate(compression);
+      const duplicate = new Duplicate(compression);
 
       const karaokeGain = this.nodes.karaokeGain = new Gain(
           'karaokeGain', 2, this.mediaElement, this.context,
@@ -89,6 +88,7 @@ class UpFish {
       nonKaraokeGain.connect(finalMerger);
     } else {
       channelConfig = this.config.surround;
+      // TODO: surround filters
     }
 
     if (channelConfig.extraInputs) {
@@ -100,7 +100,7 @@ class UpFish {
         const splitter = new Splitter(this.context, this.channels);
         source.connect(splitter);
 
-        const gain = new Gain(
+        const gain = this.nodes.extraInputGain = new Gain(
             'extraInputGain', source.channelCount, element, this.context,
             input.inputGain);
         splitter.connect(gain);
@@ -177,11 +177,11 @@ class UpFish {
   }
 
   toString() {
-    let output = '';
+    let output = [];
     for (const node of Object.values(this.nodes)) {
-      output += node.toString() + '\n';
+      output.push(node.toString());
     }
-    return output;
+    return output.join('\n');
   }
 }
 

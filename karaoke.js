@@ -26,7 +26,7 @@ export class Karaoke {
         'center', this.mediaElement, config.karaokeCenter);
 
     this.intensity = new NonNodeDynamicValue(
-        'intensity', this.mediaElement, config.karaokeCenter);
+        'intensity', this.mediaElement, config.karaokeIntensity);
 
     this.node = context.createScriptProcessor(
         2048, // buffersize
@@ -50,5 +50,11 @@ export class Karaoke {
     }
 
     this.node.connect(destination.node);
+  }
+
+  toString() {
+    return 'karaoke:\n' +
+      `  ${this.center}\n` +
+      `  ${this.intensity}`;
   }
 }

@@ -27,7 +27,6 @@ export class Compression {
     const originalRange = 1.0 - config.threshold;
     const newRange = config.max - config.threshold;
     this.node.ratio.value = originalRange / newRange;
-    console.log(`Compression treshold=${this.node.threshold.value} ratio=${this.node.ratio.value}`);
   }
 
   connect(destination) {
@@ -36,5 +35,11 @@ export class Compression {
     }
 
     this.node.connect(destination.node);
+  }
+
+  toString() {
+    return 'compression:\n' +
+        `  threshold: ${this.node.threshold.value}\n` +
+        `  ratio: ${this.node.ratio.value}`;
   }
 }

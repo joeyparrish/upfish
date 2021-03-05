@@ -46,7 +46,6 @@ class Gain {
 
     for (let i = 0; i < this.nodes.length; ++i) {
       const destinationChannel = map ? map[i] : i;
-      console.log(this.nodes[i], 0, 'to', destination.node, destinationChannel);
       this.nodes[i].connect(destination.node, 0, destinationChannel);
     }
   }
@@ -56,7 +55,6 @@ class Mixer {
   constructor(context, channels) {
     this.channels = channels;
     this.node = context.createChannelMerger(channels);
-    console.log(this.node, 0, 'to', context.destination);
   }
 
   connect(destination) {
@@ -86,7 +84,6 @@ class Splitter {
     }
 
     for (let i = 0; i < this.channels; ++i) {
-      console.log(this.node, i, 'to', destination.nodes[i], 0);
       this.node.connect(destination.nodes[i], i);
     }
   }
@@ -102,7 +99,6 @@ class Source {
       throw new Error(`Invalid source destination ${destination}`);
     }
 
-    console.log(this.source, 0, 'to', destination.node, 0);
     this.source.connect(destination.node);
   }
 
@@ -141,7 +137,6 @@ class Karaoke {
     }
 
     for (let i = 0; i < 2; ++i) {
-      console.log(this.node, 'duplicate', 'to', destination.nodes[i], 0);
       this.node.connect(destination.nodes[i]);
     }
   }
@@ -163,6 +158,8 @@ class UpFish {
     // Nodes, organized by name, for debugging.
     this.nodes = {};
 
+    this.extraAudio = [];
+
     const splitter = new Splitter(this.context, this.channels);
     this.source.connect(splitter);
 
@@ -170,41 +167,119 @@ class UpFish {
     const output = new Output(this.context);
     finalMixer.connect(output);
 
+    let channelConfig;
     if (this.channels == 2) {
-      const stereo = this.config.stereo;
+      channelConfig = this.config.stereo;
 
       const inputGain = this.nodes.inputGain = new Gain(
-          'inputGain', 2, this.mediaElement, this.context, stereo.inputGain);
+          'inputGain', 2, this.mediaElement, this.context,
+          channelConfig.inputGain);
       splitter.connect(inputGain);
 
       const tempMixer = new Mixer(this.context, this.channels);
       inputGain.connect(tempMixer);
 
       const karaoke = this.nodes.karaoke = new Karaoke(
-          this.context, this.mediaElement, stereo);
+          this.context, this.mediaElement, channelConfig);
       tempMixer.connect(karaoke);
 
       const karaokeGain = this.nodes.karaokeGain = new Gain(
           'karaokeGain', 2, this.mediaElement, this.context,
-          stereo.karaokeGain);
+          channelConfig.karaokeGain);
       karaoke.connect(karaokeGain);
       karaokeGain.connect(finalMixer);
 
       const nonKaraokeGain = this.nodes.nonKaraokeGain = new Gain(
           'nonKaraokeGain', 2, this.mediaElement, this.context,
-          stereo.nonKaraokeGain);
+          channelConfig.nonKaraokeGain);
       splitter.connect(nonKaraokeGain);
       nonKaraokeGain.connect(finalMixer);
     } else {
+      channelConfig = this.config.surround;
     }
 
-    // TODO: extraInputs, generically
+    if (channelConfig.extraInputs) {
+      for (const input of channelConfig.extraInputs) {
+        const element = document.createElement('audio');
+        element.src = input.url;
 
-    // TODO: This resume() solution sucks badly.
+        const source = new Source(this.context, element);
+        const splitter = new Splitter(this.context, this.channels);
+        source.connect(splitter);
+
+        const gain = new Gain(
+            'extraInputGain', source.channelCount, element, this.context,
+            input.inputGain);
+        splitter.connect(gain);
+        gain.connect(finalMixer, input.mix);
+
+        this.extraAudio.push({
+          element,
+          source,
+          gain,
+        });
+      }
+
+      this.mediaElement.addEventListener('play', () => {
+        for (const extra of this.extraAudio) {
+          extra.element.play();
+        }
+      });
+
+      this.mediaElement.addEventListener('pause', () => {
+        for (const extra of this.extraAudio) {
+          extra.element.pause();
+        }
+      });
+
+      this.mediaElement.addEventListener('seeking', () => {
+        for (const extra of this.extraAudio) {
+          extra.element.currentTime = this.mediaElement.currentTime;
+        }
+      });
+
+      this.mediaElement.addEventListener('timeupdate', () => {
+        for (const extra of this.extraAudio) {
+          const diff =
+              this.mediaElement.currentTime - extra.element.currentTime;
+          const seeking = this.mediaElement.seeking || extra.element.seeking;
+          if (diff > 1 && !seeking) {
+            // Shouldn't happen, but just in case: seek to sync up again.
+            console.warn('Whoops!  Way behind.');
+            extra.element.currentTime = this.mediaElement.currentTime;
+            extra.element.playbackRate = 1;
+          } else if (diff > 0.2) {
+            extra.element.playbackRate = 1.02;
+          } else if (diff > 0.1) {
+            extra.element.playbackRate = 1.01;
+          } else if (diff < -1 && !seeking) {
+            // Shouldn't happen, but just in case: seek to sync up again.
+            console.warn('Whoops!  Way ahead.');
+            extra.element.currentTime = this.mediaElement.currentTime;
+            extra.element.playbackRate = 1;
+          } else if (diff < -0.2) {
+            extra.element.playbackRate = 0.98;
+          } else if (diff < -0.1) {
+            extra.element.playbackRate = 0.99;
+          } else {
+            extra.element.playbackRate = 1;
+          }
+        }
+      });
+    }
+
+    // The audio context may need to be resumed once the user interacts with
+    // the page.  We will try when the document is clicked or when the media
+    // starts playing.
     if (this.context.state != 'running') {
-      this.mediaElement.addEventListener('click', () => {
+      const resume = () => {
         this.context.resume();
-      }, {once: true});
+      };
+
+      document.body.addEventListener('click', resume,
+          {once: true, capture: true, passive: true});
+      this.mediaElement.addEventListener('play', resume,
+          {once: true, passive: true});
     }
   }
 
@@ -213,10 +288,6 @@ class UpFish {
     for (const node of Object.values(this.nodes)) {
       output += node.toString() + '\n';
     }
-  }
-
-  start() {
-    this.mixer.node.start();
   }
 }
 

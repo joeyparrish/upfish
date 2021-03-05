@@ -46,120 +46,22 @@ class UpFish {
 
     this.extraAudio = [];
 
-    const splitter = new Splitter(this.context, this.channels);
-    this.source.connect(splitter);
+    this.splitter = new Splitter(this.context, this.channels);
+    this.source.connect(this.splitter);
 
-    const finalMerger = new Merger(this.context, this.channels);
+    this.finalMerger = new Merger(this.context, this.channels);
     const output = new Output(this.context);
-    finalMerger.connect(output);
+    this.finalMerger.connect(output);
 
     let channelConfig;
     if (this.channels == 2) {
       channelConfig = this.config.stereo;
-
-      const inputGain = this.nodes.inputGain = new Gain(
-          'inputGain', 2, this.mediaElement, this.context,
-          channelConfig.inputGain);
-      splitter.connect(inputGain);
-
-      const tempMerger = new Merger(this.context, this.channels);
-      inputGain.connect(tempMerger);
-
-      const karaoke = this.nodes.karaoke = new Karaoke(
-          this.context, this.mediaElement, channelConfig);
-      tempMerger.connect(karaoke);
-
-      const compression = this.nodes.compression = new Compression(
-          this.context, channelConfig.karaokeCompression);
-      karaoke.connect(compression);
-
-      const duplicate = new Duplicate(compression);
-
-      const karaokeGain = this.nodes.karaokeGain = new Gain(
-          'karaokeGain', 2, this.mediaElement, this.context,
-          channelConfig.karaokeGain);
-      duplicate.connect(karaokeGain);
-      karaokeGain.connect(finalMerger);
-
-      const nonKaraokeGain = this.nodes.nonKaraokeGain = new Gain(
-          'nonKaraokeGain', 2, this.mediaElement, this.context,
-          channelConfig.nonKaraokeGain);
-      splitter.connect(nonKaraokeGain);
-      nonKaraokeGain.connect(finalMerger);
+      this.setupStereoFilters(channelConfig);
     } else {
       channelConfig = this.config.surround;
-      // TODO: surround filters
+      this.setupSurroundFilters(channelConfig);
     }
-
-    if (channelConfig.extraInputs) {
-      for (const input of channelConfig.extraInputs) {
-        const element = document.createElement('audio');
-        element.src = input.url;
-
-        const source = new Source(this.context, element);
-        const splitter = new Splitter(this.context, this.channels);
-        source.connect(splitter);
-
-        const gain = this.nodes.extraInputGain = new Gain(
-            'extraInputGain', source.channelCount, element, this.context,
-            input.inputGain);
-        splitter.connect(gain);
-        gain.connect(finalMerger, input.mix);
-
-        this.extraAudio.push({
-          element,
-          source,
-          gain,
-        });
-      }
-
-      this.mediaElement.addEventListener('play', () => {
-        for (const extra of this.extraAudio) {
-          extra.element.play();
-        }
-      });
-
-      this.mediaElement.addEventListener('pause', () => {
-        for (const extra of this.extraAudio) {
-          extra.element.pause();
-        }
-      });
-
-      this.mediaElement.addEventListener('seeking', () => {
-        for (const extra of this.extraAudio) {
-          extra.element.currentTime = this.mediaElement.currentTime;
-        }
-      });
-
-      this.mediaElement.addEventListener('timeupdate', () => {
-        for (const extra of this.extraAudio) {
-          const diff =
-              this.mediaElement.currentTime - extra.element.currentTime;
-          const seeking = this.mediaElement.seeking || extra.element.seeking;
-          if (diff > 1 && !seeking) {
-            // Shouldn't happen, but just in case: seek to sync up again.
-            console.warn('Whoops!  Way behind.');
-            extra.element.currentTime = this.mediaElement.currentTime;
-            extra.element.playbackRate = 1;
-          } else if (diff > 0.2) {
-            extra.element.playbackRate = 1.02;
-          } else if (diff > 0.1) {
-            extra.element.playbackRate = 1.01;
-          } else if (diff < -1 && !seeking) {
-            // Shouldn't happen, but just in case: seek to sync up again.
-            console.warn('Whoops!  Way ahead.');
-            extra.element.currentTime = this.mediaElement.currentTime;
-            extra.element.playbackRate = 1;
-          } else if (diff < -0.2) {
-            extra.element.playbackRate = 0.98;
-          } else if (diff < -0.1) {
-            extra.element.playbackRate = 0.99;
-          } else {
-            extra.element.playbackRate = 1;
-          }
-        }
-      });
-    }
+    this.setupExtraInputs(channelConfig.extraInputs);
 
     // The audio context may need to be resumed once the user interacts with
     // the page.  We will try when the document is clicked or when the media
@@ -182,6 +84,117 @@ class UpFish {
       output.push(node.toString());
     }
     return output.join('\n');
+  }
+
+  setupStereoFilters(config) {
+    const inputGain = this.nodes.inputGain = new Gain(
+        'inputGain', 2, this.mediaElement, this.context, config.inputGain);
+    this.splitter.connect(inputGain);
+
+    const tempMerger = new Merger(this.context, this.channels);
+    inputGain.connect(tempMerger);
+
+    const karaoke = this.nodes.karaoke = new Karaoke(
+        this.context, this.mediaElement, config);
+    tempMerger.connect(karaoke);
+
+    const compression = this.nodes.compression = new Compression(
+        this.context, config.karaokeCompression);
+    karaoke.connect(compression);
+
+    const duplicate = new Duplicate(compression);
+
+    const karaokeGain = this.nodes.karaokeGain = new Gain(
+        'karaokeGain', 2, this.mediaElement, this.context, config.karaokeGain);
+    duplicate.connect(karaokeGain);
+    karaokeGain.connect(this.finalMerger);
+
+    const nonKaraokeGain = this.nodes.nonKaraokeGain = new Gain(
+        'nonKaraokeGain', 2, this.mediaElement, this.context,
+        config.nonKaraokeGain);
+    this.splitter.connect(nonKaraokeGain);
+    nonKaraokeGain.connect(this.finalMerger);
+  }
+
+  setupSurroundFilters(config) {
+    // TODO: setup surround filters
+  }
+
+  setupExtraInputs(extraInputs) {
+    if (!extraInputs) {
+      return;
+    }
+    for (const input of extraInputs) {
+      const element = document.createElement('audio');
+      element.src = input.url;
+
+      const source = new Source(this.context, element);
+      const splitter = new Splitter(this.context, this.channels);
+      source.connect(splitter);
+
+      const gain = this.nodes.extraInputGain = new Gain(
+          'extraInputGain', source.channelCount, element, this.context,
+          input.inputGain);
+      splitter.connect(gain);
+      gain.connect(this.finalMerger, input.mix);
+
+      this.extraAudio.push({
+        element,
+        source,
+        gain,
+      });
+    }
+
+    this.mediaElement.addEventListener('play', () => {
+      for (const extra of this.extraAudio) {
+        extra.element.play();
+      }
+    });
+
+    this.mediaElement.addEventListener('pause', () => {
+      for (const extra of this.extraAudio) {
+        extra.element.pause();
+      }
+    });
+
+    this.mediaElement.addEventListener('seeking', () => {
+      for (const extra of this.extraAudio) {
+        extra.element.currentTime = this.mediaElement.currentTime;
+      }
+    });
+
+    this.mediaElement.addEventListener('timeupdate', () => {
+      for (const extra of this.extraAudio) {
+        this.syncElements(extra.element);
+      }
+    });
+  }
+
+  syncElements(extraElement) {
+    const diff =
+        this.mediaElement.currentTime - extraElement.currentTime;
+    const seeking = this.mediaElement.seeking || extraElement.seeking;
+    if (diff > 1 && !seeking) {
+      // Shouldn't happen, but just in case: seek to sync up again.
+      console.warn('Whoops!  Way behind.');
+      extraElement.currentTime = this.mediaElement.currentTime;
+      extraElement.playbackRate = 1;
+    } else if (diff > 0.2) {
+      extraElement.playbackRate = 1.02;
+    } else if (diff > 0.1) {
+      extraElement.playbackRate = 1.01;
+    } else if (diff < -1 && !seeking) {
+      // Shouldn't happen, but just in case: seek to sync up again.
+      console.warn('Whoops!  Way ahead.');
+      extraElement.currentTime = this.mediaElement.currentTime;
+      extraElement.playbackRate = 1;
+    } else if (diff < -0.2) {
+      extraElement.playbackRate = 0.98;
+    } else if (diff < -0.1) {
+      extraElement.playbackRate = 0.99;
+    } else {
+      extraElement.playbackRate = 1;
+    }
   }
 }
 

@@ -28,7 +28,7 @@ class Gain {
     }
 
     this.dynamicValues = new DynamicValues(
-        name, this.nodes.map((n) => n.gain), mediaElement, config);
+        name, this.nodes.map((n) => n.gain), context, mediaElement, config);
   }
 
   get values() {

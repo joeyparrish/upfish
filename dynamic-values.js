@@ -19,17 +19,21 @@
  */
 
 export class DynamicValues {
-  constructor(name, audioParams, mediaElement, config) {
+  constructor(name, audioParams, context, mediaElement, config) {
     // The name of this value, for debugging.
     this.name = name;
     // The AudioParam objects from the filter graph that will be adjusted.
     this.audioParams = audioParams;
+    // The AudioContext.
+    this.context = context;
     // The media element which we will observe to make adjustments.
     this.mediaElement = mediaElement;
     // The default values.
     this.defaults = this.convertValueToArray(config.default);
     // The map of value overrides.
     this.map = (config.map || []).sort((a, b) => a.start - b.start);
+    // Where we are in that map.
+    this.currentMapIndex = -1;
 
     if (this.defaults.length != this.audioParams.length) {
       throw new Error(`Wrong number of values in ${this.name} config default`);
@@ -52,11 +56,13 @@ export class DynamicValues {
       this.mediaElement.addEventListener('timeupdate', () => {
         const time = this.mediaElement.currentTime;
 
-        for (const override of this.map) {
+        for (let i = 0; i < this.map.length; ++i) {
+          const override = this.map[i];
           if (override.start <= time && time < override.end) {
             // We found an override!
-            for (let i = 0; i < this.audioParams.length; ++i) {
-              this.audioParams[i].value = override.value[i];
+            if (this.currentMapIndex != i) {
+              this.setParams(override.value);
+              this.currentMapIndex = i;
             }
             return;
           } else if (override.start > time) {
@@ -65,8 +71,9 @@ export class DynamicValues {
         }
 
         // Fall back to defaults.
-        for (let i = 0; i < this.audioParams.length; ++i) {
-          this.audioParams[i].value = this.defaults[i];
+        if (this.currentMapIndex != -1) {
+          this.setParams(this.defaults);
+          this.currentMapIndex = -1;
         }
       });
     }  // if (this.map.length)
@@ -78,6 +85,17 @@ export class DynamicValues {
 
   get values() {
     return this.audioParams.map((audioParam) => audioParam.value);
+  }
+
+  setParams(values) {
+    for (let i = 0; i < this.audioParams.length; ++i) {
+      // Exponentially ramp the desired value.  This sounds better than a
+      // linear ramp or a hard switch.
+      // Note that 0 is not supported for an exponential ramp, so we replace 0
+      // with a very small number instead.
+      this.audioParams[i].exponentialRampToValueAtTime(
+          values[i] || 1e-6, this.context.currentTime + 0.1);
+    }
   }
 
   convertValueToArray(value) {
@@ -92,8 +110,16 @@ export class DynamicValues {
 
 export class NonNodeDynamicValue extends DynamicValues {
   constructor(name, mediaElement, config) {
-    const fakeAudioParam = { value: 1 };
-    super(name, [fakeAudioParam], mediaElement, config);
+    const fakeAudioParam = {
+      value: 1,
+      exponentialRampToValueAtTime: (value, time) => {
+        fakeAudioParam.value = value;
+      },
+    };
+    const fakeContext = {
+      currentTime: 0,
+    };
+    super(name, [fakeAudioParam], fakeContext, mediaElement, config);
   }
 
   toString() {

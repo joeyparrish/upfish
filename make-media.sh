@@ -1,3 +1,4 @@
+#!/bin/bash
 
 ffmpeg \
   -i ../Wizard\ People/tmp/WizardPeople-video.mp4 \

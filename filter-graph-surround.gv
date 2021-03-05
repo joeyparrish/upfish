@@ -3,7 +3,8 @@ digraph {
   labelloc = "t"
   rankdir = "LR"
 
-  original -> split;
+  original -> compression;
+  compression -> split;
 
   gain0 [label="gain"];
   gain1 [label="gain"];

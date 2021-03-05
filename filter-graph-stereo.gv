@@ -14,10 +14,12 @@ digraph {
   gain0 -> karaoke;
   gain1 -> karaoke;
 
+  karaoke -> compression;
+
   gain2 [label="gain"];
   gain3 [label="gain"];
 
-  karaoke -> duplicate;
+  compression -> duplicate;
   duplicate -> gain2 [label="left"];
   duplicate -> gain3 [label="right"];
 

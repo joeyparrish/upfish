@@ -21,6 +21,7 @@
 import {DynamicValues, NonNodeDynamicValue} from './dynamic-values.js';
 
 class Gain {
+  // TODO: default values if config is missing
   constructor(name, numNodes, mediaElement, context, config) {
     this.nodes = [];
     for (let i = 0; i < numNodes; ++i) {
@@ -107,8 +108,31 @@ class Source {
   }
 }
 
+class Compression {
+  constructor(context, config) {
+    // TODO: fill in defaults in config
+    this.node = context.createDynamicsCompressor();
+    // Convert from 0 to 1 range to -100 to 0 range.
+    this.node.threshold.value = config.threshold * 100 - 100;
+    // Convert from a "max" (0 to 1) to a compression ratio.
+    const originalRange = 1.0 - config.threshold;
+    const newRange = config.max - config.threshold;
+    this.node.ratio.value = originalRange / newRange;
+    console.log(`Compression treshold=${this.node.threshold.value} ratio=${this.node.ratio.value}`);
+  }
+
+  connect(destination) {
+    if (!destination.node) {
+      throw new Error(`Invalid compression destination ${destination}`);
+    }
+
+    this.node.connect(destination.node);
+  }
+}
+
 class Karaoke {
   constructor(context, mediaElement, config) {
+    // TODO: fill in defaults in config
     this.center = new NonNodeDynamicValue(
         'center', this.mediaElement, config.karaokeCenter);
 
@@ -132,12 +156,29 @@ class Karaoke {
   }
 
   connect(destination) {
+    if (!destination.node) {
+      throw new Error(`Invalid karaoke destination ${destination}`);
+    }
+
+    this.node.connect(destination.node);
+  }
+}
+
+class Duplicate {
+  constructor(original) {
+    if (!original.node) {
+      throw new Error(`Invalid duplicate original ${original}`);
+    }
+    this.original = original;
+  }
+
+  connect(destination) {
     if (!destination.nodes) {
       throw new Error(`Invalid karaoke destination ${destination}`);
     }
 
-    for (let i = 0; i < 2; ++i) {
-      this.node.connect(destination.nodes[i]);
+    for (const node of destination.nodes) {
+      this.original.node.connect(node);
     }
   }
 }
@@ -157,6 +198,7 @@ class UpFish {
 
     // Nodes, organized by name, for debugging.
     this.nodes = {};
+    // TODO: Do we need this?  Either use it everywhere or nowhere.
 
     this.extraAudio = [];
 
@@ -183,10 +225,16 @@ class UpFish {
           this.context, this.mediaElement, channelConfig);
       tempMixer.connect(karaoke);
 
+      const compression = this.nodes.compression = new Compression(
+          this.context, channelConfig.karaokeCompression);
+      karaoke.connect(compression);
+
+      const duplicate = this.nodes.duplicate = new Duplicate(compression);
+
       const karaokeGain = this.nodes.karaokeGain = new Gain(
           'karaokeGain', 2, this.mediaElement, this.context,
           channelConfig.karaokeGain);
-      karaoke.connect(karaokeGain);
+      duplicate.connect(karaokeGain);
       karaokeGain.connect(finalMixer);
 
       const nonKaraokeGain = this.nodes.nonKaraokeGain = new Gain(

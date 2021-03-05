@@ -20,8 +20,90 @@
 
 import {DynamicValues, NonNodeDynamicValue} from './dynamic-values.js';
 
+const defaultStereoConfig = {
+  "inputGain": {
+    "default": 1
+  },
+  "karaokeCenter": {
+    "default": 0
+  },
+  "karaokeIntensity": {
+    "default": 1
+  },
+  "karaokeCompression": {
+    "threshold": 0.1,
+    "max": 1
+  },
+  "karaokeGain": {
+    "default": 1
+  },
+  "nonKaraokeGain": {
+    "default": 0
+  }
+};
+
+const defaultSurroundConfig = {
+  "inputCompression": {
+    "threshold": 0.1,
+    "max": 1
+  },
+  "inputGain": {
+    "default": 1
+  }
+};
+
+const defaultStereoExtraInputConfig = {
+  "inputGain": {
+    "default": 1.0
+  },
+  "mix": [0, 1]
+};
+
+const defaultSurroundExtraInputConfig = {
+  "inputGain": {
+    "default": 1.0
+  },
+  "mix": [2, 2]
+};
+
+function normalize(config, defaults) {
+  for (const k in defaults) {
+    if (!(k in config)) {
+      // Since our configs are all stored in JSON, this is a safe clone.
+      config[k] = JSON.parse(JSON.stringify(defaults[k]));
+    } else if (typeof config[k] == 'object') {
+      normalize(config[k], defaults[k]);
+    }
+  }
+}
+
+function normalizeExtraInputs(extraInputs, defaults) {
+  if (!extraInputs) {
+    return;
+  }
+
+  for (const extra of extraInputs) {
+    normalize(extra, defaults);
+  }
+}
+
+function normalizeConfig(config) {
+  if (!config.stereo) {
+    config.stereo = {};
+  }
+  if (!config.surround) {
+    config.surround = {};
+  }
+  normalize(config.stereo, defaultStereoConfig);
+  normalize(config.surround, defaultSurroundConfig);
+  normalizeExtraInputs(
+      config.stereo.extraInputs, defaultStereoExtraInputConfig);
+  normalizeExtraInputs(
+      config.surround.extraInputs, defaultSurroundExtraInputConfig);
+  return config;
+}
+
 class Gain {
-  // TODO: default values if config is missing
   constructor(name, numNodes, mediaElement, context, config) {
     this.nodes = [];
     for (let i = 0; i < numNodes; ++i) {
@@ -110,7 +192,6 @@ class Source {
 
 class Compression {
   constructor(context, config) {
-    // TODO: fill in defaults in config
     this.node = context.createDynamicsCompressor();
     // Convert from 0 to 1 range to -100 to 0 range.
     this.node.threshold.value = config.threshold * 100 - 100;
@@ -132,7 +213,6 @@ class Compression {
 
 class Karaoke {
   constructor(context, mediaElement, config) {
-    // TODO: fill in defaults in config
     this.center = new NonNodeDynamicValue(
         'center', this.mediaElement, config.karaokeCenter);
 
@@ -186,7 +266,7 @@ class Duplicate {
 class UpFish {
   constructor(mediaElement, config) {
     this.mediaElement = mediaElement;
-    this.config = config;
+    this.config = normalizeConfig(config);
 
     this.context = new AudioContext({
       latencyHint: 'interactive',
@@ -339,59 +419,17 @@ class UpFish {
   }
 }
 
-const config = {
+const wizardPeopleConfig = {
   "stereo": {
-    "inputGain": {
-      "default": 1,
-      "map": [
-        {
-          "start": 0,
-          "end": 30,
-          "value": [0, 1]
-        },
-        {
-          "start": 30,
-          "end": 40,
-          "value": [1, 0]
-        }
-      ]
-    },
-    "karaokeCenter": {
-      "default": 0
-    },
-    "karaokeIntensity": {
-      "default": 1
-    },
-    "karaokeGain": {
-      "default": 1,
-      "map": [
-        {
-          "start": 2800,
-          "end": 2830,
-          "value": 0
-        }
-      ]
-    },
-    "nonKaraokeGain": {
-      "default": 0,
-      "map": [
-        {
-          "start": 2800,
-          "end": 2830,
-          "value": 1
-        }
-      ]
+    "karaokeCompression": {
+      "max": 0.2
     },
     "extraInputs": [
       {
         "url": "media/WizardPeople.mp3",
-        "inputGain": {
-          "default": 1.0
-        },
-        "mix": [0, 1]
       }
     ]
   }
 };
 
-window.upfish = new UpFish(video, config);
+window.upfish = new UpFish(video, wizardPeopleConfig);

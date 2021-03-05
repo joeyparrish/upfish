@@ -18,250 +18,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {DynamicValues, NonNodeDynamicValue} from './dynamic-values.js';
-
-const defaultStereoConfig = {
-  "inputGain": {
-    "default": 1
-  },
-  "karaokeCenter": {
-    "default": 0
-  },
-  "karaokeIntensity": {
-    "default": 1
-  },
-  "karaokeCompression": {
-    "threshold": 0.1,
-    "max": 1
-  },
-  "karaokeGain": {
-    "default": 1
-  },
-  "nonKaraokeGain": {
-    "default": 0
-  }
-};
-
-const defaultSurroundConfig = {
-  "inputCompression": {
-    "threshold": 0.1,
-    "max": 1
-  },
-  "inputGain": {
-    "default": 1
-  }
-};
-
-const defaultStereoExtraInputConfig = {
-  "inputGain": {
-    "default": 1.0
-  },
-  "mix": [0, 1]
-};
-
-const defaultSurroundExtraInputConfig = {
-  "inputGain": {
-    "default": 1.0
-  },
-  "mix": [2, 2]
-};
-
-function normalize(config, defaults) {
-  for (const k in defaults) {
-    if (!(k in config)) {
-      // Since our configs are all stored in JSON, this is a safe clone.
-      config[k] = JSON.parse(JSON.stringify(defaults[k]));
-    } else if (typeof config[k] == 'object') {
-      normalize(config[k], defaults[k]);
-    }
-  }
-}
-
-function normalizeExtraInputs(extraInputs, defaults) {
-  if (!extraInputs) {
-    return;
-  }
-
-  for (const extra of extraInputs) {
-    normalize(extra, defaults);
-  }
-}
-
-function normalizeConfig(config) {
-  if (!config.stereo) {
-    config.stereo = {};
-  }
-  if (!config.surround) {
-    config.surround = {};
-  }
-  normalize(config.stereo, defaultStereoConfig);
-  normalize(config.surround, defaultSurroundConfig);
-  normalizeExtraInputs(
-      config.stereo.extraInputs, defaultStereoExtraInputConfig);
-  normalizeExtraInputs(
-      config.surround.extraInputs, defaultSurroundExtraInputConfig);
-  return config;
-}
-
-class Gain {
-  constructor(name, numNodes, mediaElement, context, config) {
-    this.nodes = [];
-    for (let i = 0; i < numNodes; ++i) {
-      this.nodes.push(context.createGain());
-    }
-
-    this.dynamicValues = new DynamicValues(
-        name, this.nodes.map((n) => n.gain), context, mediaElement, config);
-  }
-
-  get values() {
-    return this.dynamicValues.values;
-  }
-
-  toString() {
-    return this.dynamicValues.toString();
-  }
-
-  connect(destination, map=null) {
-    if (!destination.node) {
-      throw new Error(`Invalid gain destination ${destination}`);
-    }
-
-    for (let i = 0; i < this.nodes.length; ++i) {
-      const destinationChannel = map ? map[i] : i;
-      this.nodes[i].connect(destination.node, 0, destinationChannel);
-    }
-  }
-}
-
-class Mixer {
-  constructor(context, channels) {
-    this.channels = channels;
-    this.node = context.createChannelMerger(channels);
-  }
-
-  connect(destination) {
-    if (!destination.node) {
-      throw new Error(`Invalid mixer destination ${destination}`);
-    }
-
-    this.node.connect(destination.node);
-  }
-}
-
-class Output {
-  constructor(context) {
-    this.node = context.destination;
-  }
-}
-
-class Splitter {
-  constructor(context, channels) {
-    this.channels = channels;
-    this.node = context.createChannelSplitter(channels);
-  }
-
-  connect(destination) {
-    if (!destination.nodes) {
-      throw new Error(`Invalid splitter destination ${destination}`);
-    }
-
-    for (let i = 0; i < this.channels; ++i) {
-      this.node.connect(destination.nodes[i], i);
-    }
-  }
-}
-
-class Source {
-  constructor(context, mediaElement) {
-    this.source = context.createMediaElementSource(mediaElement);
-  }
-
-  connect(destination) {
-    if (!destination.node) {
-      throw new Error(`Invalid source destination ${destination}`);
-    }
-
-    this.source.connect(destination.node);
-  }
-
-  get channelCount() {
-    return this.source.channelCount;
-  }
-}
-
-class Compression {
-  constructor(context, config) {
-    this.node = context.createDynamicsCompressor();
-    // Convert from 0 to 1 range to -100 to 0 range.
-    this.node.threshold.value = config.threshold * 100 - 100;
-    // Convert from a "max" (0 to 1) to a compression ratio.
-    const originalRange = 1.0 - config.threshold;
-    const newRange = config.max - config.threshold;
-    this.node.ratio.value = originalRange / newRange;
-    console.log(`Compression treshold=${this.node.threshold.value} ratio=${this.node.ratio.value}`);
-  }
-
-  connect(destination) {
-    if (!destination.node) {
-      throw new Error(`Invalid compression destination ${destination}`);
-    }
-
-    this.node.connect(destination.node);
-  }
-}
-
-class Karaoke {
-  constructor(context, mediaElement, config) {
-    this.center = new NonNodeDynamicValue(
-        'center', this.mediaElement, config.karaokeCenter);
-
-    this.intensity = new NonNodeDynamicValue(
-        'intensity', this.mediaElement, config.karaokeCenter);
-
-    this.node = context.createScriptProcessor(
-        2048, // buffersize
-        2, // num inputs
-        1); // num outputs
-    this.node.onaudioprocess = (event) => {
-      // TODO: use center & intensity
-      const inputL = event.inputBuffer.getChannelData(0);
-      const inputR = event.inputBuffer.getChannelData(1);
-      const output = event.outputBuffer.getChannelData(0);
-      const len = inputL.length;
-      for (let i = 0; i < len; i++) {
-        output[i] = inputL[i] - inputR[i];
-      }
-    };
-  }
-
-  connect(destination) {
-    if (!destination.node) {
-      throw new Error(`Invalid karaoke destination ${destination}`);
-    }
-
-    this.node.connect(destination.node);
-  }
-}
-
-class Duplicate {
-  constructor(original) {
-    if (!original.node) {
-      throw new Error(`Invalid duplicate original ${original}`);
-    }
-    this.original = original;
-  }
-
-  connect(destination) {
-    if (!destination.nodes) {
-      throw new Error(`Invalid karaoke destination ${destination}`);
-    }
-
-    for (const node of destination.nodes) {
-      this.original.node.connect(node);
-    }
-  }
-}
+import {Compression} from './compression.js';
+import {Duplicate} from './duplicate.js';
+import {Gain} from './gain.js';
+import {Karaoke} from './karaoke.js';
+import {Merger} from './merger.js';
+import {Output} from './output.js';
+import {Source} from './source.js';
+import {Splitter} from './splitter.js';
+import {normalizeConfig} from './config.js';
 
 class UpFish {
   constructor(mediaElement, config) {
@@ -285,9 +50,9 @@ class UpFish {
     const splitter = new Splitter(this.context, this.channels);
     this.source.connect(splitter);
 
-    const finalMixer = new Mixer(this.context, this.channels);
+    const finalMerger = new Merger(this.context, this.channels);
     const output = new Output(this.context);
-    finalMixer.connect(output);
+    finalMerger.connect(output);
 
     let channelConfig;
     if (this.channels == 2) {
@@ -298,12 +63,12 @@ class UpFish {
           channelConfig.inputGain);
       splitter.connect(inputGain);
 
-      const tempMixer = new Mixer(this.context, this.channels);
-      inputGain.connect(tempMixer);
+      const tempMerger = new Merger(this.context, this.channels);
+      inputGain.connect(tempMerger);
 
       const karaoke = this.nodes.karaoke = new Karaoke(
           this.context, this.mediaElement, channelConfig);
-      tempMixer.connect(karaoke);
+      tempMerger.connect(karaoke);
 
       const compression = this.nodes.compression = new Compression(
           this.context, channelConfig.karaokeCompression);
@@ -315,13 +80,13 @@ class UpFish {
           'karaokeGain', 2, this.mediaElement, this.context,
           channelConfig.karaokeGain);
       duplicate.connect(karaokeGain);
-      karaokeGain.connect(finalMixer);
+      karaokeGain.connect(finalMerger);
 
       const nonKaraokeGain = this.nodes.nonKaraokeGain = new Gain(
           'nonKaraokeGain', 2, this.mediaElement, this.context,
           channelConfig.nonKaraokeGain);
       splitter.connect(nonKaraokeGain);
-      nonKaraokeGain.connect(finalMixer);
+      nonKaraokeGain.connect(finalMerger);
     } else {
       channelConfig = this.config.surround;
     }
@@ -339,7 +104,7 @@ class UpFish {
             'extraInputGain', source.channelCount, element, this.context,
             input.inputGain);
         splitter.connect(gain);
-        gain.connect(finalMixer, input.mix);
+        gain.connect(finalMerger, input.mix);
 
         this.extraAudio.push({
           element,
@@ -416,6 +181,7 @@ class UpFish {
     for (const node of Object.values(this.nodes)) {
       output += node.toString() + '\n';
     }
+    return output;
   }
 }
 

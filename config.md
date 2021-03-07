@@ -107,15 +107,6 @@ This is a verbose example with every field demonstrated.
     ]
   },
   "stereo": {
-    "inputGain": {
-      "default": 1
-    },
-    "karaokeCenter": {
-      "default": 0.5
-    },
-    "karaokeIntensity": {
-      "default": 1
-    },
     "karaokeGain": {
       "default": 1
     },

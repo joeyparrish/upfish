@@ -22,22 +22,16 @@ import {NonNodeDynamicValue} from './dynamic-values.js';
 
 export class Karaoke {
   constructor(context, mediaElement, config) {
-    this.center = new NonNodeDynamicValue(
-        'center', this.mediaElement, config.karaokeCenter);
-
-    this.intensity = new NonNodeDynamicValue(
-        'intensity', this.mediaElement, config.karaokeIntensity);
-
+    // TODO: Migrate to AudioWorklet
     this.node = context.createScriptProcessor(
         2048, // buffersize
         2, // num inputs
         1); // num outputs
     this.node.onaudioprocess = (event) => {
-      // TODO: use center & intensity
       const inputL = event.inputBuffer.getChannelData(0);
       const inputR = event.inputBuffer.getChannelData(1);
       const output = event.outputBuffer.getChannelData(0);
-      const len = inputL.length;
+      const len = event.inputBuffer.length;
       for (let i = 0; i < len; i++) {
         output[i] = inputL[i] - inputR[i];
       }

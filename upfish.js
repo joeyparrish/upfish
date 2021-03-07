@@ -87,16 +87,9 @@ class UpFish {
   }
 
   setupStereoFilters(config) {
-    const inputGain = this.nodes.inputGain = new Gain(
-        'inputGain', 2, this.mediaElement, this.context, config.inputGain);
-    this.splitter.connect(inputGain);
-
-    const tempMerger = new Merger(this.context, this.channels);
-    inputGain.connect(tempMerger);
-
     const karaoke = this.nodes.karaoke = new Karaoke(
         this.context, this.mediaElement, config);
-    tempMerger.connect(karaoke);
+    this.source.connect(karaoke);
 
     const compression = this.nodes.compression = new Compression(
         this.context, config.karaokeCompression);

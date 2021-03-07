@@ -19,15 +19,6 @@
  */
 
 const defaultStereoConfig = {
-  "inputGain": {
-    "default": 1
-  },
-  "karaokeCenter": {
-    "default": 0
-  },
-  "karaokeIntensity": {
-    "default": 1
-  },
   "karaokeCompression": {
     "threshold": 0.1,
     "max": 1

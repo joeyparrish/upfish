@@ -43,10 +43,4 @@ export class Karaoke {
 
     this.node.connect(destination.node);
   }
-
-  toString() {
-    return 'karaoke:\n' +
-      `  ${this.center}\n` +
-      `  ${this.intensity}`;
-  }
 }

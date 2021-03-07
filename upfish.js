@@ -87,8 +87,7 @@ class UpFish {
   }
 
   setupStereoFilters(config) {
-    const karaoke = this.nodes.karaoke = new Karaoke(
-        this.context, this.mediaElement, config);
+    const karaoke = new Karaoke(this.context, this.mediaElement, config);
     this.source.connect(karaoke);
 
     const compression = this.nodes.compression = new Compression(

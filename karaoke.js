@@ -18,8 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {NonNodeDynamicValue} from './dynamic-values.js';
-
 export class Karaoke {
   constructor(context, mediaElement, config) {
     // TODO: Migrate to AudioWorklet

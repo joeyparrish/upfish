@@ -107,28 +107,3 @@ export class DynamicValues {
     }
   }
 }
-
-export class NonNodeDynamicValue extends DynamicValues {
-  constructor(name, mediaElement, config) {
-    const fakeAudioParam = {
-      value: 1,
-      exponentialRampToValueAtTime: (value, time) => {
-        fakeAudioParam.value = value;
-      },
-    };
-    const fakeContext = {
-      currentTime: 0,
-    };
-    super(name, [fakeAudioParam], fakeContext, mediaElement, config);
-  }
-
-  toString() {
-    return `${this.name}: ${this.value}`;
-  }
-
-  get value() {
-    return this.audioParams[0].value;
-  }
-}
-
-

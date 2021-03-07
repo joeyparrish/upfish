@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {DynamicValues, NonNodeDynamicValue} from './dynamic-values.js';
+import {DynamicValues} from './dynamic-values.js';
 
 export class Gain {
   constructor(name, numNodes, mediaElement, context, config) {

@@ -120,7 +120,21 @@ class UpFish {
   }
 
   setupSurroundFilters(config) {
-    // TODO: setup surround filters
+    const compresssion = this.nodes.compression = new Compression(
+        this.context, config.inputCompression);
+    this.source.connect(compression);
+
+    const splitter = new Splitter(this.context, this.channels);
+    compression.connect(splitter);
+
+    const inputGain = this.nodes.inputGain = new Gain(
+        'inputGain', this.channels, this.mediaElement, this.context,
+        config.inputGain);
+    splitter.connect(inputGain);
+
+    this.merger = new Merger(this.context, this.channels);
+    this.merger.connect(this.output);
+    inputGain.connect(this.merger);
   }
 
   setupExtraInputs(extraInputs) {

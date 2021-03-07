@@ -39,30 +39,30 @@ class UpFish {
     });
 
     this.source = new Source(this.context, mediaElement);
+    this.output = new Output(this.context);
     this.channels = this.source.channelCount;
 
     // Nodes, organized by name, for debugging.
     this.nodes = {};
 
     this.extraAudio = [];
+  }
 
-    this.splitter = new Splitter(this.context, this.channels);
-    this.source.connect(this.splitter);
+  async init() {
+    this.setupResume();
 
-    this.finalMerger = new Merger(this.context, this.channels);
-    const output = new Output(this.context);
-    this.finalMerger.connect(output);
+    await Karaoke.loadWorklet(this.context);
 
-    let channelConfig;
     if (this.channels == 2) {
-      channelConfig = this.config.stereo;
-      this.setupStereoFilters(channelConfig);
+      this.setupStereoFilters(this.config.stereo);
+      this.setupExtraInputs(this.config.stereo.extraInputs);
     } else {
-      channelConfig = this.config.surround;
-      this.setupSurroundFilters(channelConfig);
+      this.setupSurroundFilters(this.config.surround);
+      this.setupExtraInputs(this.config.surround.extraInputs);
     }
-    this.setupExtraInputs(channelConfig.extraInputs);
+  }
 
+  setupResume() {
     // The audio context may need to be resumed once the user interacts with
     // the page.  We will try when the document is clicked or when the media
     // starts playing.
@@ -87,7 +87,15 @@ class UpFish {
   }
 
   setupStereoFilters(config) {
-    const karaoke = new Karaoke(this.context, this.mediaElement, config);
+    if (!Karaoke.isSupported(this.context)) {
+      this.source.connect(this.output);
+      throw new Error('Karaoke not supported!!');
+    }
+
+    const splitter = new Splitter(this.context, this.channels);
+    this.source.connect(splitter);
+
+    const karaoke = new Karaoke(this.context);
     this.source.connect(karaoke);
 
     const compression = this.nodes.compression = new Compression(
@@ -99,13 +107,16 @@ class UpFish {
     const karaokeGain = this.nodes.karaokeGain = new Gain(
         'karaokeGain', 2, this.mediaElement, this.context, config.karaokeGain);
     duplicate.connect(karaokeGain);
-    karaokeGain.connect(this.finalMerger);
 
     const nonKaraokeGain = this.nodes.nonKaraokeGain = new Gain(
         'nonKaraokeGain', 2, this.mediaElement, this.context,
         config.nonKaraokeGain);
-    this.splitter.connect(nonKaraokeGain);
-    nonKaraokeGain.connect(this.finalMerger);
+    splitter.connect(nonKaraokeGain);
+
+    this.merger = new Merger(this.context, this.channels);
+    this.merger.connect(this.output);
+    karaokeGain.connect(this.merger);
+    nonKaraokeGain.connect(this.merger);
   }
 
   setupSurroundFilters(config) {
@@ -128,7 +139,7 @@ class UpFish {
           'extraInputGain', source.channelCount, element, this.context,
           input.inputGain);
       splitter.connect(gain);
-      gain.connect(this.finalMerger, input.mix);
+      gain.connect(this.merger, input.mix);
 
       this.extraAudio.push({
         element,
@@ -204,3 +215,4 @@ const wizardPeopleConfig = {
 };
 
 window.upfish = new UpFish(video, wizardPeopleConfig);
+upfish.init();

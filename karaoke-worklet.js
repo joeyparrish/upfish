@@ -18,24 +18,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export class Source {
-  constructor(context, mediaElement) {
-    this.source = context.createMediaElementSource(mediaElement);
-  }
+class KaraokeProcessor extends AudioWorkletProcessor {
+  process(inputs, outputs, parameters) {
+    const inputL = inputs[0][0];
+    const inputR = inputs[0][1];
+    const output = outputs[0][0];
 
-  connect(destination) {
-    if (!destination.node) {
-      throw new Error(`Invalid source destination ${destination}`);
+    const len = output.length;
+    for (let i = 0; i < len; ++i) {
+      output[i] = inputL[i] - inputR[i];
     }
 
-    this.source.connect(destination.node);
-  }
-
-  disconnect() {
-    this.source.disconnect();
-  }
-
-  get channelCount() {
-    return this.source.channelCount;
+    return true;
   }
 }
+
+registerProcessor('karaoke-processor', KaraokeProcessor);

@@ -180,6 +180,12 @@ class UpFish {
       }
     });
 
+    this.mediaElement.addEventListener('ratechange', () => {
+      for (const extra of this.extraAudio) {
+        extra.element.playbackRate = this.mediaElement.playbackRate;
+      }
+    });
+
     this.mediaElement.addEventListener('timeupdate', () => {
       for (const extra of this.extraAudio) {
         this.syncElements(extra.element);
@@ -191,27 +197,32 @@ class UpFish {
     const diff =
         this.mediaElement.currentTime - extraElement.currentTime;
     const seeking = this.mediaElement.seeking || extraElement.seeking;
+
+    let playbackRate = 1;
+
     if (diff > 1 && !seeking) {
       // Shouldn't happen, but just in case: seek to sync up again.
       console.warn('Whoops!  Way behind.');
       extraElement.currentTime = this.mediaElement.currentTime;
-      extraElement.playbackRate = 1;
+      playbackRate = 1;
     } else if (diff > 0.2) {
-      extraElement.playbackRate = 1.02;
+      playbackRate = 1.02;
     } else if (diff > 0.1) {
-      extraElement.playbackRate = 1.01;
+      playbackRate = 1.01;
     } else if (diff < -1 && !seeking) {
       // Shouldn't happen, but just in case: seek to sync up again.
       console.warn('Whoops!  Way ahead.');
       extraElement.currentTime = this.mediaElement.currentTime;
-      extraElement.playbackRate = 1;
+      playbackRate = 1;
     } else if (diff < -0.2) {
-      extraElement.playbackRate = 0.98;
+      playbackRate = 0.98;
     } else if (diff < -0.1) {
-      extraElement.playbackRate = 0.99;
+      playbackRate = 0.99;
     } else {
-      extraElement.playbackRate = 1;
+      playbackRate = 1;
     }
+
+    extraElement.playbackRate = this.mediaElement.playbackRate * playbackRate;
   }
 }
 
@@ -230,3 +241,11 @@ const wizardPeopleConfig = {
 
 window.upfish = new UpFish(video, wizardPeopleConfig);
 upfish.init();
+
+video.addEventListener('timeupdate', () => {
+  time.textContent = video.currentTime;
+});
+
+playbackRate.addEventListener('change', () => {
+  video.playbackRate = playbackRate.selectedOptions[0].textContent;
+});

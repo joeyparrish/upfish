@@ -3,42 +3,41 @@ digraph {
   labelloc = "t"
   rankdir = "LR"
 
-  original -> karaoke [label="left+right"];
+  original -> karaoke [label="stereo"];
   karaoke -> compression [label="mono"];
 
   gain0 [label="gain"];
   gain1 [label="gain"];
 
-  compression -> duplicate;
+  compression -> duplicate [label="mono"];
   duplicate -> gain0 [label="left"];
   duplicate -> gain1 [label="right"];
 
-  gain0 -> mix;
-  gain1 -> mix;
+  gain0 -> merger;
+  gain1 -> merger;
 
-  split2 [label="split"];
-  original -> split2;
+  original -> splitter [label="stereo"];
 
   gain2 [label="gain"];
   gain3 [label="gain"];
 
-  split2 -> gain2 [label="left"];
-  split2 -> gain3 [label="right"];
+  splitter -> gain2 [label="left"];
+  splitter -> gain3 [label="right"];
 
-  gain2 -> mix;
-  gain3 -> mix;
+  gain2 -> merger;
+  gain3 -> merger;
 
-  split3 [label="split"];
-  extra -> split3;
+  splitter2 [label="split"];
+  extra -> splitter2 [label="stereo"];
 
   gain4 [label="gain"];
   gain5 [label="gain"];
 
-  split3 -> gain4 [label="left"];
-  split3 -> gain5 [label="right"];
+  splitter2 -> gain4 [label="left"];
+  splitter2 -> gain5 [label="right"];
 
-  gain4 -> mix;
-  gain5 -> mix;
+  gain4 -> merger;
+  gain5 -> merger;
 
-  mix -> output;
+  merger -> output;
 }

@@ -22,15 +22,23 @@ import {UpFish} from './src/upfish.js';
 
 async function main() {
   const video = document.getElementById('video');
-  const time = document.getElementById('time');
-  const playbackRate = document.getElementById('playbackRate');
+  const timeDebug = document.getElementById('timeDebug');
+  const gainDebug = document.getElementById('gainDebug');
+  const playbackRateControl = document.getElementById('playbackRateControl');
+  let activeGainNode;
 
   video.addEventListener('timeupdate', () => {
-    time.textContent = video.currentTime;
+    timeDebug.textContent = video.currentTime;
+
+    if (activeGainNode) {
+      // Round to 6 decimal places.
+      gainDebug.textContent = activeGainNode.values.map(
+          (x) => Math.round(x * 1e6) / 1e6).join(' , ');
+    }
   });
 
-  playbackRate.addEventListener('change', () => {
-    video.playbackRate = playbackRate.selectedOptions[0].textContent;
+  playbackRateControl.addEventListener('change', () => {
+    video.playbackRate = playbackRateControl.selectedOptions[0].textContent;
   });
 
   const response = await fetch('configs/WizardPeople.json');
@@ -41,6 +49,12 @@ async function main() {
   const config = await response.json();
   window.upfish = new UpFish(video, config);
   await upfish.init();
+
+  if (upfish.channels == 2) {
+    activeGainNode = upfish.nodes.karaokeGain;
+  } else {
+    activeGainNode = upfish.nodes.inputGain;
+  }
 }
 
 if (document.readyState == 'loading') {

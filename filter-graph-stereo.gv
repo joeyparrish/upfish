@@ -4,12 +4,11 @@ digraph {
   rankdir = "LR"
 
   original -> karaoke [label="stereo"];
-  karaoke -> compression [label="mono"];
+  karaoke -> duplicate [label="mono"];
 
   gain0 [label="gain"];
   gain1 [label="gain"];
 
-  compression -> duplicate [label="mono"];
   duplicate -> gain0 [label="left"];
   duplicate -> gain1 [label="right"];
 

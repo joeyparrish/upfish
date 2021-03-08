@@ -19,10 +19,6 @@
  */
 
 const defaultStereoConfig = {
-  "karaokeCompression": {
-    "threshold": 0.1,
-    "max": 1
-  },
   "karaokeGain": {
     "default": 1
   },
@@ -32,10 +28,6 @@ const defaultStereoConfig = {
 };
 
 const defaultSurroundConfig = {
-  "inputCompression": {
-    "threshold": 0.1,
-    "max": 1
-  },
   "inputGain": {
     "default": 1
   }

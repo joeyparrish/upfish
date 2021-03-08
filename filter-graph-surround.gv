@@ -3,8 +3,7 @@ digraph {
   labelloc = "t"
   rankdir = "LR"
 
-  original -> compression [label="5.1 surround"];
-  compression -> splitter [label="5.1 surround"];
+  original -> splitter [label="5.1 surround"];
 
   gain0 [label="gain"];
   gain1 [label="gain"];

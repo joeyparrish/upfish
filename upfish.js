@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {Compression} from './compression.js';
 import {Duplicate} from './duplicate.js';
 import {Gain} from './gain.js';
 import {Karaoke} from './karaoke.js';
@@ -98,11 +97,7 @@ export class UpFish {
     const karaoke = new Karaoke(this.context);
     this.source.connect(karaoke);
 
-    const compression = this.nodes.compression = new Compression(
-        this.context, config.karaokeCompression);
-    karaoke.connect(compression);
-
-    const duplicate = new Duplicate(compression);
+    const duplicate = new Duplicate(karaoke);
 
     const karaokeGain = this.nodes.karaokeGain = new Gain(
         'karaokeGain', 2, this.mediaElement, this.context, config.karaokeGain);
@@ -120,12 +115,8 @@ export class UpFish {
   }
 
   setupSurroundFilters(config) {
-    const compresssion = this.nodes.compression = new Compression(
-        this.context, config.inputCompression);
-    this.source.connect(compression);
-
     const splitter = new Splitter(this.context, this.channels);
-    compression.connect(splitter);
+    this.source.connect(splitter);
 
     const inputGain = this.nodes.inputGain = new Gain(
         'inputGain', this.channels, this.mediaElement, this.context,

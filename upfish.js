@@ -18,14 +18,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {Duplicate} from './duplicate.js';
-import {Gain} from './gain.js';
-import {Karaoke} from './karaoke.js';
-import {Merger} from './merger.js';
-import {Output} from './output.js';
-import {Source} from './source.js';
-import {Splitter} from './splitter.js';
-import {normalizeConfig} from './config.js';
+import {Duplicate} from './lib/duplicate.js';
+import {Gain} from './lib/gain.js';
+import {Karaoke} from './lib/karaoke.js';
+import {Merger} from './lib/merger.js';
+import {Output} from './lib/output.js';
+import {Source} from './lib/source.js';
+import {Splitter} from './lib/splitter.js';
+import {normalizeConfig} from './lib/config.js';
 
 export class UpFish {
   constructor(mediaElement, config) {

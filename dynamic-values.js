@@ -94,7 +94,7 @@ export class DynamicValues {
       // Note that 0 is not supported for an exponential ramp, so we replace 0
       // with a very small number instead.
       this.audioParams[i].exponentialRampToValueAtTime(
-          values[i] || 1e-6, this.context.currentTime + 0.1);
+          values[i] || 1e-6, this.context.currentTime + 1);
     }
   }
 

@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {UpFish} from './upfish.js';
+import {UpFish} from './src/upfish.js';
 
 async function main() {
   const video = document.getElementById('video');
@@ -33,7 +33,7 @@ async function main() {
     video.playbackRate = playbackRate.selectedOptions[0].textContent;
   });
 
-  const response = await fetch('WizardPeople.json');
+  const response = await fetch('configs/WizardPeople.json');
   if (!response.ok) {
     throw new Error('Failed to load JSON config!');
   }

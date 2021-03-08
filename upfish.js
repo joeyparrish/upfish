@@ -28,7 +28,7 @@ import {Source} from './source.js';
 import {Splitter} from './splitter.js';
 import {normalizeConfig} from './config.js';
 
-class UpFish {
+export class UpFish {
   constructor(mediaElement, config) {
     this.mediaElement = mediaElement;
     this.config = normalizeConfig(config);
@@ -225,27 +225,3 @@ class UpFish {
     extraElement.playbackRate = this.mediaElement.playbackRate * playbackRate;
   }
 }
-
-const wizardPeopleConfig = {
-  "stereo": {
-    "karaokeCompression": {
-      "max": 0.2
-    },
-    "extraInputs": [
-      {
-        "url": "media/WizardPeople.mp3",
-      }
-    ]
-  }
-};
-
-window.upfish = new UpFish(video, wizardPeopleConfig);
-upfish.init();
-
-video.addEventListener('timeupdate', () => {
-  time.textContent = video.currentTime;
-});
-
-playbackRate.addEventListener('change', () => {
-  video.playbackRate = playbackRate.selectedOptions[0].textContent;
-});

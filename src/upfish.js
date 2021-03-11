@@ -37,6 +37,8 @@ export class UpFish {
       sampleRate: 48000,
     });
 
+    this.listeners = [];
+
     this.source = new Source(this.context, mediaElement);
     this.output = new Output(this.context);
     this.channels = this.source.channelCount;
@@ -61,6 +63,20 @@ export class UpFish {
     }
   }
 
+  destroy() {
+    for (const {eventTarget, eventName, listener} of this.listeners) {
+      eventTarget.removeEventListener(eventName, listener);
+    }
+
+    for (const extra of this.extraAudio) {
+      extra.element.removeAttribute('src');
+      extra.element.load();
+    }
+
+    this.source.disconnect();
+    this.source.connect(this.output);
+  }
+
   setupResume() {
     // The audio context may need to be resumed once the user interacts with
     // the page.  We will try when the document is clicked or when the media
@@ -70,9 +86,9 @@ export class UpFish {
         this.context.resume();
       };
 
-      document.body.addEventListener('click', resume,
+      this.listen(document.body, 'click', resume,
           {once: true, capture: true, passive: true});
-      this.mediaElement.addEventListener('play', resume,
+      this.listen(this.mediaElement, 'play', resume,
           {once: true, passive: true});
     }
   }
@@ -153,35 +169,40 @@ export class UpFish {
       });
     }
 
-    this.mediaElement.addEventListener('play', () => {
+    this.listen(this.mediaElement, 'play', () => {
       for (const extra of this.extraAudio) {
         extra.element.play();
       }
     });
 
-    this.mediaElement.addEventListener('pause', () => {
+    this.listen(this.mediaElement, 'pause', () => {
       for (const extra of this.extraAudio) {
         extra.element.pause();
       }
     });
 
-    this.mediaElement.addEventListener('seeking', () => {
+    this.listen(this.mediaElement, 'seeking', () => {
       for (const extra of this.extraAudio) {
         extra.element.currentTime = this.mediaElement.currentTime;
       }
     });
 
-    this.mediaElement.addEventListener('ratechange', () => {
+    this.listen(this.mediaElement, 'ratechange', () => {
       for (const extra of this.extraAudio) {
         extra.element.playbackRate = this.mediaElement.playbackRate;
       }
     });
 
-    this.mediaElement.addEventListener('timeupdate', () => {
+    this.listen(this.mediaElement, 'timeupdate', () => {
       for (const extra of this.extraAudio) {
         this.syncElements(extra.element);
       }
     });
+  }
+
+  listen(eventTarget, eventName, listener, options) {
+    this.listeners.push({eventTarget, eventName, listener});
+    eventTarget.addEventListener(eventName, listener, options);
   }
 
   syncElements(extraElement) {

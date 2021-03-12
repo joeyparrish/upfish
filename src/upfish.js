@@ -223,7 +223,7 @@ export class UpFish {
 
     if (diff > 1 && !seeking) {
       // Shouldn't happen, but just in case: seek to sync up again.
-      console.warn('Whoops!  Way behind.');
+      console.warn('Whoops!  Way behind.', diff);
       extraElement.currentTime = this.mediaElement.currentTime;
       playbackRate = 1;
     } else if (diff > 0.2) {
@@ -232,7 +232,7 @@ export class UpFish {
       playbackRate = 1.01;
     } else if (diff < -1 && !seeking) {
       // Shouldn't happen, but just in case: seek to sync up again.
-      console.warn('Whoops!  Way ahead.');
+      console.warn('Whoops!  Way ahead.', diff);
       extraElement.currentTime = this.mediaElement.currentTime;
       playbackRate = 1;
     } else if (diff < -0.2) {

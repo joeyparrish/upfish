@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "./build.sh",
+    "lint": "npx eslint",
+    "test": "npm run lint"
+  }
+}

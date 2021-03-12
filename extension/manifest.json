@@ -1,0 +1,48 @@
+{
+  "name": "UpFish",
+  "description": "Dynamically making fun of your movies.",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": [
+    "activeTab",
+    "declarativeNetRequest",
+    "scripting"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [{
+      "id": "ruleset_1",
+      "enabled": true,
+      "path": "network_rules.json"
+    }]
+  },
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "icons": {
+    "128": "upfish.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "karaoke-worklet.js"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": [
+        "content-script.js",
+        "upfish.bundle.js"
+      ]
+    }
+  ],
+  "action": {
+    "default_title": "Configure UpFish",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "upfish.png"
+    }
+  }
+}

@@ -60,7 +60,13 @@ class KaraokeWorkletNode extends AudioWorkletNode {
   }
 
   static async loadModule(context) {
-    await context.audioWorklet.addModule('karaoke-worklet.js');
+    let workletUrl = 'karaoke-worklet.js';
+    if (window.chrome && chrome.runtime) {
+      // In the context of a Chrome extension, build a URL that points into the
+      // extension.
+      workletUrl = chrome.runtime.getURL('dist/karaoke-worklet.js');
+    }
+    await context.audioWorklet.addModule(workletUrl);
   }
 
   constructor(context) {

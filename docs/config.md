@@ -39,6 +39,7 @@ overrides for specific time ranges (field `"map"`).  Each such override has a
 start time (field `"start"`), an end time (field `"end"`), and a specific value
 to apply during this time range (field `"value"`).  Any time the presentation
 is not in a time range from the override map, the default setting is applied.
+All times are in seconds.
 
 The end of a time range is excluded from the range, and time ranges **must
 not** overlap.

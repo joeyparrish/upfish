@@ -160,6 +160,7 @@ export class UpFish {
       const element = document.createElement('audio');
       element.src = input.url;
       element.crossOrigin = 'anonymous';
+      element.currentTime = this.mediaElement.currentTime;
 
       const source = new Source(this.context, element);
       const splitter = new Splitter(this.context, this.channels);

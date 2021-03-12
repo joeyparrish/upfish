@@ -20,7 +20,14 @@
 
 export class Source {
   constructor(context, mediaElement) {
-    this.source = context.createMediaElementSource(mediaElement);
+    // Once a MediaElementSourceNode is created for the media element, you
+    // can't make another one.  So cache and reuse the source node.
+    if (!mediaElement.upfishSource) {
+      mediaElement.upfishSource =
+          context.createMediaElementSource(mediaElement);
+    }
+
+    this.source = mediaElement.upfishSource;
   }
 
   connect(destination) {

@@ -32,10 +32,17 @@ export class UpFish {
     this.mediaElement = mediaElement;
     this.config = normalizeConfig(config);
 
-    this.context = new AudioContext({
-      latencyHint: 'interactive',
-      sampleRate: 48000,
-    });
+    // We are forced to cache source nodes, and so we must also cache the
+    // context.  You can't use a source and destination from different
+    // contexts.
+    if (!mediaElement.upfishContext) {
+      mediaElement.upfishContext = new AudioContext({
+        latencyHint: 'interactive',
+        sampleRate: 48000,
+      });
+    }
+
+    this.context = mediaElement.upfishContext;
 
     this.listeners = [];
 

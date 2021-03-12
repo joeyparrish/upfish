@@ -28,8 +28,8 @@ export class Karaoke {
 
   static async loadWorklet(context) {
     // This feature may not be supported in all contexts.
-    if (context.audioWorklet) {
-      await context.audioWorklet.addModule('karaoke-worklet.js');
+    if (KaraokeWorkletNode.supported(context)) {
+      await KaraokeWorkletNode.loadModule(context);
     }
   }
 
@@ -57,6 +57,10 @@ export class Karaoke {
 class KaraokeWorkletNode extends AudioWorkletNode {
   static supported(context) {
     return !!context.audioWorklet;
+  }
+
+  static async loadModule(context) {
+    await context.audioWorklet.addModule('karaoke-worklet.js');
   }
 
   constructor(context) {

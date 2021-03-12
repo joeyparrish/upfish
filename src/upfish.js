@@ -155,9 +155,11 @@ export class UpFish {
     if (!extraInputs) {
       return;
     }
+
     for (const input of extraInputs) {
       const element = document.createElement('audio');
       element.src = input.url;
+      element.crossOrigin = 'anonymous';
 
       const source = new Source(this.context, element);
       const splitter = new Splitter(this.context, this.channels);

@@ -68,6 +68,12 @@ export class UpFish {
       this.setupSurroundFilters(this.config.surround);
       this.setupExtraInputs(this.config.surround.extraInputs);
     }
+
+    if (!this.mediaElement.paused) {
+      for (const extra of this.extraAudio) {
+        extra.element.play();
+      }
+    }
   }
 
   destroy() {

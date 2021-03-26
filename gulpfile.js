@@ -23,8 +23,9 @@ const gulp = require('gulp');
 const del = require('del');
 const eslint = require('gulp-eslint');
 const rename = require('gulp-rename');
-const replace = require('gulp-replace-task');
 const rollup = require('gulp-rollup');
+const svg2img = require('svg2img');
+const transform = require('gulp-transform');
 
 function clean() {
   return del(['dist']);
@@ -54,13 +55,8 @@ function bundle() {
   // without the "export" keyword.  Instead, I'm removing the export statement.
   // If I don't, there is a runtime error on "export" when the bundle is used
   // as a content script in the Chrome extension.
-  .pipe(replace({
-    patterns: [
-      {
-        match: /^export.*$/m,
-        replacement: '',
-      },
-    ],
+  .pipe(transform('utf8', (content, file) => {
+    return content.replace(/^export.*$/m, '');
   }))
   .pipe(rename('upfish.bundle.js'))
   .pipe(gulp.dest('dist/'));
@@ -83,8 +79,32 @@ function copyConfigs() {
   .pipe(gulp.dest('dist/configs/'));
 }
 
-const build = gulp.series(clean, gulp.parallel(
-      bundle, copyExtensionFiles, copyConfigs));
+function generatePng() {
+  return gulp.src([
+    'upfish.svg',
+  ])
+  .pipe(transform(null, (content, file) => {
+    return new Promise((resolve, reject) => {
+      svg2img(content, {width: 128, height: 128}, (error, png) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(png);
+        }
+      });
+    });
+  }))
+  .pipe(rename('upfish.png'))
+  .pipe(gulp.dest('dist/'));
+}
+
+const build = gulp.series(
+    clean,
+    gulp.parallel(
+        bundle,
+        copyExtensionFiles,
+        copyConfigs,
+        generatePng));
 
 exports.clean = clean;
 exports.lint = lint;

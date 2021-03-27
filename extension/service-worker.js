@@ -19,35 +19,32 @@
  */
 
 (() => {
-  const upfishConfigSelection =
-      document.getElementById('upfishConfigSelection');
+  const onResponse = (response) => {
+    // Response may come back null if the content script isn't loaded in a
+    // certain tab.
+    const active = response && response.active;
 
-  upfishConfigSelection.addEventListener('change', async () => {
-    const selection = upfishConfigSelection.selectedOptions[0];
-    const configUrl = selection && selection.value;
-    console.log('on selection change', {configUrl});
+    chrome.action.setIcon({
+      path: active ? 'upfish.active.png' : 'upfish.png',
+    });
+  };
 
+  // Update the icon status when the active tab changes.
+  chrome.tabs.onActivated.addListener((activeInfo) => {
+    chrome.tabs.sendMessage(activeInfo.tabId, {
+      type: 'UpFishStatus',
+    }, /* options */ null, onResponse);
+  });
+
+  // Also update when the active window changes.
+  chrome.windows.onFocusChanged.addListener(async (windowId) => {
     const [tab] = await chrome.tabs.query({
       active: true,
       currentWindow: true,
     });
 
-    let config = null;
-    if (configUrl) {
-      const response = await fetch(configUrl);
-      if (!response.ok) {
-        throw new Error('Failed to load JSON config!');
-      }
-      config = await response.json();
-    }
-
     chrome.tabs.sendMessage(tab.id, {
-      type: 'UpFishConfig',
-      config,
-    });
-
-    chrome.action.setIcon({
-      path: configUrl ? 'upfish.active.png' : 'upfish.png',
-    });
+      type: 'UpFishStatus',
+    }, /* options */ null, onResponse);
   });
 })();

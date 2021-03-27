@@ -44,5 +44,8 @@
     "default_icon": {
       "128": "upfish.png"
     }
+  },
+  "background": {
+    "service_worker": "service-worker.js"
   }
 }

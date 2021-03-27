@@ -79,22 +79,44 @@ function copyConfigs() {
   .pipe(gulp.dest('dist/configs/'));
 }
 
+function svgToPng(svg, size) {
+  return new Promise((resolve, reject) => {
+    svg2img(svg, size, (error, png) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(png);
+      }
+    });
+  });
+}
+
 function generatePng() {
   return gulp.src([
     'upfish.svg',
   ])
   .pipe(transform(null, (content, file) => {
-    return new Promise((resolve, reject) => {
-      svg2img(content, {width: 128, height: 128}, (error, png) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(png);
-        }
-      });
-    });
+    return svgToPng(content, {width: 128, height: 128});
   }))
   .pipe(rename('upfish.png'))
+  .pipe(gulp.dest('dist/'));
+}
+
+function generateActivePng() {
+  return gulp.src([
+    'upfish.svg',
+  ])
+  .pipe(transform(null, (content, file) => {
+    // Swap the body and eye colors.
+    content = Buffer.from(
+        content.toString('utf8')
+            .replace('cornflowerblue', 'BODYCOLOR')
+            .replace('lightsalmon', 'cornflowerblue')
+            .replace('BODYCOLOR', 'lightsalmon'));
+
+    return svgToPng(content, {width: 128, height: 128});
+  }))
+  .pipe(rename('upfish.active.png'))
   .pipe(gulp.dest('dist/'));
 }
 
@@ -104,7 +126,8 @@ const build = gulp.series(
         bundle,
         copyExtensionFiles,
         copyConfigs,
-        generatePng));
+        generatePng,
+        generateActivePng));
 
 exports.clean = clean;
 exports.lint = lint;

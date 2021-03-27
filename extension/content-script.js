@@ -22,21 +22,28 @@ if (!document.upfishActivated) {
   document.upfishActivated = true;
   console.log('UpFish activated!  Willikers!');
 
-  chrome.runtime.onMessage.addListener(async (request) => {
-    const config = request.config;
-    const video = document.querySelector('video');
+  chrome.runtime.onMessage.addListener(async (request, sender, reply) => {
+    if (request.type == 'UpFishConfig') {
+      const config = request.config;
+      const video = document.querySelector('video');
 
-    if (window.upfish) {
-      window.upfish.destroy();
-      window.upfish = null;
+      if (window.upfish) {
+        window.upfish.destroy();
+        window.upfish = null;
+      }
+
+      if (!config) {
+        return;
+      }
+
+      window.upfish = new UpFish(video, config);
+      await window.upfish.init();
+
+      console.log('Victory for UpFish!', config);
+    } else if (request.type == 'UpFishStatus') {
+      reply({
+        active: !!window.upfish,
+      });
     }
-
-    if (!config) {
-      return;
-    }
-
-    window.upfish = new UpFish(video, config);
-    await window.upfish.init();
-    console.log('Victory for UpFish!', config);
   });
 }

@@ -22,12 +22,19 @@
   const DEFAULT_CONFIGS = [
     {
       id: 1,
+      url: 'configs/GenericKaraoke.json',
+      name: 'Generic Karaoke Filter',
+      editable: false,
+    },
+    {
+      id: 2,
       // TODO: Finalize and check in Wizard People config
       url: 'configs/WizardPeople.json',
       name: 'Wizard People',
+      editable: false,
     },
+    // TODO: We need the more recent version of Wizard People, too
     // TODO: We need at least two movies up in here
-    // TODO: Add a generic karaoke filter config, for use with music videos
   ];
 
   let configs = [];

@@ -1,0 +1,3 @@
+{
+  "comment": "By default, UpFish will apply a karaoke filter to stereo inputs, and drop the center channel from surround-sound inputs.  This means that without any additional config, you get a generic karaoke filter when this is activated.  See also the default configs in src/lib/config.js."
+}

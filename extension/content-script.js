@@ -34,13 +34,14 @@ if (!document.upfishActivated) {
       }
 
       if (!config) {
+        console.log('Professor Catface gingerly escorts Upfish away.');
         return;
       }
 
       window.upfish = new UpFish(video, config, configId);
       await window.upfish.init();
 
-      console.log('Victory for UpFish!', config);
+      console.log('A victory for UpFish!', config, window.upfish);
     } else if (request.type == 'UpFishStatus') {
       reply({
         active: !!window.upfish,

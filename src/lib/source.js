@@ -28,6 +28,13 @@ export class Source {
     }
 
     this.source = mediaElement.upfishSource;
+
+    // In case this was cached and previously connected to the output,
+    // disconnect it now.  This occurs when we shut down UpFish, because
+    // instead of destroying a source, we have to directly connect it to the
+    // output instead.  It is harmless to disconnect a source that is not
+    // connected in the first place.
+    this.source.disconnect();
   }
 
   connect(destination) {

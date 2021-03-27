@@ -24,6 +24,13 @@ class KaraokeProcessor extends AudioWorkletProcessor {
     const inputR = inputs[0][1];
     const output = outputs[0][0];
 
+    if (!inputL || !inputR) {
+      // This occurs when we disconnect this node.  Don't continue, because
+      // that would cause a nonsensical error, and this is actually an expected
+      // situation.
+      return false;
+    }
+
     const len = output.length;
     for (let i = 0; i < len; ++i) {
       output[i] = inputL[i] - inputR[i];

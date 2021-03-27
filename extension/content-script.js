@@ -25,7 +25,7 @@ if (!document.upfishActivated) {
   chrome.runtime.onMessage.addListener(async (request, sender, reply) => {
     if (request.type == 'UpFishConfig') {
       const video = document.querySelector('video');
-      const config = request.config;
+      const configJson = request.configJson;
       const configId = request.configId;
 
       if (window.upfish) {
@@ -33,15 +33,16 @@ if (!document.upfishActivated) {
         window.upfish = null;
       }
 
-      if (!config) {
-        console.log('Professor Catface gingerly escorts Upfish away.');
-        return;
-      }
-
-      window.upfish = new UpFish(video, config, configId);
+      window.upfish = new UpFish(video, configJson, configId);
       await window.upfish.init();
 
-      console.log('A victory for UpFish!', config, window.upfish);
+      console.log('A victory for UpFish!', configJson, window.upfish);
+    } else if (request.type == 'UpFishOff') {
+      if (window.upfish) {
+        window.upfish.destroy();
+        window.upfish = null;
+        console.log('Professor Catface gingerly escorts Upfish away.');
+      }
     } else if (request.type == 'UpFishStatus') {
       reply({
         active: !!window.upfish,

@@ -21,9 +21,11 @@
     <link rel="stylesheet" href="popup.css">
   </head>
   <body>
+    <!-- This "page" is recreated each time the extension is clicked.  So the
+         select element only has one option: "Off".  The others are loaded from
+         the account settings (or from defaults) and populated at runtime. -->
     <select id="upfishConfigSelection">
       <option value="">Off</option>
-      <option value="configs/WizardPeople.json">Wizard People</option>
     </select>
   </body>
   <script src="popup.js"></script>

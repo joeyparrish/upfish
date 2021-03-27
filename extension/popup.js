@@ -19,16 +19,43 @@
  */
 
 (async () => {
+  const DEFAULT_CONFIGS = [
+    {
+      id: 1,
+      // TODO: Finalize and check in Wizard People config
+      url: 'configs/WizardPeople.json',
+      name: 'Wizard People',
+    },
+    // TODO: We need at least two movies up in here
+    // TODO: Add a generic karaoke filter config, for use with music videos
+  ];
+
+  let configs = [];
+
   const upfishConfigSelection =
       document.getElementById('upfishConfigSelection');
 
-  const selectById = (id) => {
-    // TODO: This is hacky, using URLs as IDs
-    for (const option of upfishConfigSelection.options) {
-      if (option.value == id) {
-        option.selected = true;
-      }
+  chrome.storage.sync.get(['configs'], (result) => {
+    configs = result.configs;
+    if (!configs || !configs.length) {
+      configs = DEFAULT_CONFIGS;
     }
+
+    for (const config of configs) {
+      const option = document.createElement('option');
+      option.value = config.id;
+      option.textContent = config.name;
+      upfishConfigSelection.appendChild(option);
+    }
+  });
+
+  const selectById = (id) => {
+    const option = Array.from(upfishConfigSelection.options).find(
+        (option) => option.value == id);
+    if (!option) {
+      throw new Error(`Can't find option with id ${id}!`);
+    }
+    option.selected = true;
   };
 
   const [tab] = await chrome.tabs.query({
@@ -54,27 +81,37 @@
 
   upfishConfigSelection.addEventListener('change', async () => {
     const selection = upfishConfigSelection.selectedOptions[0];
-    const configUrl = selection && selection.value;
-    console.log('on selection change', {configUrl});
+    const configId = selection && selection.value;
 
-    let config = null;
-    let configId = configUrl;  // FIXME
-    if (configUrl) {
-      const response = await fetch(configUrl);
+    if (configId) {
+      const config = configs.find((c) => c.id == configId);
+      if (!config) {
+        throw new Error(`Can't find config id ${configId}!`);
+      }
+
+      const response = await fetch(config.url);
       if (!response.ok) {
         throw new Error('Failed to load JSON config!');
       }
-      config = await response.json();
+      const configJson = await response.json();
+
+      chrome.tabs.sendMessage(tab.id, {
+        type: 'UpFishConfig',
+        configJson,
+        configId,
+      });
+
+      chrome.action.setIcon({
+        path: 'upfish.active.png',
+      });
+    } else {
+      chrome.tabs.sendMessage(tab.id, {
+        type: 'UpFishOff',
+      });
+
+      chrome.action.setIcon({
+        path: 'upfish.png',
+      });
     }
-
-    chrome.tabs.sendMessage(tab.id, {
-      type: 'UpFishConfig',
-      config,
-      configId,
-    });
-
-    chrome.action.setIcon({
-      path: configUrl ? 'upfish.active.png' : 'upfish.png',
-    });
   });
 })();

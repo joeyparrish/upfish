@@ -28,9 +28,10 @@ import {Splitter} from './lib/splitter.js';
 import {normalizeConfig} from './lib/config.js';
 
 export class UpFish {
-  constructor(mediaElement, config) {
+  constructor(mediaElement, config, configId) {
     this.mediaElement = mediaElement;
     this.config = normalizeConfig(config);
+    this.configId = configId;
 
     // We are forced to cache source nodes, and so we must also cache the
     // context.  You can't use a source and destination from different

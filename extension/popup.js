@@ -18,21 +18,47 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-(() => {
+(async () => {
   const upfishConfigSelection =
       document.getElementById('upfishConfigSelection');
+
+  const selectById = (id) => {
+    // TODO: This is hacky, using URLs as IDs
+    for (const option of upfishConfigSelection.options) {
+      if (option.value == id) {
+        option.selected = true;
+      }
+    }
+  };
+
+  const [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+
+  await new Promise((resolve, reject) => {
+    chrome.tabs.sendMessage(tab.id, {
+      type: 'UpFishStatus',
+    }, /* options */ null, (response) => {
+      if (!response) {
+        reject(new Error('No response to status query'));
+      }
+
+      const configId = response && response.configId;
+      if (configId) {
+        selectById(configId);
+      }
+      resolve();
+    });
+  });
 
   upfishConfigSelection.addEventListener('change', async () => {
     const selection = upfishConfigSelection.selectedOptions[0];
     const configUrl = selection && selection.value;
     console.log('on selection change', {configUrl});
 
-    const [tab] = await chrome.tabs.query({
-      active: true,
-      currentWindow: true,
-    });
-
     let config = null;
+    let configId = configUrl;  // FIXME
     if (configUrl) {
       const response = await fetch(configUrl);
       if (!response.ok) {
@@ -44,6 +70,7 @@
     chrome.tabs.sendMessage(tab.id, {
       type: 'UpFishConfig',
       config,
+      configId,
     });
 
     chrome.action.setIcon({

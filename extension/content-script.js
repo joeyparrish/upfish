@@ -24,8 +24,9 @@ if (!document.upfishActivated) {
 
   chrome.runtime.onMessage.addListener(async (request, sender, reply) => {
     if (request.type == 'UpFishConfig') {
-      const config = request.config;
       const video = document.querySelector('video');
+      const config = request.config;
+      const configId = request.configId;
 
       if (window.upfish) {
         window.upfish.destroy();
@@ -36,13 +37,14 @@ if (!document.upfishActivated) {
         return;
       }
 
-      window.upfish = new UpFish(video, config);
+      window.upfish = new UpFish(video, config, configId);
       await window.upfish.init();
 
       console.log('Victory for UpFish!', config);
     } else if (request.type == 'UpFishStatus') {
       reply({
         active: !!window.upfish,
+        configId: window.upfish && window.upfish.configId,
       });
     }
   });

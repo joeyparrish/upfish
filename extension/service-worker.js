@@ -43,6 +43,12 @@
       currentWindow: true,
     });
 
+    if (!tab) {
+      // This happens when we focus a window that isn't a normal window with
+      // tabs, such as the debugger window.
+      return;
+    }
+
     chrome.tabs.sendMessage(tab.id, {
       type: 'UpFishStatus',
     }, /* options */ null, onResponse);

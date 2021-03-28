@@ -10,7 +10,6 @@
     "gulp": "^4.0.2",
     "gulp-eslint": "^6.0.0",
     "gulp-rename": "^2.0.0",
-    "gulp-rollup": "^2.17.0",
     "gulp-transform": "^3.0.5",
     "rollup": "^2.41.4",
     "svg2img": "^0.9.1"

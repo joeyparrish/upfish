@@ -27,7 +27,7 @@ import {Source} from './lib/source.js';
 import {Splitter} from './lib/splitter.js';
 import {normalizeConfig} from './lib/config.js';
 
-export class UpFish {
+export default class UpFish {
   constructor(mediaElement, config, configId) {
     this.mediaElement = mediaElement;
     this.config = normalizeConfig(config);

@@ -23,7 +23,7 @@ const gulp = require('gulp');
 const del = require('del');
 const eslint = require('gulp-eslint');
 const rename = require('gulp-rename');
-const rollup = require('gulp-rollup');
+const {rollup} = require('rollup');
 const svg2img = require('svg2img');
 const transform = require('gulp-transform');
 
@@ -40,26 +40,16 @@ function lint() {
   .pipe(eslint());
 }
 
-function bundle() {
-  return gulp.src([
-    'src/**/*.js',
-  ])
-  .pipe(rollup({
+async function bundleUpFish() {
+  const bundle = await rollup({
     input: 'src/upfish.js',
-    output: {
-      format: 'es',
-    },
-  }))
-  // It seems like this should be an option in rollup, but I can't find it.  I
-  // want the ES deps imported, and the top-level module to just be a global
-  // without the "export" keyword.  Instead, I'm removing the export statement.
-  // If I don't, there is a runtime error on "export" when the bundle is used
-  // as a content script in the Chrome extension.
-  .pipe(transform('utf8', (content, file) => {
-    return content.replace(/^export.*$/m, '');
-  }))
-  .pipe(rename('upfish.bundle.js'))
-  .pipe(gulp.dest('dist/'));
+  });
+
+  await bundle.write({
+    file: 'dist/upfish.bundle.js',
+    format: 'iife',
+    name: 'UpFish',
+  });
 }
 
 function copyExtensionFiles() {
@@ -123,7 +113,7 @@ function generateActivePng() {
 const build = gulp.series(
     clean,
     gulp.parallel(
-        bundle,
+        bundleUpFish,
         copyExtensionFiles,
         copyConfigs,
         generatePng,

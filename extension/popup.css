@@ -67,8 +67,8 @@ details > summary::after {
 /* When something has keyboard focus (either the summary, which is what is
  * clicked to open the <select>-like element, or a highlighted option), show it
  * with a background color. */
-summary:focus,
-details .highlighted {
+div[role="option"].highlighted,
+summary:focus {
   background-color: lightblue;
 }
 
@@ -77,6 +77,10 @@ div[role="option"] {
    * be pushed to the right-hand side cleanly. */
   display: flex;
   flex-direction: row;
+}
+
+div[role="option"],
+summary {
   /* Use the "default" cursor, rather than the "text" cursor, to better emulate
    * a real <select> element. */
   cursor: default;
@@ -109,10 +113,32 @@ body[data-view="edit"] #editView {
   justify-content: space-between;
 }
 
-#addButton {
-  float: right;
+/* Move the "add" button to the right side. */
+#selectionActions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
+/* Push the "add" button down a bit away from the options above. */
+#addButton {
+  margin-top: 1em;
+}
+
+/* Highlight invalid form inputs with a red border.  Also make it dashed for
+ * the colorblind. */
 input:invalid {
   border: 1px dashed red;
+}
+
+/* Set the overall size of the popup. */
+body {
+  margin: 8px;
+  width: calc(15em + 8px);
+}
+#editView input {
+  /* Without this, the input fields seem to be sized in a way that surprises
+   * me, overflowing the margins of the document body. */
+  box-sizing: border-box;
+  width: 100%;
 }

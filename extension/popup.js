@@ -214,6 +214,13 @@
     highlightItem(selectionElement.selected);
   });
 
+  document.addEventListener('click', (e) => {
+    const withinSelectionElement = !!e.target.closest('#selectionElement');
+    if (!withinSelectionElement) {
+      selectionElement.open = false;
+    }
+  });
+
   const checkFormValidity = () => {
     saveEdits.disabled = !editForm.checkValidity();
   };

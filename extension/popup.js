@@ -188,7 +188,7 @@
         chrome.tabs.sendMessage(tab.id, {
           type: 'UpFishConfig',
           configJson,
-          configId,
+          configId: config.id,
         });
 
         chrome.action.setIcon({

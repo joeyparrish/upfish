@@ -18,23 +18,45 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/* Many of these styles have to do with our <select>-like element, which is
+ * actually built on <details> and <summary>.  In case it is not obvious why we
+ * have this setup, it is to allow the options to embed elements other than
+ * text (such as an edit or remove button).  A native <option> element can only
+ * contain text. */
+
+/* The select-like element should have a border around it, like a native
+ * <select> does. */
 details {
   border: 1px solid black;
   border-radius: 0.2em;
 }
 
+/* The summary (the "output" of what is selected) and the options inside should
+ * have some padding around them. */
 summary,
-#selectionOptions > * {
+div[role="option"] {
   padding: 0.2em 0.5em;
 }
 
+/* This is the visible part of the <select>-like element when it is closed.  It
+ * also serves as an "output" showing what is currently selected. */
 summary {
-  list-style: none;
+  /* Add a border along the bottom, so that when the list is opened, the
+   * current selection will be visually separated from the list, as it is in a
+   * native <select> element. */
   border-bottom: 1px solid black;
   border-collapse: collapse;
+  /* The summary element would normally have an icon showing if it is expanded
+   * or collapsed.  But it can only appear on the left, and we don't want that.
+   * So disable it. */
+  list-style: none;
+  /* Make this relative-positioned, so that we can add an icon on the right
+   * with ::after. */
   position: relative;
 }
 
+/* Add a triangle icon (using unicode) on the right-hand side of the summary
+ * element. */
 details > summary::after {
   display: inline-block;
   position: absolute;
@@ -42,7 +64,40 @@ details > summary::after {
   content: '\25BC';
 }
 
+/* When something has keyboard focus (either the summary, which is what is
+ * clicked to open the <select>-like element, or a highlighted option), show it
+ * with a background color. */
 summary:focus,
 details .highlighted {
   background-color: lightblue;
+}
+
+div[role="option"] {
+  /* Make the option divs into flex boxes, so that their button containers can
+   * be pushed to the right-hand side cleanly. */
+  display: flex;
+  flex-direction: row;
+  /* Use the "default" cursor, rather than the "text" cursor, to better emulate
+   * a real <select> element. */
+  cursor: default;
+}
+
+/* Move the button container with an option div to the right-hand side,
+ * consuming whatever space is left in the row. */
+.button-container {
+  display: inline-block;
+  flex-grow: 1;
+  text-align: right;
+}
+
+/* Only display one view at a time. */
+#selectionView,
+#editView {
+  display: none;
+}
+body[data-view="selection"] #selectionView {
+  display: block;
+}
+body[data-view="edit"] #editView {
+  display: block;
 }

@@ -18,6 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// TODO: Refactor.  This is too long.
 (async () => {
   const DEFAULT_CONFIGS = [
     {
@@ -48,6 +49,8 @@
   const selectionElement = document.getElementById('selectionElement');
   const selectedNameElement = document.getElementById('selectedNameElement');
   const selectionOptions = document.getElementById('selectionOptions');
+  const cancelEdits = document.getElementById('cancelEdits');
+  const saveEdits = document.getElementById('saveEdits');
 
   // Update the UI to highlight an item.
   const highlightItem = (highlighted) => {
@@ -117,6 +120,34 @@
     div.tabIndex = tabIndex++;
     selectionOptions.appendChild(div);
 
+    if (config.editable) {
+      const container = document.createElement('div');
+      container.classList.add('button-container');
+      div.appendChild(container);
+
+      const edit = document.createElement('button');
+      edit.textContent = 'edit';
+      container.appendChild(edit);
+      edit.addEventListener('click', (e) => {
+        e.stopPropagation();  // Don't let the div beneath handle this.
+
+        selectionElement.open = false;
+        document.body.dataset.view = 'edit';
+      });
+
+      const remove = document.createElement('button');
+      remove.textContent = 'remove';
+      container.appendChild(remove);
+      remove.addEventListener('click', (e) => {
+        e.stopPropagation();  // Don't let the div beneath handle this.
+
+        if (window.confirm(`Are you sure you want to delete "${config.name}"?`)) {
+          configs = configs.filter((c) => c != config);
+          selectionOptions.removeChild(div);
+        }
+      });
+    }
+
     div.addEventListener('mouseover', () => {
       highlightItem(div);
     });
@@ -160,6 +191,10 @@
 
   selectionElement.addEventListener('toggle', () => {
     highlightItem(selectionElement.selected);
+  });
+
+  cancelEdits.addEventListener('click', () => {
+    document.body.dataset.view = 'selection';
   });
 
   // Get a handle to the current tab.

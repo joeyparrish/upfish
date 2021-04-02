@@ -20,14 +20,22 @@
   <head>
     <link rel="stylesheet" href="popup.css">
   </head>
-  <body>
-    <!-- This "page" is recreated each time the extension is clicked, and we
-         need to load available options from the account settings.  So the
-         details are populated at runtime. -->
-    <details id="selectionElement" role="combobox">
-      <summary id="selectedNameElement">Off</summary>
-      <div id="selectionOptions" role="listbox"></div>
-    </details>
+  <body data-view="selection">
+    <div id="selectionView">
+      <!-- This "page" is recreated each time the extension is clicked, and we
+           need to load available options from the account settings.  So the
+           details are populated at runtime. -->
+      <details id="selectionElement" role="combobox">
+        <summary id="selectedNameElement">Off</summary>
+        <div id="selectionOptions" role="listbox"></div>
+      </details>
+    </div>
+    <div id="editView">
+      <div id="editActions">
+        <button id="cancelEdits">Cancel</button>
+        <button id="saveEdits">Save</button>
+      </div>
+    </div>
   </body>
   <script src="popup.js"></script>
 </html>

@@ -21,12 +21,13 @@
     <link rel="stylesheet" href="popup.css">
   </head>
   <body>
-    <!-- This "page" is recreated each time the extension is clicked.  So the
-         select element only has one option: "Off".  The others are loaded from
-         the account settings (or from defaults) and populated at runtime. -->
-    <select id="upfishConfigSelection">
-      <option value="">Off</option>
-    </select>
+    <!-- This "page" is recreated each time the extension is clicked, and we
+         need to load available options from the account settings.  So the
+         details are populated at runtime. -->
+    <details id="selectionElement" role="combobox">
+      <summary id="selectedNameElement">Off</summary>
+      <div id="selectionOptions" role="listbox"></div>
+    </details>
   </body>
   <script src="popup.js"></script>
 </html>

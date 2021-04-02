@@ -29,12 +29,25 @@
         <summary id="selectedNameElement">Off</summary>
         <div id="selectionOptions" role="listbox"></div>
       </details>
+      <button id="addButton">Add</button>
     </div>
     <div id="editView">
-      <div id="editActions">
-        <button id="cancelEdits">Cancel</button>
-        <button id="saveEdits">Save</button>
-      </div>
+      <form id="editForm">
+        <input id="editId" type="hidden" value="foo" />
+        <div>
+          <label for="editName">Name</label>
+          <input id="editName" type="text" required />
+        </div>
+        <div>
+          <label for="editUrl">URL (https:// required)</label>
+          <input id="editUrl" type="text" required pattern="^https://.+" />
+        </div>
+        <div id="editActions">
+          <!-- type="button" indicates not to "submit" the form" -->
+          <button id="cancelEdits" type="button">Cancel</button>
+          <button id="saveEdits">Save</button>
+        </div>
+      </form>
     </div>
   </body>
   <script src="popup.js"></script>

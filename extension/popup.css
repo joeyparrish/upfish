@@ -101,3 +101,18 @@ body[data-view="selection"] #selectionView {
 body[data-view="edit"] #editView {
   display: block;
 }
+
+/* Push the edit buttons apart */
+#editActions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#addButton {
+  float: right;
+}
+
+input:invalid {
+  border: 1px dashed red;
+}

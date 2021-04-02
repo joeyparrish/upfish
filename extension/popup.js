@@ -49,8 +49,13 @@
   const selectionElement = document.getElementById('selectionElement');
   const selectedNameElement = document.getElementById('selectedNameElement');
   const selectionOptions = document.getElementById('selectionOptions');
+  const editForm = document.getElementById('editForm');
+  const editId = document.getElementById('editId');
+  const editName = document.getElementById('editName');
+  const editUrl = document.getElementById('editUrl');
   const cancelEdits = document.getElementById('cancelEdits');
   const saveEdits = document.getElementById('saveEdits');
+  const addButton = document.getElementById('addButton');
 
   // Update the UI to highlight an item.
   const highlightItem = (highlighted) => {
@@ -112,12 +117,19 @@
 
   // Populate the options available.
   let tabIndex = 100;
-  for (const config of configs) {
+  const createNewOption = (config) => {
     const div = document.createElement('div');
-    div.upfishConfig = config;
-    div.textContent = config.name;
     div.setAttribute('role', 'option');
+
+    // Set text content.  Then, while the text node is still the only child
+    // node, save a reference to it so that we can more easily update it later
+    // when editing.
+    div.textContent = config.name;
+    config.textNode = div.childNodes[0];
+
+    div.upfishConfig = config;
     div.tabIndex = tabIndex++;
+
     selectionOptions.appendChild(div);
 
     if (config.editable) {
@@ -131,7 +143,12 @@
       edit.addEventListener('click', (e) => {
         e.stopPropagation();  // Don't let the div beneath handle this.
 
+        editId.value = config.id;
+        editName.value = config.name;
+        editUrl.value = config.url;
+
         selectionElement.open = false;
+        checkFormValidity();
         document.body.dataset.view = 'edit';
       });
 
@@ -187,13 +204,61 @@
         });
       }
     });
+  };
+
+  for (const config of configs) {
+    createNewOption(config);
   }
 
   selectionElement.addEventListener('toggle', () => {
     highlightItem(selectionElement.selected);
   });
 
+  const checkFormValidity = () => {
+    saveEdits.disabled = !editForm.checkValidity();
+  };
+
+  addButton.addEventListener('click', () => {
+    editId.value = configs.reduce((acc, config) => {
+      return Math.max(acc, config.id);
+    }, 0) + 1;
+    editName.value = '';
+    editUrl.value = '';
+    checkFormValidity();
+
+    selectionElement.open = false;
+    document.body.dataset.view = 'edit';
+  });
+
+  editName.addEventListener('input', checkFormValidity);
+  editName.addEventListener('change', checkFormValidity);
+  editUrl.addEventListener('input', checkFormValidity);
+  editUrl.addEventListener('change', checkFormValidity);
+
   cancelEdits.addEventListener('click', () => {
+    document.body.dataset.view = 'selection';
+  });
+
+  saveEdits.addEventListener('click', (e) => {
+    e.preventDefault();  // Don't navigate to "submit" the form.
+
+    const id = Number(editId.value);
+    let config = configs.find((c) => c.id == id);
+    if (config) {
+      config.name = editName.value;
+      config.url = editUrl.value;
+      config.textNode.data = editName.value;
+    } else {
+      config = {
+        id,
+        name: editName.value,
+        url: editUrl.value,
+        editable: true,
+      };
+      configs.push(config);
+      createNewOption(config);
+    }
+
     document.body.dataset.view = 'selection';
   });
 

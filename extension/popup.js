@@ -70,7 +70,8 @@
     }
   };
 
-  // Load the configs from storage, if any.  Otherwise, we will use the defaults.
+  // Load the configs from storage, if any.  Otherwise, we will use the
+  // defaults.
   await new Promise((resolve) => {
     if (!window.chrome || !chrome.storage) {
       // Allows the popup to be loaded outside of the extension context to work
@@ -149,7 +150,7 @@
       edit.textContent = 'edit';
       container.appendChild(edit);
       edit.addEventListener('click', (e) => {
-        e.stopPropagation();  // Don't let the div beneath handle this.
+        e.stopPropagation(); // Don't let the div beneath handle this.
 
         editId.value = config.id;
         editName.value = config.name;
@@ -164,9 +165,10 @@
       remove.textContent = 'remove';
       container.appendChild(remove);
       remove.addEventListener('click', async (e) => {
-        e.stopPropagation();  // Don't let the div beneath handle this.
+        e.stopPropagation(); // Don't let the div beneath handle this.
 
-        if (window.confirm(`Are you sure you want to delete "${config.name}"?`)) {
+        if (window.confirm(
+            `Are you sure you want to delete "${config.name}"?`)) {
           configs = configs.filter((c) => c != config);
           selectionOptions.removeChild(div);
           await updateConfigStorage();
@@ -256,7 +258,7 @@
   });
 
   saveEdits.addEventListener('click', async (e) => {
-    e.preventDefault();  // Don't navigate to "submit" the form.
+    e.preventDefault(); // Don't navigate to "submit" the form.
 
     const id = Number(editId.value);
     let config = configs.find((c) => c.id == id);

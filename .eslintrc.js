@@ -1,5 +1,5 @@
 module.exports = {
-  'extends': 'eslint:recommended',
+  'extends': ['eslint:recommended', 'google'],
   env: {
     es2017: true,
   },

@@ -86,6 +86,12 @@
     });
   });
 
+  const updateConfigStorage = () => {
+    return new Promise((resolve) => {
+      chrome.storage.sync.set({configs}, resolve);
+    });
+  };
+
   const handleArrowKeys = (e) => {
     if (e.key == 'ArrowDown') {
       const highlighted = selectionOptions.querySelector('.highlighted');
@@ -155,12 +161,13 @@
       const remove = document.createElement('button');
       remove.textContent = 'remove';
       container.appendChild(remove);
-      remove.addEventListener('click', (e) => {
+      remove.addEventListener('click', async (e) => {
         e.stopPropagation();  // Don't let the div beneath handle this.
 
         if (window.confirm(`Are you sure you want to delete "${config.name}"?`)) {
           configs = configs.filter((c) => c != config);
           selectionOptions.removeChild(div);
+          await updateConfigStorage();
         }
       });
     }
@@ -246,7 +253,7 @@
     document.body.dataset.view = 'selection';
   });
 
-  saveEdits.addEventListener('click', (e) => {
+  saveEdits.addEventListener('click', async (e) => {
     e.preventDefault();  // Don't navigate to "submit" the form.
 
     const id = Number(editId.value);
@@ -267,6 +274,7 @@
     }
 
     document.body.dataset.view = 'selection';
+    await updateConfigStorage();
   });
 
   // Get a handle to the current tab.

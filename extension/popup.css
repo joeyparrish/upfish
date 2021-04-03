@@ -24,11 +24,14 @@
  * text (such as an edit or remove button).  A native <option> element can only
  * contain text. */
 
-/* The select-like element should have a border around it, like a native
- * <select> does. */
 details {
+  /* The select-like element should have a border around it, like a native
+   * <select> does. */
   border: 1px solid black;
   border-radius: 0.2em;
+  /* Also like native <select>, the user should not be able to select any of
+   * the text. */
+  user-select: none;
 }
 
 /* The summary (the "output" of what is selected) and the options inside should
@@ -77,6 +80,7 @@ div[role="option"] {
    * be pushed to the right-hand side cleanly. */
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 div[role="option"],

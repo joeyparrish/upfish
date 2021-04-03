@@ -47,7 +47,7 @@ async function main() {
   }
 
   const config = await response.json();
-  window.upfish = new UpFish(video, config);
+  const upfish = window.upfish = new UpFish(video, config);
   await upfish.init();
 
   if (upfish.channels == 2) {

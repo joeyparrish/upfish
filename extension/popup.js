@@ -43,9 +43,11 @@
     // TODO: We need the more recent version of Wizard People, too
     // TODO: We need at least two movies up in here
   ];
-
   let configs = DEFAULT_CONFIGS;
 
+  // Grab all the elements by their IDs.  This is redundant at runtime, since
+  // their IDs could just as well function as global variables.  But it helps
+  // eslint ensure that we are not using a bogus variable name.
   const selectionElement = document.getElementById('selectionElement');
   const selectedNameElement = document.getElementById('selectedNameElement');
   const selectionOptions = document.getElementById('selectionOptions');

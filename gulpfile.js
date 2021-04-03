@@ -20,8 +20,10 @@
 
 const gulp = require('gulp');
 
+const crx = require('gulp-crx-pack');
 const del = require('del');
 const eslint = require('gulp-eslint');
+const fs = require('fs');
 const rename = require('gulp-rename');
 const {rollup} = require('rollup');
 const svg2img = require('svg2img');
@@ -110,6 +112,18 @@ function generateActivePng() {
   .pipe(gulp.dest('dist/'));
 }
 
+function packageExtension() {
+  return gulp.src([
+    'dist/',
+  ])
+  .pipe(crx({
+    // To generate, use "openssl genrsa -out privkey.pem 2048"
+    privateKey: fs.readFileSync('privkey.pem', 'utf8'),
+    filename: 'UpFish.crx'
+  }))
+  .pipe(gulp.dest('./'));
+}
+
 const build = gulp.series(
     clean,
     gulp.parallel(
@@ -119,8 +133,12 @@ const build = gulp.series(
         generatePng,
         generateActivePng));
 
+const all = gulp.series(
+    gulp.parallel(lint, build),
+    packageExtension);
+
 exports.clean = clean;
 exports.lint = lint;
 exports.build = build;
-
-exports.default = gulp.parallel(lint, build);
+exports.all = all;
+exports.default = all;

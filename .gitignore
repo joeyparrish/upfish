@@ -1,3 +1,5 @@
 dist/
 media/
 node_modules/
+UpFish.crx
+privkey.pem

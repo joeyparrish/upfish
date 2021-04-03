@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {UpFish} from './src/upfish.js';
+import UpFish from './src/upfish.js';
 
 async function main() {
   const video = document.getElementById('video');

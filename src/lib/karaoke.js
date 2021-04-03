@@ -65,6 +65,10 @@ class KaraokeWorkletNode extends AudioWorkletNode {
       // In the context of a Chrome extension, build a URL that points into the
       // extension.
       workletUrl = chrome.runtime.getURL(workletUrl);
+    } else {
+      // Outside of the Chrome extension, in the test page, use the full path
+      // from the source repo.
+      workletUrl = 'src/lib/' + workletUrl;
     }
     await context.audioWorklet.addModule(workletUrl);
   }

@@ -23,7 +23,9 @@
     <link rel="icon" href="upfish.svg">
   </head>
   <body>
-    <video id="video" controls autoplay src="media/HP-stereo.mp4"></video>
+    <video id="video" controls autoplay>
+      <source type="video/mp4" src="media/HP-stereo.mp4">
+    </video>
     <div id="timeDebug"></div>
     <div id="gainDebug"></div>
     <select id="playbackRateControl">

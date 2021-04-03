@@ -39,7 +39,9 @@ function lint() {
     'src/**/*.js',
     'extension/*.js',
   ])
-  .pipe(eslint());
+  .pipe(eslint())
+  .pipe(eslint.format())
+  .pipe(eslint.failAfterError());
 }
 
 async function bundleUpFish() {

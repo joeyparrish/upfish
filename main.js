@@ -24,8 +24,10 @@ async function main() {
   const video = document.getElementById('video');
   const timeDebug = document.getElementById('timeDebug');
   const gainDebug = document.getElementById('gainDebug');
+  const speedDebug = document.getElementById('speedDebug');
   const playbackRateControl = document.getElementById('playbackRateControl');
-  let activeGainNode;
+  let activeGainNode = null;
+  let extraAudioElement = null;
 
   video.addEventListener('timeupdate', () => {
     timeDebug.textContent = video.currentTime;
@@ -34,6 +36,9 @@ async function main() {
       // Round to 6 decimal places.
       gainDebug.textContent = activeGainNode.values.map(
           (x) => Math.round(x * 1e6) / 1e6).join(' , ');
+    }
+    if (extraAudioElement) {
+      speedDebug.textContent = extraAudioElement.playbackRate;
     }
   });
 
@@ -55,6 +60,7 @@ async function main() {
   } else {
     activeGainNode = upfish.nodes.inputGain;
   }
+  extraAudioElement = upfish.extraAudio[0].element;
 }
 
 if (document.readyState == 'loading') {

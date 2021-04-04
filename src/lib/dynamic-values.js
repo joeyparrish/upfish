@@ -26,11 +26,11 @@ export class DynamicValues {
   /**
    * @param {string} name
    * @param {!Array<!AudioParam>} audioParams
-   * @param {!AudioContext} context
    * @param {!HTMLMediaElement} mediaElement
+   * @param {!UpFish} upfish
    * @param {UpFishGainConfig} config
    */
-  constructor(name, audioParams, context, mediaElement, config) {
+  constructor(name, audioParams, mediaElement, upfish, config) {
     /**
      * @type {string}
      *
@@ -46,7 +46,7 @@ export class DynamicValues {
     this.audioParams = audioParams;
 
     /** @type {!AudioContext} */
-    this.context = context;
+    this.context = upfish.context;
 
     /**
      * @type {!HTMLMediaElement}
@@ -95,11 +95,13 @@ export class DynamicValues {
       this.audioParams[i].value = this.defaults[i];
     }
 
-    // If we are going to vary these values, listen for timeudpate events and
+    // If we are going to vary these values, listen for timeupdate events and
     // adjust based on the media time.
     if (this.map.length) {
-      // TODO: This is a potential memory leak
-      this.mediaElement.addEventListener('timeupdate', () => {
+      // Adding this listener through the UpFish instance means it will be
+      // properly cleaned up when UpFish is disabled or has its configuration
+      // changed.  Using addEventListener directly could create a memory leak.
+      upfish.listen(this.mediaElement, 'timeupdate', () => {
         const time = this.mediaElement.currentTime;
 
         for (let i = 0; i < this.map.length; ++i) {

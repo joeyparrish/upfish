@@ -66,6 +66,7 @@ export default class UpFish {
       });
     }
 
+    /** @type {!AudioContext} */
     this.context = mediaElement.upfishContext;
 
     this.listeners = [];
@@ -176,12 +177,11 @@ export default class UpFish {
     const duplicate = new Duplicate(karaoke);
 
     const karaokeGain = this.nodes.karaokeGain = new Gain(
-        'karaokeGain', 2, this.mediaElement, this.context, config.karaokeGain);
+        'karaokeGain', 2, this.mediaElement, this, config.karaokeGain);
     duplicate.connect(karaokeGain);
 
     const nonKaraokeGain = this.nodes.nonKaraokeGain = new Gain(
-        'nonKaraokeGain', 2, this.mediaElement, this.context,
-        config.nonKaraokeGain);
+        'nonKaraokeGain', 2, this.mediaElement, this, config.nonKaraokeGain);
     splitter.connect(nonKaraokeGain);
 
     this.merger = new Merger(this.context, this.channels);
@@ -200,8 +200,7 @@ export default class UpFish {
     this.source.connect(splitter);
 
     const inputGain = this.nodes.inputGain = new Gain(
-        'inputGain', this.channels, this.mediaElement, this.context,
-        config.inputGain);
+        'inputGain', this.channels, this.mediaElement, this, config.inputGain);
     splitter.connect(inputGain);
 
     this.merger = new Merger(this.context, this.channels);
@@ -230,7 +229,7 @@ export default class UpFish {
       source.connect(splitter);
 
       const gain = this.nodes.extraInputGain = new Gain(
-          'extraInputGain', source.channelCount, element, this.context,
+          'extraInputGain', source.channelCount, element, this,
           input.inputGain);
       splitter.connect(gain);
       gain.connect(this.merger, input.mix);

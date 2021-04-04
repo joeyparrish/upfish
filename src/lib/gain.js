@@ -31,17 +31,17 @@ export class Gain {
    * @param {string} name
    * @param {number} numNodes
    * @param {!HTMLMediaElement} mediaElement
-   * @param {!AudioContext} context
-   * @param {UpFishConfig} config
+   * @param {!UpFish} upfish
+   * @param {UpFishGainConfig} config
    */
-  constructor(name, numNodes, mediaElement, context, config) {
+  constructor(name, numNodes, mediaElement, upfish, config) {
     this.nodes = [];
     for (let i = 0; i < numNodes; ++i) {
-      this.nodes.push(context.createGain());
+      this.nodes.push(upfish.context.createGain());
     }
 
     this.dynamicValues = new DynamicValues(
-        name, this.nodes.map((n) => n.gain), context, mediaElement, config);
+        name, this.nodes.map((n) => n.gain), mediaElement, upfish, config);
   }
 
   /** @return {!Array<number>} */

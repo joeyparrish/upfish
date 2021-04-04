@@ -27,10 +27,33 @@ import {Source} from './lib/source.js';
 import {Splitter} from './lib/splitter.js';
 import {normalizeConfig} from './lib/config.js';
 
+/**
+ * UpFish - dynamically making fun of your movies
+ *
+ * Creates an audio filter graph to manipulate the audio of the given media
+ * element, and optionally mixes in additional audio.  The specifics are
+ * governed by the number of audio channels in the source material, and by the
+ * given config.
+ */
 export default class UpFish {
+  /**
+   * @param {!HTMLMediaElement} mediaElement
+   * @param {UpFishConfig} config
+   * @param {number} configId
+   */
   constructor(mediaElement, config, configId) {
+    /** @type {!HTMLMediaElement} mediaElement */
     this.mediaElement = mediaElement;
+
+    /** @type {UpFishConfig} config */
     this.config = normalizeConfig(config);
+
+    /**
+     * Only used by the Chrome extension to read the currently-selected config
+     * ID and set the appropriate UI state in the extension.
+     *
+     * @type {number} configId
+     */
     this.configId = configId;
 
     // We are forced to cache source nodes, and so we must also cache the
@@ -57,6 +80,11 @@ export default class UpFish {
     this.extraAudio = [];
   }
 
+  /**
+   * Initialize UpFish.
+   *
+   * @return {!Promise}
+   */
   async init() {
     this.setupResume();
 
@@ -77,6 +105,7 @@ export default class UpFish {
     }
   }
 
+  /** Destroy UpFish, the extra audio elements, and the filter graph. */
   destroy() {
     for (const {eventTarget, eventName, listener} of this.listeners) {
       eventTarget.removeEventListener(eventName, listener);
@@ -87,10 +116,20 @@ export default class UpFish {
       extra.element.load();
     }
 
+    // The best we can do to destroy the graph is to connect the source
+    // directly to the output.  If it is completely disconnected, nothing can
+    // play.
     this.source.disconnect();
     this.source.connect(this.output);
   }
 
+  /**
+   * Set up appropriate listeners to "resume" the audio context.
+   *
+   * An audio context may not be able to run without user interaction.
+   * So if the audio context is not running, listen for a click or play event
+   * which we can use to "resume" the audio context (make it run).
+   */
   setupResume() {
     // The audio context may need to be resumed once the user interacts with
     // the page.  We will try when the document is clicked or when the media
@@ -107,6 +146,7 @@ export default class UpFish {
     }
   }
 
+  /** @return {string} */
   toString() {
     const output = [];
     for (const node of Object.values(this.nodes)) {
@@ -115,7 +155,13 @@ export default class UpFish {
     return output.join('\n');
   }
 
+  /**
+   * Set up the filter graph for stereo content.
+   *
+   * @param {UpFishStereoConfig} config
+   */
   setupStereoFilters(config) {
+    // Karaoke filtering is required for stereo content.
     if (!Karaoke.isSupported(this.context)) {
       this.source.connect(this.output);
       throw new Error('Karaoke not supported!!');
@@ -144,6 +190,11 @@ export default class UpFish {
     nonKaraokeGain.connect(this.merger);
   }
 
+  /**
+   * Set up the filter graph for surround-sound content.
+   *
+   * @param {UpFishSurroundConfig} config
+   */
   setupSurroundFilters(config) {
     const splitter = new Splitter(this.context, this.channels);
     this.source.connect(splitter);
@@ -158,6 +209,11 @@ export default class UpFish {
     inputGain.connect(this.merger);
   }
 
+  /**
+   * Set up extra audio inputs.
+   *
+   * @param {Array<UpFishExtraInputConfig>} extraInputs
+   */
   setupExtraInputs(extraInputs) {
     if (!extraInputs) {
       return;
@@ -217,11 +273,28 @@ export default class UpFish {
     });
   }
 
+  /**
+   * Listen to an event, and record the listener so that it can be removed in
+   * destroy().
+   *
+   * @param {!EventTarget} eventTarget
+   * @param {string} eventName
+   * @param {(!EventListener|function)} listener
+   * @param {EventOptions=} options
+   */
   listen(eventTarget, eventName, listener, options) {
     this.listeners.push({eventTarget, eventName, listener});
     eventTarget.addEventListener(eventName, listener, options);
   }
 
+  /**
+   * Sync an extra audio element with the main element.
+   *
+   * Will adjust playback rate to keep closely in sync.  If the elements are
+   * too far out of sync, the extra audio element will seek instead.
+   *
+   * @param {!HTMLMediaelement} extraElement
+   */
   syncElements(extraElement) {
     const diff =
         this.mediaElement.currentTime - extraElement.currentTime;

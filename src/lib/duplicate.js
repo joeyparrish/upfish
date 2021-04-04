@@ -18,7 +18,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * A node which takes one single-channel input and duplicates it to two
+ * single-channel outputs.
+ */
 export class Duplicate {
+  /**
+   * @param {UpFishNode} original
+   */
   constructor(original) {
     if (!original.node) {
       throw new Error(`Invalid duplicate original ${original}`);
@@ -26,6 +33,9 @@ export class Duplicate {
     this.original = original;
   }
 
+  /**
+   * @param {UpFishNode} destination
+   */
   connect(destination) {
     if (!destination.nodes) {
       throw new Error(`Invalid karaoke destination ${destination}`);

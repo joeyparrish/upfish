@@ -18,12 +18,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * A merger, which takes many single-channel inputs and connects to one
+ * multi-channel output.
+ */
 export class Merger {
+  /**
+   * @param {!AudioContext} context
+   * @param {number} channels
+   */
   constructor(context, channels) {
     this.channels = channels;
     this.node = context.createChannelMerger(channels);
   }
 
+  /**
+   * @param {UpFishNode} destination
+   */
   connect(destination) {
     if (!destination.node) {
       throw new Error(`Invalid mixer destination ${destination}`);

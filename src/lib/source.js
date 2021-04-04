@@ -18,7 +18,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * A source node, which produces multi-channel output from a media element.
+ */
 export class Source {
+  /**
+   * @param {!AudioContext} context
+   * @param {!HTMLMediaElement} mediaElement
+   */
   constructor(context, mediaElement) {
     // Once a MediaElementSourceNode is created for the media element, you
     // can't make another one.  So cache and reuse the source node.
@@ -37,6 +44,9 @@ export class Source {
     this.source.disconnect();
   }
 
+  /**
+   * @param {UpFishNode} destination
+   */
   connect(destination) {
     if (!destination.node) {
       throw new Error(`Invalid source destination ${destination}`);
@@ -45,10 +55,16 @@ export class Source {
     this.source.connect(destination.node);
   }
 
+  /**
+   * Disconnect the underlying WebAudio nodes.
+   */
   disconnect() {
     this.source.disconnect();
   }
 
+  /**
+   * @type {number}
+   */
   get channelCount() {
     return this.source.channelCount;
   }

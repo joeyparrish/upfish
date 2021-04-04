@@ -9,8 +9,6 @@ module.exports = {
       // function/method arguments.
       args: 'none',
     }],
-    // TODO: Add jsdoc everywhere
-    'require-jsdoc': 'off',
   },
   overrides: [
     {

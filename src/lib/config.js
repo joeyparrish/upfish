@@ -18,6 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/** @const {UpFishStereoConfig} */
 const defaultStereoConfig = {
   'karaokeGain': {
     'default': 1,
@@ -27,12 +28,14 @@ const defaultStereoConfig = {
   },
 };
 
+/** @const {UpFishSurroundConfig} */
 const defaultSurroundConfig = {
   'inputGain': {
     'default': [1, 1, 0, 1, 1, 1],
   },
 };
 
+/** @const {UpFishExtraInputConfig} */
 const defaultStereoExtraInputConfig = {
   'inputGain': {
     'default': 1.0,
@@ -40,6 +43,7 @@ const defaultStereoExtraInputConfig = {
   'mix': [0, 1],
 };
 
+/** @const {UpFishExtraInputConfig} */
 const defaultSurroundExtraInputConfig = {
   'inputGain': {
     'default': 1.0,
@@ -47,6 +51,12 @@ const defaultSurroundExtraInputConfig = {
   'mix': [2, 2],
 };
 
+/**
+ * Normalize a config dictionary by filling in defaults for any missing keys.
+ *
+ * @param {!Object} config
+ * @param {!Object} defaults
+ */
 function normalize(config, defaults) {
   for (const k in defaults) {
     if (!(k in config)) {
@@ -58,6 +68,13 @@ function normalize(config, defaults) {
   }
 }
 
+/**
+ * Normalize an "extraInputs" config array by filling in defaults for any
+ * missing keys within the items of the array.
+ *
+ * @param {!Array<!Object>} extraInputs
+ * @param {UpFishExtraInputConfig} defaults
+ */
 function normalizeExtraInputs(extraInputs, defaults) {
   if (!extraInputs) {
     return;
@@ -68,6 +85,13 @@ function normalizeExtraInputs(extraInputs, defaults) {
   }
 }
 
+/**
+ * Normalize a complete UpFish config by filling in defaults for any missing
+ * keys.
+ *
+ * @param {UpFishConfig} config
+ * @return {UpFishConfig} The same config passed in.
+ */
 export function normalizeConfig(config) {
   if (!config.stereo) {
     config.stereo = {};

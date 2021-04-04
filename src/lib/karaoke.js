@@ -18,14 +18,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * A karaoke filter, which takes stereo input and connects to a single-channel
+ * output.
+ *
+ * If possible, it will use an audio worklet, which is more efficient.  In some
+ * contexts, this is not possible, so we will fall back to a "script processor
+ * node".
+ */
 export class Karaoke {
-  // The Karaoke filters require one of these two methods.
-  // If neither is supported, then Karaoke-filtering isn't possible.
+  /**
+   * Determine if karaoke filtering is possible.
+   *
+   * @param {!AudioContext} context
+   * @return {boolean}
+   */
   static isSupported(context) {
+    // The Karaoke filters require one of these two methods.
+    // If neither is supported, then Karaoke-filtering isn't possible.
     return KaraokeWorkletNode.supported(context) ||
         KaraokeScriptProcessorNode.supported(context);
   }
 
+  /**
+   * Load the Karaoke audio worklet, if supported.
+   *
+   * @param {!AudioContext} context
+   * @return {!Promise}
+   */
   static async loadWorklet(context) {
     // This feature may not be supported in all contexts.
     if (KaraokeWorkletNode.supported(context)) {
@@ -33,6 +53,9 @@ export class Karaoke {
     }
   }
 
+  /**
+   * @param {!AudioContext} context
+   */
   constructor(context) {
     if (KaraokeWorkletNode.supported(context)) {
       // This is preferable, since it runs on another thread.  Requires https.
@@ -43,6 +66,9 @@ export class Karaoke {
     }
   }
 
+  /**
+   * @param {UpFishNode} destination
+   */
   connect(destination) {
     if (!destination.node) {
       throw new Error(`Invalid karaoke destination ${destination}`);
@@ -52,13 +78,29 @@ export class Karaoke {
   }
 }
 
-// This requires https or localhost (secure contexts), and runs on a separate
-// thread.
+/**
+ * A karaoke filter node based on an audio worklet.
+ *
+ * This requires https or localhost (secure contexts), and runs on a separate
+ * thread.
+ */
 class KaraokeWorkletNode extends AudioWorkletNode {
+  /**
+   * Determine if an audio worklet is possible.
+   *
+   * @param {!AudioContext} context
+   * @return {boolean}
+   */
   static supported(context) {
     return !!context.audioWorklet;
   }
 
+  /**
+   * Load the Karaoke audio worklet.  Assumes support.
+   *
+   * @param {!AudioContext} context
+   * @return {!Promise}
+   */
   static async loadModule(context) {
     let workletUrl = 'karaoke-worklet.js';
     if (window.chrome && chrome.runtime) {
@@ -73,6 +115,9 @@ class KaraokeWorkletNode extends AudioWorkletNode {
     await context.audioWorklet.addModule(workletUrl);
   }
 
+  /**
+   * @param {!AudioContext} context
+   */
   constructor(context) {
     super(context, 'karaoke-processor', {
       outputChannelCount: [1],
@@ -80,13 +125,26 @@ class KaraokeWorkletNode extends AudioWorkletNode {
   }
 }
 
-// This is usable on http sites, but runs on the main thread and is deprecated.
-// Browsers could remove this at any time.
+/**
+ * A karaoke filter node based on a "script processor node".
+ *
+ * This is usable on http sites, but runs on the main thread and is deprecated.
+ * Browsers could remove support for this at any time.
+ */
 class KaraokeScriptProcessorNode {
+  /**
+   * Determine if a script processor node is possible.
+   *
+   * @param {!AudioContext} context
+   * @return {boolean}
+   */
   static supported(context) {
     return !!context.createScriptProcessor;
   }
 
+  /**
+   * @param {!AudioContext} context
+   */
   constructor(context) {
     const node = context.createScriptProcessor(
         2048, // buffersize
@@ -98,6 +156,9 @@ class KaraokeScriptProcessorNode {
     return node;
   }
 
+  /**
+   * @param {!AudioProcessingEvent} event
+   */
   static onAudioProcess(event) {
     const inputL = event.inputBuffer.getChannelData(0);
     const inputR = event.inputBuffer.getChannelData(1);

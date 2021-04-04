@@ -29,10 +29,20 @@ const {rollup} = require('rollup');
 const svg2img = require('svg2img');
 const transform = require('gulp-transform');
 
+/**
+ * Remove everything that we built.
+ *
+ * @return {!Promise}
+ */
 function clean() {
   return del(['dist']);
 }
 
+/**
+ * Lint the entire codebase.
+ *
+ * @return {!Stream}
+ */
 function lint() {
   return gulp.src([
     '*.js',
@@ -40,10 +50,22 @@ function lint() {
     'extension/*.js',
   ])
   .pipe(eslint())
+  // Without this, eslint errors are not shown.
   .pipe(eslint.format())
+  // Without this, eslint errors will not fail this gulp task.
   .pipe(eslint.failAfterError());
 }
 
+/**
+ * Create a bundle for UpFish.
+ *
+ * When UpFish is loaded by the extension, it is done as a "content script" in
+ * the context of the page.  This does not allow us to load an ES module, so
+ * the entire UpFish library must be bundled into a single IIFE that exports
+ * UpFish to |window|.
+ *
+ * @return {!Promise}
+ */
 async function bundleUpFish() {
   const bundle = await rollup({
     input: 'src/upfish.js',
@@ -56,6 +78,11 @@ async function bundleUpFish() {
   });
 }
 
+/**
+ * Copy all extension files to the output folder.
+ *
+ * @return {!Stream}
+ */
 function copyExtensionFiles() {
   return gulp.src([
     'src/lib/karaoke-worklet.js',
@@ -66,6 +93,11 @@ function copyExtensionFiles() {
   .pipe(gulp.dest('dist/'));
 }
 
+/**
+ * Copy all built-in config files to the output folder.
+ *
+ * @return {!Stream}
+ */
 function copyConfigs() {
   return gulp.src([
     'configs/*',
@@ -73,6 +105,13 @@ function copyConfigs() {
   .pipe(gulp.dest('dist/configs/'));
 }
 
+/**
+ * Convert an SVG to a PNG.
+ *
+ * @param {!Buffer} svg
+ * @param {{width: number, height: number}} size
+ * @return {!Promise<QBuffer>}
+ */
 function svgToPng(svg, size) {
   return new Promise((resolve, reject) => {
     svg2img(svg, size, (error, png) => {
@@ -85,6 +124,14 @@ function svgToPng(svg, size) {
   });
 }
 
+/**
+ * Generate a PNG version of our SVG logo.
+ *
+ * The SVG logo can't be used as the icon in the Chrome extension, so it must
+ * be converted to PNG.
+ *
+ * @return {!Stream}
+ */
 function generatePng() {
   return gulp.src([
     'upfish.svg',
@@ -96,6 +143,13 @@ function generatePng() {
   .pipe(gulp.dest('dist/'));
 }
 
+/**
+ * Generate a PNG version of our SVG logo for when the extension is active.
+ *
+ * This swaps the colors in our SVG logo, then converts it to PNG.
+ *
+ * @return {!Stream}
+ */
 function generateActivePng() {
   return gulp.src([
     'upfish.svg',
@@ -114,6 +168,14 @@ function generateActivePng() {
   .pipe(gulp.dest('dist/'));
 }
 
+/**
+ * Package the Chrome extension into a crx file.
+ *
+ * Expects "privkey.pem" to contain your private key, to sign the extension.
+ * For obvious reasons, we don't put that in the repo.
+ *
+ * @return {!Stream}
+ */
 function packageExtension() {
   return gulp.src([
     'dist/',
@@ -126,7 +188,15 @@ function packageExtension() {
   .pipe(gulp.dest('./'));
 }
 
-const build = gulp.series(
+/**
+ * The "build" task: clean, then execute all build steps in parallel.
+ *
+ * Only creates an "unpacked" extension in the "dist/" folder.
+ * Does not package the extension as a crx file.
+ *
+ * @type {!TaskFunction}
+ */
+const build = exports.build = gulp.series(
     clean,
     gulp.parallel(
         bundleUpFish,
@@ -135,12 +205,28 @@ const build = gulp.series(
         generatePng,
         generateActivePng));
 
-const all = gulp.series(
+/**
+ * The "all" task: lint and build in parallel, then package the extension.
+ * @type {!TaskFunction}
+ */
+const all = exports.all = gulp.series(
     gulp.parallel(lint, build),
     packageExtension);
 
+/**
+ * The "clean" task: remove everything that we built.
+ * @type {!TaskFunction}
+ */
 exports.clean = clean;
+
+/**
+ * The "lint" task: lint the entire codebase.
+ * @type {!TaskFunction}
+ */
 exports.lint = lint;
-exports.build = build;
-exports.all = all;
+
+/**
+ * By default, run the "all" task.
+ * @type {!TaskFunction}
+ */
 exports.default = all;

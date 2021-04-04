@@ -18,7 +18,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * A node representing the output.
+ */
 export class Output {
+  /**
+   * @param {!AudioContext} context
+   */
   constructor(context) {
     this.node = context.destination;
   }

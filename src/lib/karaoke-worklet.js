@@ -18,7 +18,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * An audio worklet that implements a karaoke filter.
+ */
 class KaraokeProcessor extends AudioWorkletProcessor {
+  /**
+   * @param {!Array<!Array<!Float32Array>>} inputs
+   * @param {!Array<!Array<!Float32Array>>} outputs
+   * @param {!Object<string, Float32Array>} parameters
+   * @return {boolean}
+   * @override
+   */
   process(inputs, outputs, parameters) {
     const inputL = inputs[0][0];
     const inputR = inputs[0][1];

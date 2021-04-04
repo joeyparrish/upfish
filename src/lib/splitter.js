@@ -18,12 +18,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * A splitter, which takes one multi-channel input and connects to many
+ * single-channel outputs.
+ */
 export class Splitter {
+  /**
+   * @param {!AudioContext} context
+   * @param {number} channels
+   */
   constructor(context, channels) {
     this.channels = channels;
     this.node = context.createChannelSplitter(channels);
   }
 
+  /**
+   * @param {UpFishNode} destination
+   */
   connect(destination) {
     if (!destination.nodes) {
       throw new Error(`Invalid splitter destination ${destination}`);

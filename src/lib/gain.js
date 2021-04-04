@@ -20,7 +20,20 @@
 
 import {DynamicValues} from './dynamic-values.js';
 
+/**
+ * A gain node, which takes many single-channel inputs, adjusts their gain
+ * independently, and connects to many single-channel outputs.
+ *
+ * The gain values can vary over time based on the config.
+ */
 export class Gain {
+  /**
+   * @param {string} name
+   * @param {number} numNodes
+   * @param {!HTMLMediaElement} mediaElement
+   * @param {!AudioContext} context
+   * @param {UpFishConfig} config
+   */
   constructor(name, numNodes, mediaElement, context, config) {
     this.nodes = [];
     for (let i = 0; i < numNodes; ++i) {
@@ -31,14 +44,21 @@ export class Gain {
         name, this.nodes.map((n) => n.gain), context, mediaElement, config);
   }
 
+  /** @return {!Array<number>} */
   get values() {
     return this.dynamicValues.values;
   }
 
+  /** @return {string} */
   toString() {
     return this.dynamicValues.toString();
   }
 
+  /**
+   * @param {UpFishNode} destination
+   * @param {Array<number>=} map An optional map from input channels to output
+   *   channels.
+   */
   connect(destination, map=null) {
     if (!destination.node) {
       throw new Error(`Invalid gain destination ${destination}`);

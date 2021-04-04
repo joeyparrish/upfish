@@ -18,27 +18,71 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * Maintain AudioParam values dynamically based on the config and the current
+ * time of the main media element.
+ */
 export class DynamicValues {
+  /**
+   * @param {string} name
+   * @param {!Array<!AudioParam>} audioParams
+   * @param {!AudioContext} context
+   * @param {!HTMLMediaElement} mediaElement
+   * @param {UpFishGainConfig} config
+   */
   constructor(name, audioParams, context, mediaElement, config) {
-    // The name of this value, for debugging.
+    /**
+     * @type {string}
+     *
+     * The name of this value, for debugging.
+     */
     this.name = name;
-    // The AudioParam objects from the filter graph that will be adjusted.
+
+    /**
+     * @type {!Array<!AudioParam>}
+     *
+     * The AudioParam objects from the filter graph that will be adjusted.
+     */
     this.audioParams = audioParams;
-    // The AudioContext.
+
+    /** @type {!AudioContext} */
     this.context = context;
-    // The media element which we will observe to make adjustments.
+
+    /**
+     * @type {!HTMLMediaElement}
+     *
+     * The media element which we will observe to make adjustments.
+     */
     this.mediaElement = mediaElement;
-    // The default values.
+
+    /**
+     * @type {!Array<number>}
+     *
+     * The default gain per channel.
+     */
     this.defaults = this.convertValueToArray(config.default);
-    // The map of value overrides.
+
+    /**
+     * @type {!Array<UpFishGainOverride>}
+     *
+     * The map of value overrides over time.
+     */
     this.map = (config.map || []).sort((a, b) => a.start - b.start);
-    // Where we are in that map.
+
+    /**
+     * @type {number}
+     *
+     * The current index into this.map.  Will be used to avoid writing the
+     * AudioParam values when they have not changed.
+     */
     this.currentMapIndex = -1;
 
     if (this.defaults.length != this.audioParams.length) {
       throw new Error(`Wrong number of values in ${this.name} config default`);
     }
 
+    // Normalize the override values.  Single numbers will be converted into an
+    // array of values per channel.
     for (const override of this.map) {
       override.value = this.convertValueToArray(override.value);
       if (override.value.length != this.audioParams.length) {
@@ -46,6 +90,7 @@ export class DynamicValues {
       }
     }
 
+    // Set the default values.
     for (let i = 0; i < this.audioParams.length; ++i) {
       this.audioParams[i].value = this.defaults[i];
     }
@@ -53,6 +98,7 @@ export class DynamicValues {
     // If we are going to vary these values, listen for timeudpate events and
     // adjust based on the media time.
     if (this.map.length) {
+      // TODO: This is a potential memory leak
       this.mediaElement.addEventListener('timeupdate', () => {
         const time = this.mediaElement.currentTime;
 
@@ -79,14 +125,17 @@ export class DynamicValues {
     } // if (this.map.length)
   }
 
+  /** @return {string} */
   toString() {
     return `${this.name}: ${this.values}`;
   }
 
+  /** @return {!Array<number>} */
   get values() {
     return this.audioParams.map((audioParam) => audioParam.value);
   }
 
+  /** @param {!Array<number>} values */
   setParams(values) {
     for (let i = 0; i < this.audioParams.length; ++i) {
       // Exponentially ramp the desired value.  This sounds better than a
@@ -98,6 +147,13 @@ export class DynamicValues {
     }
   }
 
+  /**
+   * Normalize values.  Single numbers will be converted into an array of
+   * values per channel.
+   *
+   * @param {(!Array<number>|number)} value
+   * @return {!Array<number>}
+   */
   convertValueToArray(value) {
     if (Array.isArray(value)) {
       return value;

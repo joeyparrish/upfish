@@ -18,6 +18,11 @@ module.exports = {
       env: {
         node: true,
       },
+      rules: {
+        // Disable indentation rules here because I can't seem to write a
+        // gulpfile that is still legible in strict Google style compliance.
+        indent: 'off',
+      },
     },
     {
       files: ['extension/*.js'],

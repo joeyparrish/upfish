@@ -108,7 +108,7 @@ export default class UpFish {
   }
 
   toString() {
-    let output = [];
+    const output = [];
     for (const node of Object.values(this.nodes)) {
       output.push(node.toString());
     }

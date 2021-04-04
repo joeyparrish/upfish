@@ -19,32 +19,32 @@
  */
 
 const defaultStereoConfig = {
-  "karaokeGain": {
-    "default": 1
+  'karaokeGain': {
+    'default': 1,
   },
-  "nonKaraokeGain": {
-    "default": 0
-  }
+  'nonKaraokeGain': {
+    'default': 0,
+  },
 };
 
 const defaultSurroundConfig = {
-  "inputGain": {
-    "default": [1, 1, 0, 1, 1, 1]
-  }
+  'inputGain': {
+    'default': [1, 1, 0, 1, 1, 1],
+  },
 };
 
 const defaultStereoExtraInputConfig = {
-  "inputGain": {
-    "default": 1.0
+  'inputGain': {
+    'default': 1.0,
   },
-  "mix": [0, 1]
+  'mix': [0, 1],
 };
 
 const defaultSurroundExtraInputConfig = {
-  "inputGain": {
-    "default": 1.0
+  'inputGain': {
+    'default': 1.0,
   },
-  "mix": [2, 2]
+  'mix': [2, 2],
 };
 
 function normalize(config, defaults) {

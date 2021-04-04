@@ -76,7 +76,7 @@ export class DynamicValues {
           this.currentMapIndex = -1;
         }
       });
-    }  // if (this.map.length)
+    } // if (this.map.length)
   }
 
   toString() {

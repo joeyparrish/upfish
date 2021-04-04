@@ -183,7 +183,7 @@ function packageExtension() {
   .pipe(crx({
     // To generate, use "openssl genrsa -out privkey.pem 2048"
     privateKey: fs.readFileSync('privkey.pem', 'utf8'),
-    filename: 'UpFish.crx',
+    filename: 'upfish.crx',
   }))
   .pipe(gulp.dest('./'));
 }

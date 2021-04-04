@@ -9,6 +9,8 @@ module.exports = {
       // function/method arguments.
       args: 'none',
     }],
+    // TODO: Add jsdoc everywhere
+    'require-jsdoc': 'off',
   },
   overrides: [
     {
@@ -19,9 +21,11 @@ module.exports = {
     },
     {
       files: ['extension/*.js'],
+      parserOptions: {
+        sourceType: 'module',
+      },
       env: {
         browser: true,
-        serviceworker: true,
         webextensions: true,
       },
     },

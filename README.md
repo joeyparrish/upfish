@@ -14,10 +14,10 @@ https://www.gnu.org/licenses/gpl-3.0.en.html
 
 ## Logo
 
-The UpFish logo is based on two free vector graphics from
-[Vecteezy](https://vecteezy.com/):
- - "Linear Fish Icons": https://www.vecteezy.com/vector-art/157657-linear-fish-icons
- - "Arrow Icon" https://www.vecteezy.com/vector-art/553925-arrow-icon
+The UpFish logo is based on:
+ - "Fish Outline SVG Vector" https://www.svgrepo.com/svg/31355/fish-outline
+ - By: "SVG Repo" https://www.svgrepo.com/
+ - License: CC0 https://www.svgrepo.com/page/licensing
 
 
 ## Why is it called "UpFish"?

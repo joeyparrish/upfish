@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>UpFish Session Counter Debug</title>
+    <style>
+      div {
+        margin: 1em 0;
+      }
+
+      label {
+        font-size: 120%;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <img src="/num-installs">
+      <img src="/num-sessions">
+    </div>
+    <div>
+      <label for="install-chart">Installations over time</label>
+      <iframe id="install-chart" src="/install-chart.html" style="width: 100%"></iframe>
+    </div>
+    <div>
+      <label for="install-chart">Sessions over time</label>
+      <iframe id="session-chart" src="/session-chart.html" style="width: 100%"></iframe>
+    </div>
+  </body>
+</html>

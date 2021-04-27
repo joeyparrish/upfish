@@ -24,6 +24,7 @@ const crx = require('gulp-crx-pack');
 const del = require('del');
 const eslint = require('gulp-eslint');
 const fs = require('fs');
+const path = require('path');
 const rename = require('gulp-rename');
 const {rollup} = require('rollup');
 const svg2img = require('svg2img');
@@ -87,6 +88,7 @@ function copyExtensionFiles() {
   return gulp.src([
     'src/lib/karaoke-worklet.js',
     'extension/*',
+    '!extension/token.js',
     'README.md',
     'LICENSE.md',
   ])
@@ -103,6 +105,29 @@ function copyConfigs() {
     'configs/*',
   ])
   .pipe(gulp.dest('dist/configs/'));
+}
+
+/**
+ * Generate the token file, which contains the access token for our analytics.
+ * Not actual security, but prevents casual or accidental spam.
+ *
+ * @return {!Stream}
+ */
+function generateTokenFile() {
+  return gulp.src([
+    'extension/token.js',
+  ])
+  .pipe(transform('utf8', (content, file) => {
+    const EXPECTED_TOKEN = process.env.EXPECTED_TOKEN;
+    if (EXPECTED_TOKEN) {
+      // Official builds.
+      return `// Please be kind.\nexport default '${EXPECTED_TOKEN}';\n`;
+    } else {
+      // For local use as an unpacked extension.
+      return content;
+    }
+  }))
+  .pipe(gulp.dest('dist/'));
 }
 
 /**
@@ -171,12 +196,21 @@ function generateActivePng() {
 /**
  * Package the Chrome extension into a crx file.
  *
- * Expects "privkey.pem" to contain your private key, to sign the extension.
- * For obvious reasons, we don't put that in the repo.
+ * Expects "privkey.pem" to contain your private key, to sign the extension,
+ * and "EXPECTED_TOKEN" in an environment variable, to prevent casual spam in
+ * the analytics.
  *
- * @return {!Stream}
+ * For obvious reasons, we don't put those things in the repo.
+ *
+ * @return {!Stream|!Promise}
  */
 function packageExtension() {
+  const privKeyPath = path.join(__dirname, 'privkey.pem');
+  if (!process.env.EXPECTED_TOKEN || !fs.existsSync(privKeyPath)) {
+    // These are required for the official package.
+    return Promise.resolve();
+  }
+
   return gulp.src([
     'dist/',
   ])
@@ -202,6 +236,7 @@ const build = exports.build = gulp.series(
         bundleUpFish,
         copyExtensionFiles,
         copyConfigs,
+        generateTokenFile,
         generatePng,
         generateActivePng));
 

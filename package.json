@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "build": "gulp build",
+    "start": "node session-counter/index.js",
     "lint": "gulp lint"
   },
   "devDependencies": {
@@ -15,5 +16,9 @@
     "gulp-transform": "^3.0.5",
     "rollup": "^2.41.4",
     "svg2img": "^0.9.1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "promise-mysql": "^5.0.3"
   }
 }

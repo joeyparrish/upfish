@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import EXPECTED_TOKEN from './token.js';
 
 (() => {
-  const onResponse = (response) => {
+  const onStatusResponse = (response) => {
     // Response may come back null if the content script isn't loaded in a
     // certain tab.
     const active = response && response.active;
@@ -33,7 +34,7 @@
   chrome.tabs.onActivated.addListener((activeInfo) => {
     chrome.tabs.sendMessage(activeInfo.tabId, {
       type: 'UpFishStatus',
-    }, /* options */ null, onResponse);
+    }, /* options */ null, onStatusResponse);
   });
 
   // Also update when the active window changes.
@@ -51,6 +52,21 @@
 
     chrome.tabs.sendMessage(tab.id, {
       type: 'UpFishStatus',
-    }, /* options */ null, onResponse);
+    }, /* options */ null, onStatusResponse);
   });
+
+  if (EXPECTED_TOKEN) {
+    // When the extension is first installed or updated, log this event to
+    // analytics.
+    chrome.runtime.onInstalled.addListener(async (details) => {
+      const reason = details.reason;
+      if (reason == 'install' || reason == 'update') {
+        await fetch('https://upfish-session-counter.herokuapp.com/install-counter', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({token: EXPECTED_TOKEN}),
+        });
+      }
+    });
+  }
 })();

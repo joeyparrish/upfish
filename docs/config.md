@@ -1,13 +1,13 @@
-# Config Files
+# UpFish Config Files
 
 
 ## Features
 
  - JSON config format
  - Supports stereo and 5.1 surround inputs
- - Karaoke filter used for stereo inputs
- - Adjust gain per channel, and over time
- - Mix in extra inputs
+ - Karaoke filter for stereo inputs
+ - Adjustable gain per channel, and over time
+ - Mix in extra inputs synchronized to the original movie
 
 
 ## Overview
@@ -48,7 +48,7 @@ Example:
 
 ```json
 {
-  "surround": {
+  "stereo": {
     "inputGain": {
       "default": 0.2,
       "map": [
@@ -65,7 +65,7 @@ Example:
           "value": [0, 0.2]
         },
         {
-          "comment": "Turn the right channel back to full here.",
+          "comment": "Turn the right channel to full, but not the left.",
           "start": 211.2,
           "end": 216.6,
           "value": [0.2, 1]
@@ -84,15 +84,19 @@ Example:
 The input splits and goes two ways: one path goes through the karaoke filter,
 and one goes around it.  Each of these paths has independent gain adjustments,
 with the non-karaoke gain defaulting to 0.  You can switch back to the original
-audio at any time by setting the karaoke gain to zero and increasing the
-non-karaoke gain.
+audio at any time by setting the karaoke gain to 0 and setting the non-karaoke
+gain to 1.
+
+You can also adjust the apparent strength of the karaoke filter by mixing the
+two.  For example, you could set the karaoke gain to 0.8 and the non-karaoke
+gain to 0.2 to _mostly_ remove the vocals in the center.
 
 Stereo settings:
 
 |setting       |default|
 |--------------|-------|
-|karaokeGain   |      1|
-|nonKaraokeGain|      0|
+|karaokeGain   |1      |
+|nonKaraokeGain|0      |
 
 Stereo channel order: left, right
 
@@ -117,27 +121,28 @@ side-left, side-right.
 
 ## Extra Inputs
 
-To mix in extra inputs, add an `"extraInputs"` field, which is an array of
-input descriptors.  Each input descriptor has an audio file URL (`"url"` field),
-a gain setting (`"inputGain"` field), and an array mapping input channels to
-output channels (`"mix"` field).  By default, extra inputs are mixed into the
-center channel in surround mode, or the left and right channels in stereo mode.
+To mix in extra inputs, add an `"extraInputs"` field inside `"stereo"` or
+`"surround"` or both.  `"extraInputs"` is an array of input descriptors.  Each
+input descriptor has an audio file URL (`"url"` field), a gain setting
+(`"inputGain"` field), and an array mapping input channels to output channels
+(`"mix"` field).  By default, extra inputs are mixed into the center channel in
+surround mode, or the left and right channels in stereo mode.
 
 Extra input settings:
 
 |setting  |default                |
 |---------|-----------------------|
 |url      |(required - no default)|
-|inputGain|                      1|
+|inputGain|1                      |
 |mix      |[0, 1] in stereo mode  |
 |mix      |[2, 2] in surround mode|
 
 
 ## Other notes
 
-Changing gain values in particular places allows "ducking" to silence voices
-that are not removed by the karaoke filter, or as an alternative to the karaoke
-filter.  See also https://en.wikipedia.org/wiki/Ducking
+Changing gain values at particular times in the movie allows "ducking" to
+silence voices that are not removed by the karaoke filter, or as an alternative
+to the karaoke filter.  See also https://en.wikipedia.org/wiki/Ducking
 
 
 ## Example Config
@@ -175,6 +180,18 @@ This is a verbose example config with every field demonstrated.
   "stereo": {
     "karaokeGain": {
       "default": 0.1
+      "map": [
+        {
+          "start": 123.4,
+          "end": 127.9,
+          "value": 0.05,
+        },
+        {
+          "start": 867.5309,
+          "end": 1800.6492568,
+          "value": 0,
+        }
+      ],
     },
     "nonKaraokeGain": {
       "default": 0
@@ -191,3 +208,28 @@ This is a verbose example config with every field demonstrated.
   }
 }
 ```
+
+
+## Adding a Custom Config to UpFish
+
+Your custom config file should be hosted somewhere on the web.
+
+For development purposes while you are writing and testing your config, a local
+web server is a good place to start.  You can even use something like
+`npx http-server` to quickly start a temporary node-based server on `localhost`
+without installing anything.
+
+To share your config with others, you will need to host it (and any extra audio
+inputs) on an accessible public web server.  You can host static content easily
+on the cloud storage provider of your choice, or even on
+[GitHub Pages](https://pages.github.com/).
+
+To add a custom config to UpFish, open the extension and click the "Add" button.
+![The "add" button](custom-add.png)
+
+Next, fill in a name and the URL of the config file (from your local web server
+or from a more permanent location), then click "Save".
+![The "edit" dialog](custom-edit.png)
+
+Your custom config will now show up in the list of configs.
+![The "selection" dialog](custom-select.png)

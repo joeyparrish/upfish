@@ -146,3 +146,32 @@ body {
   box-sizing: border-box;
   width: 100%;
 }
+
+/* Add some vertical space around the edit view sections. */
+#editView div {
+  margin: 1em 0;
+}
+
+/* Make round inline buttons on custom configs. */
+.button-container button {
+  width: 1.8em;
+  height: 1.8em;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  border: 1px solid black;
+  background: white;
+}
+
+/* Change the button background color on hover. */
+.button-container button:hover {
+  background: lightgray;
+}
+
+/* Size the images inside the inline buttons and center them. */
+.button-container button img {
+  width: 1.2em;
+  height: 1.2em;
+  display: block;
+  margin: auto;
+}

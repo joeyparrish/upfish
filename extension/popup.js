@@ -171,20 +171,28 @@ function createNewOptionElement(config) {
     div.appendChild(container);
 
     const edit = document.createElement('button');
-    edit.textContent = 'edit';
     container.appendChild(edit);
     edit.addEventListener('click', (e) => {
       e.stopPropagation(); // Don't let the div beneath handle this.
       openEditor(config);
     });
 
+    const editIcon = document.createElement('img');
+    editIcon.src = 'edit.svg';
+    editIcon.alt = 'edit';
+    edit.appendChild(editIcon);
+
     const remove = document.createElement('button');
-    remove.textContent = 'remove';
     container.appendChild(remove);
     remove.addEventListener('click', async (e) => {
       e.stopPropagation(); // Don't let the div beneath handle this.
       await deleteOption(config, div);
     });
+
+    const removeIcon = document.createElement('img');
+    removeIcon.src = 'remove.svg';
+    removeIcon.alt = 'remove';
+    remove.appendChild(removeIcon);
   }
 
   div.addEventListener('mouseover', () => {

@@ -20,8 +20,6 @@
 import DEFAULT_CONFIGS from './default-configs.js';
 import EXPECTED_TOKEN from './token.js';
 
-// TODO: reorganize
-
 /**
  * The current configs for UpFish.
  *

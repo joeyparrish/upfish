@@ -49,6 +49,11 @@ export class Gain {
     return this.dynamicValues.values;
   }
 
+  /** @params {!Array<number>} values */
+  set values(values) {
+    this.dynamicValues.setParams(values);
+  }
+
   /** @return {string} */
   toString() {
     return this.dynamicValues.toString();

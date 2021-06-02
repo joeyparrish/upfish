@@ -25,8 +25,12 @@ export class Source {
   /**
    * @param {!AudioContext} context
    * @param {!HTMLMediaElement} mediaElement
+   * @param {boolean} forceSurround If true, force the source element to be
+   *   treated as 6-channel input.  If the media is 6-channel, but the device
+   *   only has 2 output channels, this flag is needed to keep the browser from
+   *   down-mixing content before we process it.
    */
-  constructor(context, mediaElement) {
+  constructor(context, mediaElement, forceSurround) {
     // Once a MediaElementSourceNode is created for the media element, you
     // can't make another one.  So cache and reuse the source node.
     if (!mediaElement.upfishSource) {
@@ -35,6 +39,11 @@ export class Source {
     }
 
     this.source = mediaElement.upfishSource;
+
+    if (forceSurround) {
+      this.source.channelCountMode = 'explicit';
+      this.source.channelCount = 6;
+    }
 
     // In case this was cached and previously connected to the output,
     // disconnect it now.  This occurs when we shut down UpFish, because

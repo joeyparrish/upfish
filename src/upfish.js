@@ -39,9 +39,10 @@ export default class UpFish {
   /**
    * @param {!HTMLMediaElement} mediaElement
    * @param {UpFishConfig} config
-   * @param {number} configId
+   * @param {number=} configId
+   * @param {boolean=} forceSurround
    */
-  constructor(mediaElement, config, configId) {
+  constructor(mediaElement, config, configId, forceSurround=false) {
     /** @type {!HTMLMediaElement} mediaElement */
     this.mediaElement = mediaElement;
 
@@ -71,7 +72,7 @@ export default class UpFish {
 
     this.listeners = [];
 
-    this.source = new Source(this.context, mediaElement);
+    this.source = new Source(this.context, mediaElement, forceSurround);
     this.output = new Output(this.context);
     this.channels = this.source.channelCount;
 
@@ -224,7 +225,7 @@ export default class UpFish {
       element.crossOrigin = 'anonymous';
       element.currentTime = this.mediaElement.currentTime;
 
-      const source = new Source(this.context, element);
+      const source = new Source(this.context, element, /* forceSurround */ false);
       const splitter = new Splitter(this.context, this.channels);
       source.connect(splitter);
 

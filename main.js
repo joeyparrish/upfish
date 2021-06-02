@@ -30,6 +30,7 @@ async function main() {
   const video = document.getElementById('video');
   const timeDebug = document.getElementById('timeDebug');
   const gainDebug = document.getElementById('gainDebug');
+  const gainChange = document.getElementById('gainChange');
   const speedDebug = document.getElementById('speedDebug');
   const playbackRateControl = document.getElementById('playbackRateControl');
 
@@ -47,6 +48,9 @@ async function main() {
       // Round to 6 decimal places.
       gainDebug.textContent = activeGainNode.values.map(
           (x) => Math.round(x * 1e6) / 1e6).join(' , ');
+      activeGainNode.values.forEach((value, i) => {
+        gainChange.children[i].valueAsNumber = value;
+      });
     }
 
     // Show the speed used to keep the extra audio in sync.
@@ -61,24 +65,55 @@ async function main() {
     video.playbackRate = playbackRateControl.selectedOptions[0].textContent;
   });
 
-  // Fetch the config for Wizard People.
+  // TODO: generalize media src, config, and forceSurround
+  // Fetch the config.
+  console.log('Fetching config...');
   const response = await fetch('configs/WizardPeople.json');
   if (!response.ok) {
     throw new Error('Failed to load JSON config!');
   }
 
-  // Initialize UpFish.
+  console.log('Parsing JSON...');
   const config = await response.json();
-  const upfish = window.upfish = new UpFish(video, config);
+
+  console.log('Setting video src...');
+  video.src = 'media/HP-surround.mp4';
+  video.load();
+
+  // Initialize UpFish.
+  console.log('Initializing UpFish...');
+  const upfish = window.upfish = new UpFish(
+      video, config, /* configId */ null, /* forceSurround */ true);
   await upfish.init();
 
   // Get handles to the nodes we want to observe.
+  console.log(`UpFish running with ${upfish.channels} channels.`);
   if (upfish.channels == 2) {
     activeGainNode = upfish.nodes.karaokeGain;
   } else {
     activeGainNode = upfish.nodes.inputGain;
   }
-  extraAudioElement = upfish.extraAudio[0].element;
+  if (upfish.extraAudio.length) {
+    extraAudioElement = upfish.extraAudio[0].element;
+  }
+
+  for (let i = 0; i < upfish.channels; ++i) {
+    const input = document.createElement('input');
+    input.type = 'range';
+    input.setAttribute('orient', 'vertical');  // Firefox
+    input.style.webkitAppearance = 'slider-vertical';  // Chrome
+    input.style.width = '1em';
+    input.style.height = '3em';
+    input.min = '0';
+    input.max = '1';
+    input.step = '0.5';
+    gainChange.appendChild(input);
+
+    input.oninput = () => {
+      const values = Array.from(gainChange.children).map((slider) => slider.valueAsNumber);
+      activeGainNode.values = values;
+    };
+  }
 }
 
 if (document.readyState == 'loading') {

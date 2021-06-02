@@ -147,7 +147,7 @@ class KaraokeScriptProcessorNode {
    */
   constructor(context) {
     const node = context.createScriptProcessor(
-        2048, // buffersize
+        0, // buffer size (0 means let the browser choose)
         2, // num inputs
         1); // num outputs
 

@@ -49,6 +49,13 @@ async function main() {
       gainDebug.textContent = activeGainNode.values.map(
           (x) => Math.round(x * 1e6) / 1e6).join(' , ');
       activeGainNode.values.forEach((value, i) => {
+        // Don't fight the user for control of this slider!
+        // We use :hover instead of activeElement because active sticks around
+        // after the user stops interacting with it.
+        if (gainChange.children[i] == document.querySelector('input:hover')) {
+          return;
+        }
+
         gainChange.children[i].valueAsNumber = value;
       });
     }
@@ -103,10 +110,10 @@ async function main() {
     input.setAttribute('orient', 'vertical');  // Firefox
     input.style.webkitAppearance = 'slider-vertical';  // Chrome
     input.style.width = '1em';
-    input.style.height = '3em';
+    input.style.height = '5em';
     input.min = '0';
     input.max = '1';
-    input.step = '0.5';
+    input.step = '0.1';
     gainChange.appendChild(input);
 
     input.oninput = () => {

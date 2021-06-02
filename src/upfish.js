@@ -62,7 +62,7 @@ export default class UpFish {
     // contexts.
     if (!mediaElement.upfishContext) {
       mediaElement.upfishContext = new AudioContext({
-        latencyHint: 'interactive',
+        latencyHint: 'balanced',  // less glitchy than 'interactive' somehow
         sampleRate: 48000,
       });
     }

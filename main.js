@@ -27,12 +27,28 @@ import UpFish from './src/upfish.js';
  */
 async function main() {
   // Get handles to static elements from the page.
+  const mediaInput = document.getElementById('mediaInput');
+  const configInput = document.getElementById('configInput');
+  const loadButton = document.getElementById('loadButton');
   const video = document.getElementById('video');
   const timeDebug = document.getElementById('timeDebug');
   const gainDebug = document.getElementById('gainDebug');
   const gainChange = document.getElementById('gainChange');
   const speedDebug = document.getElementById('speedDebug');
   const playbackRateControl = document.getElementById('playbackRateControl');
+
+  const paramStrings = location.search.substr(1).split('&');
+  const params = new Map(paramStrings.map(x => x.split('=')));
+
+  const mediaUrl = params.get('media') || '';
+  const configUrl = params.get('config') || '';
+  mediaInput.value = mediaUrl;
+  configInput.value = configUrl;
+  loadButton.onclick = () => {
+    // Don't use initial values mediaUrl & configUrl.
+    // Read the current state of the input fields.
+    location.href = `?media=${mediaInput.value}&config=${configInput.value}`;
+  };
 
   // These are filled in later from UpFish, and observed in the page's UI.
   let activeGainNode = null;
@@ -72,55 +88,61 @@ async function main() {
     video.playbackRate = playbackRateControl.selectedOptions[0].textContent;
   });
 
-  // TODO: generalize media src, config, and forceSurround
-  // Fetch the config.
-  console.log('Fetching config...');
-  const response = await fetch('configs/WizardPeople.json');
-  if (!response.ok) {
-    throw new Error('Failed to load JSON config!');
+  let config;
+  if (configUrl) {
+    // Fetch the config.
+    console.log('Fetching config...');
+    const response = await fetch(configUrl);
+    if (!response.ok) {
+      throw new Error('Failed to load JSON config!');
+    }
+
+    console.log('Parsing JSON...');
+    config = await response.json();
   }
 
-  console.log('Parsing JSON...');
-  const config = await response.json();
-
-  console.log('Setting video src...');
-  video.src = 'media/HP-surround.mp4';
-  video.load();
-
-  // Initialize UpFish.
-  console.log('Initializing UpFish...');
-  const upfish = window.upfish = new UpFish(
-      video, config, /* configId */ null, /* forceSurround */ true);
-  await upfish.init();
-
-  // Get handles to the nodes we want to observe.
-  console.log(`UpFish running with ${upfish.channels} channels.`);
-  if (upfish.channels == 2) {
-    activeGainNode = upfish.nodes.karaokeGain;
-  } else {
-    activeGainNode = upfish.nodes.inputGain;
-  }
-  if (upfish.extraAudio.length) {
-    extraAudioElement = upfish.extraAudio[0].element;
+  if (mediaUrl) {
+    console.log('Setting video src...');
+    video.src = mediaUrl;
+    video.load();
   }
 
-  for (let i = 0; i < upfish.channels; ++i) {
-    const input = document.createElement('input');
-    input.type = 'range';
-    input.setAttribute('orient', 'vertical');  // Firefox
-    input.style.webkitAppearance = 'slider-vertical';  // Chrome
-    input.style.width = '1em';
-    input.style.height = '5em';
-    input.min = '0';
-    input.max = '1';
-    input.step = '0.1';
-    gainChange.appendChild(input);
+  if (configUrl && mediaUrl) {
+    // Initialize UpFish.
+    console.log('Initializing UpFish...');
+    const upfish = window.upfish = new UpFish(
+        video, config, /* configId */ null, /* forceSurround */ true);
+    await upfish.init();
 
-    input.oninput = () => {
-      const values = Array.from(gainChange.children).map((slider) => slider.valueAsNumber);
-      activeGainNode.values = values;
-    };
-  }
+    // Get handles to the nodes we want to observe.
+    console.log(`UpFish running with ${upfish.channels} channels.`);
+    if (upfish.channels == 2) {
+      activeGainNode = upfish.nodes.karaokeGain;
+    } else {
+      activeGainNode = upfish.nodes.inputGain;
+    }
+    if (upfish.extraAudio.length) {
+      extraAudioElement = upfish.extraAudio[0].element;
+    }
+
+    for (let i = 0; i < upfish.channels; ++i) {
+      const input = document.createElement('input');
+      input.type = 'range';
+      input.setAttribute('orient', 'vertical');  // Firefox
+      input.style.webkitAppearance = 'slider-vertical';  // Chrome
+      input.style.width = '1em';
+      input.style.height = '5em';
+      input.min = '0';
+      input.max = '1';
+      input.step = '0.1';
+      gainChange.appendChild(input);
+
+      input.oninput = () => {
+        const values = Array.from(gainChange.children).map((slider) => slider.valueAsNumber);
+        activeGainNode.values = values;
+      };
+    }
+  }  // if (configUrl && mediaUrl)
 }
 
 if (document.readyState == 'loading') {

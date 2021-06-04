@@ -23,11 +23,28 @@
     <link rel="icon" href="upfish.svg">
   </head>
   <body>
+    <div>
+      <label for="mediaInput">Media URL:</label>
+      <input id="mediaInput" type="text">
+    </div>
+    <div>
+      <label for="configInput">Config URL:</label>
+      <input id="configInput" type="text">
+    </div>
+    <div>
+      <button id="loadButton">Load</button>
+    </div>
     <video id="video" controls autoplay>
       <source type="video/mp4">
     </video>
-    <div>Current media timestamp: <span id="timeDebug"></span></div>
-    <div>Current extra audio speed: <span id="speedDebug"></span></div>
+    <div>
+      <label for="timeDebug">Current media timestamp:</label>
+      <span id="timeDebug"></span>
+    </div>
+    <div>
+      <label for="speedDebug">Current extra audio speed:</label>
+      <span id="speedDebug"></span>
+    </div>
     <div>Change playback rate:
       <select id="playbackRateControl">
         <option>2.0</option>
@@ -37,8 +54,14 @@
         <option>0.25</option>
       </select>
     </div>
-    <div>Current gain: <span id="gainDebug"></span></div>
-    <div style="display: flex;">Change gain: <span id="gainChange"></span></div>
+    <div>
+      <label for="gainDebug">Current gain:</label>
+      <span id="gainDebug"></span>
+    </div>
+    <div style="display: flex;">
+      <label for="gainChange">Change gain:</label>
+      <span id="gainChange"></span>
+    </div>
   </body>
   <script type="module" src="main.js"></script>
 </html>

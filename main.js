@@ -20,6 +20,72 @@
 
 import UpFish from './src/upfish.js';
 
+
+// Handles to static elements from the page.
+let mediaInput = null;
+let configInput = null;
+let loadButton = null;
+let video = null;
+let timeDebug = null;
+let gainDebug = null;
+let gainChange = null;
+let speedDebug = null;
+let playbackRateControl = null;
+
+// These are filled in later from UpFish, and observed in the page's UI.
+let activeGainNode = null;
+let extraAudioElement = null;
+
+
+/**
+ * Update the debug UI in the demo page.
+ */
+function updateDebugUI() {
+  // Show the current time.
+  timeDebug.textContent = video.currentTime;
+
+  // Show the current gain values.
+  if (activeGainNode) {
+    // Round to 6 decimal places.
+    gainDebug.textContent = activeGainNode.values.map(
+        (x) => Math.round(x * 1e6) / 1e6).join(' , ');
+    activeGainNode.values.forEach((value, i) => {
+      // Don't fight the user for control of this slider!
+      // We use :hover instead of activeElement because active sticks around
+      // after the user stops interacting with it.
+      if (gainChange.children[i] == document.querySelector('input:hover')) {
+        return;
+      }
+
+      gainChange.children[i].valueAsNumber = value;
+    });
+  }
+
+  // Show the speed used to keep the extra audio in sync.
+  if (extraAudioElement) {
+    speedDebug.textContent = extraAudioElement.playbackRate;
+  }
+}
+
+
+/**
+ * Create a vertically-styled range input element.
+ * @return {HTMLInputElement}
+ */
+function createVerticalRangeInput() {
+  const input = document.createElement('input');
+  input.type = 'range';
+  input.setAttribute('orient', 'vertical');  // Firefox
+  input.style.webkitAppearance = 'slider-vertical';  // Chrome
+  input.style.width = '1em';
+  input.style.height = '5em';
+  input.min = '0';
+  input.max = '1';
+  input.step = '0.1';
+  return input;
+}
+
+
 /**
  * Initialize the test page.
  *
@@ -27,15 +93,15 @@ import UpFish from './src/upfish.js';
  */
 async function main() {
   // Get handles to static elements from the page.
-  const mediaInput = document.getElementById('mediaInput');
-  const configInput = document.getElementById('configInput');
-  const loadButton = document.getElementById('loadButton');
-  const video = document.getElementById('video');
-  const timeDebug = document.getElementById('timeDebug');
-  const gainDebug = document.getElementById('gainDebug');
-  const gainChange = document.getElementById('gainChange');
-  const speedDebug = document.getElementById('speedDebug');
-  const playbackRateControl = document.getElementById('playbackRateControl');
+  mediaInput = document.getElementById('mediaInput');
+  configInput = document.getElementById('configInput');
+  loadButton = document.getElementById('loadButton');
+  video = document.getElementById('video');
+  timeDebug = document.getElementById('timeDebug');
+  gainDebug = document.getElementById('gainDebug');
+  gainChange = document.getElementById('gainChange');
+  speedDebug = document.getElementById('speedDebug');
+  playbackRateControl = document.getElementById('playbackRateControl');
 
   const paramStrings = location.search.substr(1).split('&');
   const params = new Map(paramStrings.map(x => x.split('=')));
@@ -50,37 +116,8 @@ async function main() {
     location.href = `?media=${mediaInput.value}&config=${configInput.value}`;
   };
 
-  // These are filled in later from UpFish, and observed in the page's UI.
-  let activeGainNode = null;
-  let extraAudioElement = null;
-
   // Update the page UI every time the video element's time updates.
-  video.addEventListener('timeupdate', () => {
-    // Show the current time.
-    timeDebug.textContent = video.currentTime;
-
-    // Show the current gain values.
-    if (activeGainNode) {
-      // Round to 6 decimal places.
-      gainDebug.textContent = activeGainNode.values.map(
-          (x) => Math.round(x * 1e6) / 1e6).join(' , ');
-      activeGainNode.values.forEach((value, i) => {
-        // Don't fight the user for control of this slider!
-        // We use :hover instead of activeElement because active sticks around
-        // after the user stops interacting with it.
-        if (gainChange.children[i] == document.querySelector('input:hover')) {
-          return;
-        }
-
-        gainChange.children[i].valueAsNumber = value;
-      });
-    }
-
-    // Show the speed used to keep the extra audio in sync.
-    if (extraAudioElement) {
-      speedDebug.textContent = extraAudioElement.playbackRate;
-    }
-  });
+  video.addEventListener('timeupdate', updateDebugUI);
 
   // When the user changes the playback rate in the UI, make an adjustment to
   // the main video's playback rate.
@@ -126,17 +163,8 @@ async function main() {
     }
 
     for (let i = 0; i < upfish.channels; ++i) {
-      const input = document.createElement('input');
-      input.type = 'range';
-      input.setAttribute('orient', 'vertical');  // Firefox
-      input.style.webkitAppearance = 'slider-vertical';  // Chrome
-      input.style.width = '1em';
-      input.style.height = '5em';
-      input.min = '0';
-      input.max = '1';
-      input.step = '0.1';
+      const input = createVerticalRangeInput();
       gainChange.appendChild(input);
-
       input.oninput = () => {
         const values = Array.from(gainChange.children).map((slider) => slider.valueAsNumber);
         activeGainNode.values = values;

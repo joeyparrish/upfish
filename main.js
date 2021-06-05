@@ -23,7 +23,9 @@ import UpFish from './src/upfish.js';
 
 // Handles to static elements from the page.
 let mediaInput = null;
+let mediaInputError = null;
 let configInput = null;
+let configInputError = null;
 let loadButton = null;
 let video = null;
 let timeDebug = null;
@@ -94,7 +96,9 @@ function createVerticalRangeInput() {
 async function main() {
   // Get handles to static elements from the page.
   mediaInput = document.getElementById('mediaInput');
+  mediaInputError = document.getElementById('mediaInputError');
   configInput = document.getElementById('configInput');
+  configInputError = document.getElementById('configInputError');
   loadButton = document.getElementById('loadButton');
   video = document.getElementById('video');
   timeDebug = document.getElementById('timeDebug');
@@ -131,6 +135,7 @@ async function main() {
     console.log('Fetching config...');
     const response = await fetch(configUrl);
     if (!response.ok) {
+      configInputError.textContent = 'Failed to load JSON config!';
       throw new Error('Failed to load JSON config!');
     }
 
@@ -140,6 +145,9 @@ async function main() {
 
   if (mediaUrl) {
     console.log('Setting video src...');
+    video.onerror = () => {
+      mediaInputError.textContent = video.error.message;
+    };
     video.src = mediaUrl;
     video.load();
   }

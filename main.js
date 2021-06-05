@@ -24,6 +24,7 @@ import UpFish from './src/upfish.js';
 // Handles to static elements from the page.
 let mediaInput = null;
 let mediaInputError = null;
+let forceSurroundInput = null;
 let configInput = null;
 let configInputError = null;
 let loadButton = null;
@@ -97,6 +98,7 @@ async function main() {
   // Get handles to static elements from the page.
   mediaInput = document.getElementById('mediaInput');
   mediaInputError = document.getElementById('mediaInputError');
+  forceSurroundInput = document.getElementById('forceSurroundInput');
   configInput = document.getElementById('configInput');
   configInputError = document.getElementById('configInputError');
   loadButton = document.getElementById('loadButton');
@@ -112,12 +114,14 @@ async function main() {
 
   const mediaUrl = params.get('media') || '';
   const configUrl = params.get('config') || '';
+  const forceSurround = params.get('surround') == 'true';
   mediaInput.value = mediaUrl;
+  forceSurroundInput.checked = forceSurround;
   configInput.value = configUrl;
   loadButton.onclick = () => {
     // Don't use initial values mediaUrl & configUrl.
     // Read the current state of the input fields.
-    location.href = `?media=${mediaInput.value}&config=${configInput.value}`;
+    location.href = `?media=${mediaInput.value}&config=${configInput.value}&surround=${forceSurroundInput.checked}`;
   };
 
   // Update the page UI every time the video element's time updates.
@@ -156,7 +160,7 @@ async function main() {
     // Initialize UpFish.
     console.log('Initializing UpFish...');
     const upfish = window.upfish = new UpFish(
-        video, config, /* configId */ null, /* forceSurround */ true);
+        video, config, /* configId */ null, forceSurround);
     await upfish.init();
 
     // Get handles to the nodes we want to observe.
@@ -180,6 +184,7 @@ async function main() {
     }
   }  // if (configUrl && mediaUrl)
 }
+
 
 if (document.readyState == 'loading') {
   // If the page is not done loading, wait.

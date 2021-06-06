@@ -38,12 +38,16 @@ const DEFAULT_CONFIGS = [
   },
   {
     id: 2,
-    // TODO: Finalize and check in Wizard People config
-    url: 'configs/WizardPeople.json',
-    name: 'Wizard People',
+    url: 'configs/WizardPeople-v2.json',
+    name: 'Wizard People, Dear Reader (2005, v2)',
     editable: false,
   },
-  // TODO: We need the more recent version of Wizard People, too
+  {
+    id: 3,
+    url: 'configs/WizardPeople-v1.json',
+    name: 'Wizard People, Dear Reader (2004, v1)',
+    editable: false,
+  },
   // TODO: We need at least two movies up in here
 ];
 

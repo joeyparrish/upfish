@@ -1,0 +1,208 @@
+{
+  "stereo": {
+    "karaokeGain": {
+      "default": "0.5",
+      "comment": "The map below is to deal with many instances of off-center voices or digital noise created by the karaoke filter.",
+      "map": [
+        {
+          "start": 144,
+          "end": 156,
+          "value": 0.2,
+          "comment": "Willikers!  Hagar is off-center!"
+        },
+        {
+          "start": 589,
+          "end": 593,
+          "value": 0.2,
+          "comment": "Sweet mustache!  Uncle Salt-Porker is off-center during the bird wars."
+        },
+        {
+          "start": 738,
+          "end": 745,
+          "value": 0,
+          "comment": "Yuckers!  The crashing waves sound terrible."
+        },
+        {
+          "start": 774,
+          "end": 826,
+          "value": 0.2,
+          "comment": "Kabloomers!  Hagar crashing the beach party had too much digital noise in the loud bassy sounds."
+        },
+        {
+          "start": 1170,
+          "end": 1290,
+          "value": 0.3,
+          "comment": "Holy balls!  The music here is just too loud in Calgon Alley."
+        },
+        {
+          "start": 1595,
+          "end": 1599,
+          "value": 0.1,
+          "comment": "Jeepers!  The breaking glass has lots of digital noise in it, too."
+        },
+        {
+          "start": 3745,
+          "end": 3747,
+          "value": 0,
+          "comment": "Well, bless my nippers!  Dazzler is off-center here."
+        },
+        {
+          "start": 3770,
+          "end": 3778,
+          "value": 0.1,
+          "comment": "Blammo!  Karaoke filter on the dog creates some weird noise."
+        },
+        {
+          "start": 5369,
+          "end": 5387,
+          "value": 0,
+          "comment": "Crumbs and carrots!  Dazzler's off-center voice yet again."
+        },
+        {
+          "start": 6023,
+          "end": 6025,
+          "value": 0.1,
+          "comment": "What is this, a digital noise free-for-all?  The hatching egg hurts my ears."
+        },
+        {
+          "start": 6972,
+          "end": 7069,
+          "value": 0.1,
+          "comment": "Dog and root noises are weird."
+        },
+        {
+          "start": 7171,
+          "end": 7228,
+          "value": 0.05,
+          "comment": "More weird noises from the keys."
+        },
+        {
+          "start": 7810,
+          "end": 7864,
+          "value": 0.1,
+          "comment": "We don't need to hear Valmart's actual speech."
+        },
+        {
+          "start": 7864,
+          "end": 8038,
+          "value": 0.3,
+          "comment": "The dracula-fight music is too intense.  Willikers!"
+        }
+      ]
+    },
+    "extraInputs": [
+      {
+        "url": "https://storage.googleapis.com/upfish/wizard-people/WizardPeople-v2-volume-corrected-mono.mp4"
+      }
+    ]
+  },
+  "surround": {
+    "comment": "The surround sound version is significantly simpler to modify.  Voices are almost always in the center channel, so there are very few overrides up until Val-mart's speech at the end.  Even with two output channels and crappy downmixing, you will have a much better experience.  The karaoke filter on stereo inputs is just not as good as having separate channels.  Good luck finding a streaming service that will serve you the surround sound version, though.",
+    "inputGain": {
+      "default": [0.5, 0.5, 0, 1, 0.5, 0.5],
+      "map": [
+        {
+          "start": 80,
+          "end": 233,
+          "value": [0, 0, 0, 1, 0.5, 0.5],
+          "comment": "Willikers!  Voices are not in the center channel in this scene."
+        },
+        {
+          "start": 2828.8,
+          "end": 2876,
+          "value": [0.5, 0.5, 0, 1, 0, 0],
+          "comment": "Jeepers!  Ghost voices are in the side channels."
+        },
+        {
+          "start": 3311.4,
+          "end": 3314.2,
+          "value": [0, 0, 0, 1, 0.5, 0.5],
+          "comment": "Holy balls!  The kids all answer Catface Meowmers in the front channels."
+        },
+        {
+          "start": 3978.4,
+          "end": 4024.1,
+          "value": [0, 0, 0, 1, 0.5, 0.5],
+          "comment": "Sweet mustache!  The kids all answer Ugnaught in the front channels, too!"
+        },
+        {
+          "start": 4127,
+          "end": 4132.2,
+          "value": [0.5, 0.5, 0, 1, 0, 0],
+          "comment": "Kabloomers!  Dumbledore lets out a mighty roar in the side channels."
+        },
+        {
+          "start": 4587,
+          "end": 5034.4,
+          "value": [0.3, 0.3, 0, 1, 0, 0],
+          "comment": "Crumbs and carrots!  The announcer at the cribbage match is in both front and side channels.  It seems to be most tolerable to remove the side channels, so that we get more of the music and zooming effects from broomstickers."
+        },
+        {
+          "start": 5207,
+          "end": 5212.5,
+          "value": [0, 0, 0, 1, 0.5, 0.5],
+          "comment": "Well, bless my nippers!  Ron is yelling off-center on Christmas morning."
+        },
+        {
+          "start": 5365,
+          "end": 5369.8,
+          "value": [0.1, 0.1, 0, 1, 0.5, 0.5],
+          "comment": "Blam!  That crazy face monster is really loud in the front channels!"
+        },
+        {
+          "start": 5853.5,
+          "end": 5863,
+          "value": [0.1, 0.1, 0, 1, 0.5, 0.5],
+          "comment": "Wa-oosh!  The wretched Harmony sweeps in with a knowledge bomb in the front channels."
+        },
+        {
+          "start": 7728,
+          "end": 7731,
+          "value": [0, 0, 0, 1, 0.5, 0.5],
+          "comment": "Yuckers!  Cut out Val-mart's creepy ghost talk."
+        },
+        {
+          "start": 7785,
+          "end": 7817,
+          "value": [0, 0, 0, 1, 0.3, 0.3],
+          "comment": "Yuckers!  More Val-mart."
+        },
+        {
+          "start": 7817,
+          "end": 7935,
+          "value": [0, 0, 0, 1, 0.1, 0.1],
+          "comment": "Yuckers!  More Val-mart, in more channels."
+        },
+        {
+          "start": 7935,
+          "end": 7960,
+          "value": [0, 0, 0, 1, 0.3, 0.3],
+          "comment": "Yuckers!  More Val-mart."
+        },
+        {
+          "start": 7960,
+          "end": 7963,
+          "value": [0, 0, 0, 1, 0.1, 0.1],
+          "comment": "Yuckers!  More Val-mart, in more channels."
+        },
+        {
+          "start": 7963,
+          "end": 8035,
+          "value": [0, 0, 0, 1, 0.3, 0.3],
+          "comment": "Yuckers!  More Val-mart."
+        },
+        {
+          "start": 8333,
+          "end": 8334.5,
+          "value": [0, 0.5, 0, 1, 0.3, 0.3],
+          "comment": "Dumbledore announces Slytherin in the front-left channel."
+        }
+      ]
+    },
+    "extraInputs": [
+      {
+        "url": "https://storage.googleapis.com/upfish/wizard-people/WizardPeople-v2-volume-corrected-mono.mp4"
+      }
+    ]
+  }
+}

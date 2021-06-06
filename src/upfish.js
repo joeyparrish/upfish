@@ -226,7 +226,7 @@ export default class UpFish {
       element.currentTime = this.mediaElement.currentTime;
 
       const source = new Source(this.context, element, /* forceSurround */ false);
-      const splitter = new Splitter(this.context, this.channels);
+      const splitter = new Splitter(this.context, source.channelCount);
       source.connect(splitter);
 
       const gain = this.nodes.extraInputGain = new Gain(

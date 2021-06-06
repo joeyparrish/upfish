@@ -62,7 +62,7 @@ export default class UpFish {
     // contexts.
     if (!mediaElement.upfishContext) {
       mediaElement.upfishContext = new AudioContext({
-        latencyHint: 'balanced',  // less glitchy than 'interactive' somehow
+        latencyHint: 'balanced', // less glitchy than 'interactive' somehow
         sampleRate: 48000,
       });
     }
@@ -225,7 +225,8 @@ export default class UpFish {
       element.crossOrigin = 'anonymous';
       element.currentTime = this.mediaElement.currentTime;
 
-      const source = new Source(this.context, element, /* forceSurround */ false);
+      const source = new Source(
+          this.context, element, /* forceSurround */ false);
       const splitter = new Splitter(this.context, source.channelCount);
       source.connect(splitter);
 

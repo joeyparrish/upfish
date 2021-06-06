@@ -78,8 +78,8 @@ function updateDebugUI() {
 function createVerticalRangeInput() {
   const input = document.createElement('input');
   input.type = 'range';
-  input.setAttribute('orient', 'vertical');  // Firefox
-  input.style.webkitAppearance = 'slider-vertical';  // Chrome
+  input.setAttribute('orient', 'vertical'); // Firefox
+  input.style.webkitAppearance = 'slider-vertical'; // Chrome
   input.style.width = '1em';
   input.style.height = '5em';
   input.min = '0';
@@ -110,7 +110,7 @@ async function main() {
   playbackRateControl = document.getElementById('playbackRateControl');
 
   const paramStrings = location.search.substr(1).split('&');
-  const params = new Map(paramStrings.map(x => x.split('=')));
+  const params = new Map(paramStrings.map((x) => x.split('=')));
 
   const mediaUrl = params.get('media') || '';
   const configUrl = params.get('config') || '';
@@ -121,7 +121,9 @@ async function main() {
   loadButton.onclick = () => {
     // Don't use initial values mediaUrl & configUrl.
     // Read the current state of the input fields.
-    location.href = `?media=${mediaInput.value}&config=${configInput.value}&surround=${forceSurroundInput.checked}`;
+    location.href =
+        `?media=${mediaInput.value}&config=${configInput.value}` +
+        `&surround=${forceSurroundInput.checked}`;
   };
 
   // Update the page UI every time the video element's time updates.
@@ -178,11 +180,13 @@ async function main() {
       const input = createVerticalRangeInput();
       gainChange.appendChild(input);
       input.oninput = () => {
-        const values = Array.from(gainChange.children).map((slider) => slider.valueAsNumber);
+        const values =
+            Array.from(gainChange.children)
+                .map((slider) => slider.valueAsNumber);
         activeGainNode.values = values;
       };
     }
-  }  // if (configUrl && mediaUrl)
+  } // if (configUrl && mediaUrl)
 }
 
 

@@ -162,7 +162,7 @@ async function main() {
     // Initialize UpFish.
     console.log('Initializing UpFish...');
     const upfish = window.upfish = new UpFish(
-        video, config, /* configId */ null, forceSurround);
+        video, config, /* configId */ null, forceSurround ? 6 : null);
     await upfish.init();
 
     // Get handles to the nodes we want to observe.

@@ -25,12 +25,14 @@ export class Source {
   /**
    * @param {!AudioContext} context
    * @param {!HTMLMediaElement} mediaElement
-   * @param {boolean} forceSurround If true, force the source element to be
-   *   treated as 6-channel input.  If the media is 6-channel, but the device
-   *   only has 2 output channels, this flag is needed to keep the browser from
-   *   down-mixing content before we process it.
+   * @param {number=} forceChannels If set, force the source element to be
+   *   treated as having a certain number of channels.  Without this, the
+   *   browser may mix all source material into 2 channels before we handle it.
+   *   Use this parameter to avoid down-mixing of surround-sound content into
+   *   stereo, or up-mixing of mono (1-channel) content into stereo with the
+   *   right channel muted.
    */
-  constructor(context, mediaElement, forceSurround) {
+  constructor(context, mediaElement, forceChannels) {
     // Once a MediaElementSourceNode is created for the media element, you
     // can't make another one.  So cache and reuse the source node.
     if (!mediaElement.upfishSource) {
@@ -38,11 +40,11 @@ export class Source {
           context.createMediaElementSource(mediaElement);
     }
 
-    this.source = mediaElement.upfishSource;
+    this.node = mediaElement.upfishSource;
 
-    if (forceSurround) {
-      this.source.channelCountMode = 'explicit';
-      this.source.channelCount = 6;
+    if (forceChannels) {
+      this.node.channelCountMode = 'explicit';
+      this.node.channelCount = forceChannels;
     }
 
     // In case this was cached and previously connected to the output,
@@ -50,7 +52,7 @@ export class Source {
     // instead of destroying a source, we have to directly connect it to the
     // output instead.  It is harmless to disconnect a source that is not
     // connected in the first place.
-    this.source.disconnect();
+    this.node.disconnect();
   }
 
   /**
@@ -61,20 +63,20 @@ export class Source {
       throw new Error(`Invalid source destination ${destination}`);
     }
 
-    this.source.connect(destination.node);
+    this.node.connect(destination.node);
   }
 
   /**
    * Disconnect the underlying WebAudio nodes.
    */
   disconnect() {
-    this.source.disconnect();
+    this.node.disconnect();
   }
 
   /**
    * @type {number}
    */
   get channelCount() {
-    return this.source.channelCount;
+    return this.node.channelCount;
   }
 }

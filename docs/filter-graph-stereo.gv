@@ -27,7 +27,7 @@ digraph {
   gain3 -> merger;
 
   splitter2 [label="split"];
-  extra -> splitter2 [label="stereo"];
+  extra -> splitter2 [label="stereo or mono"];
 
   gain4 [label="gain"];
   gain5 [label="gain"];

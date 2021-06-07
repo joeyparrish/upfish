@@ -41,6 +41,7 @@ const defaultStereoExtraInputConfig = {
     'default': 1.0,
   },
   'mix': [0, 1],
+  'mono': false,
 };
 
 /** @const {UpFishExtraInputConfig} */

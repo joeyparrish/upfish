@@ -22,7 +22,7 @@ digraph {
   splitter -> gain5 [label="side-right"];
 
   splitter2 [label="split"];
-  extra -> splitter2 [label="stereo"];
+  extra -> splitter2 [label="stereo or mono"];
   splitter2 -> gain6 [label="left"];
   splitter2 -> gain7 [label="right"];
 

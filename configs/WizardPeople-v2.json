@@ -92,6 +92,7 @@
     },
     "extraInputs": [
       {
+        "mono": true,
         "url": "https://storage.googleapis.com/upfish/wizard-people/WizardPeople-v2-volume-corrected-mono.mp4"
       }
     ]
@@ -201,6 +202,7 @@
     },
     "extraInputs": [
       {
+        "mono": true,
         "url": "https://storage.googleapis.com/upfish/wizard-people/WizardPeople-v2-volume-corrected-mono.mp4"
       }
     ]

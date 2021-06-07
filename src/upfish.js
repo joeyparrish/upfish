@@ -40,9 +40,9 @@ export default class UpFish {
    * @param {!HTMLMediaElement} mediaElement
    * @param {UpFishConfig} config
    * @param {number=} configId
-   * @param {boolean=} forceSurround
+   * @param {number=} forceChannels
    */
-  constructor(mediaElement, config, configId, forceSurround=false) {
+  constructor(mediaElement, config, configId, forceChannels=null) {
     /** @type {!HTMLMediaElement} mediaElement */
     this.mediaElement = mediaElement;
 
@@ -72,7 +72,7 @@ export default class UpFish {
 
     this.listeners = [];
 
-    this.source = new Source(this.context, mediaElement, forceSurround);
+    this.source = new Source(this.context, mediaElement, forceChannels);
     this.output = new Output(this.context);
     this.channels = this.source.channelCount;
 
@@ -226,13 +226,23 @@ export default class UpFish {
       element.currentTime = this.mediaElement.currentTime;
 
       const source = new Source(
-          this.context, element, /* forceSurround */ false);
-      const splitter = new Splitter(this.context, source.channelCount);
-      source.connect(splitter);
+          this.context, element, /* forceChannels */ input.mono ? 1 : null);
+
+      let splitter;
+      if (input.mono) {
+        splitter = new Duplicate(source);
+      } else {
+        splitter = new Splitter(this.context, source.channelCount);
+        source.connect(splitter);
+      }
 
       const gain = this.nodes.extraInputGain = new Gain(
-          'extraInputGain', source.channelCount, element, this,
-          input.inputGain);
+          'extraInputGain',
+          // For mono inputs, ignore the source channel count, since we are
+          // duplicating the mono input into two channels from here on in the
+          // graph.
+          input.mono ? 2 : source.channelCount,
+          element, this, input.inputGain);
       splitter.connect(gain);
       gain.connect(this.merger, input.mix);
 

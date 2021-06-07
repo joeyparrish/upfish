@@ -124,9 +124,18 @@ side-left, side-right.
 To mix in extra inputs, add an `"extraInputs"` field inside `"stereo"` or
 `"surround"` or both.  `"extraInputs"` is an array of input descriptors.  Each
 input descriptor has an audio file URL (`"url"` field), a gain setting
-(`"inputGain"` field), and an array mapping input channels to output channels
-(`"mix"` field).  By default, extra inputs are mixed into the center channel in
-surround mode, or the left and right channels in stereo mode.
+(`"inputGain"` field), an array mapping input channels to output channels
+(`"mix"` field), and a flag to specify a mono (1-channel) input (`"mono"`
+field).
+
+By default, extra inputs are mixed into the center channel in surround mode, or
+the left and right channels in stereo mode.
+
+Because we can't detect mono inputs programatically, the `"mono"` field must be
+set to `true` for any 1-channel inputs.  When this flag is set, UpFish will
+duplicate the input's contents into both left and right channels in stereo
+mode.  Without this flag, mono inputs will only appear in the left channel of
+stereo content.
 
 Extra input settings:
 
@@ -136,6 +145,7 @@ Extra input settings:
 |inputGain|1                      |
 |mix      |[0, 1] in stereo mode  |
 |mix      |[2, 2] in surround mode|
+|mono     |false                  |
 
 
 ## Other notes
@@ -170,6 +180,7 @@ This is a verbose example config with every field demonstrated.
     "extraInputs": [
       {
         "url": "WizardPeople.mp3",
+        "mono": true,
         "inputGain": {
           "default": 1.0
         },
@@ -199,6 +210,7 @@ This is a verbose example config with every field demonstrated.
     "extraInputs": [
       {
         "url": "WizardPeople.mp3",
+        "mono": true,
         "inputGain": {
           "default": 1.0
         },

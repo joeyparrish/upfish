@@ -265,6 +265,29 @@ export default class UpFish {
       }
     });
 
+    // The main element can be in a "waiting" state while it loads early media,
+    // even though you've hit "play" and the "paused" attribute reads false.
+    // If we don't react to the "waiting" event, we might get the extra audio
+    // out of sync.
+    this.listen(this.mediaElement, 'waiting', () => {
+      for (const extra of this.extraAudio) {
+        extra.element.pause();
+      }
+    });
+
+    // The counterpoint to the "waiting" event above is "canplay", but
+    // "canplay" can also fire when we're in an explicitly-paused state.  So
+    // don't react if we're explicitly paused.
+    this.listen(this.mediaElement, 'canplay', () => {
+      if (this.mediaElement.paused) {
+        return;
+      }
+
+      for (const extra of this.extraAudio) {
+        extra.element.play();
+      }
+    });
+
     this.listen(this.mediaElement, 'seeking', () => {
       for (const extra of this.extraAudio) {
         extra.element.currentTime = this.mediaElement.currentTime;

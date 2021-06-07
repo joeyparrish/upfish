@@ -258,6 +258,13 @@ export default class UpFish {
     this.listen(this.mediaElement, 'seeking', () => {
       for (const extra of this.extraAudio) {
         extra.element.currentTime = this.mediaElement.currentTime;
+
+        // The extra media could be paused because it has ended earlier than
+        // the main content.  In this case, we should sync the paused states,
+        // as well at the time.
+        if (extra.element.paused && !this.mediaElement.paused) {
+          extra.element.play();
+        }
       }
     });
 
@@ -300,6 +307,13 @@ export default class UpFish {
     const diff =
         this.mediaElement.currentTime - extraElement.currentTime;
     const seeking = this.mediaElement.seeking || extraElement.seeking;
+
+    // Exclude positive diffs if the extra element content has ended.
+    // In such a case, we would naturally appear to be "behind", but seeking or
+    // increasing playback rate would not be appropriate.
+    if (diff > 0 && extraElement.ended) {
+      return;
+    }
 
     let playbackRate = 1;
 

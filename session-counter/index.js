@@ -35,6 +35,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('promise-mysql');
+const path = require('path');
 
 const port = process.env.PORT || 5000;
 const dbUrl = new URL(process.env.DATABASE_URL);
@@ -232,6 +233,11 @@ app.use(bodyParser.json());
   app.get('/debug.html', (req, res) => {
     res.set('Content-Type', 'text/html');
     res.sendFile(__dirname + '/debug.html');
+  });
+
+  app.get('/upfish.svg', (req, res) => {
+    res.set('Content-Type', 'image/svg+xml');
+    res.sendFile(path.dirname(__dirname) + '/upfish.svg');
   });
 
   // A nuclear option to wipe the DB.  Used during early development of the

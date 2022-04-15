@@ -41,6 +41,10 @@ to apply during this time range (field `"value"`).  Any time the presentation
 is not in a time range from the override map, the default setting is applied.
 All times are in seconds.
 
+If a gain node has a constant gain that is the same across all channels, a
+single value can be given instead of an object.  This means `"inputGain": 0.5`
+is equivalent to `"inputGain": {"default": 0.5}`.
+
 The end of a time range is excluded from the range, and time ranges **must
 not** overlap.
 

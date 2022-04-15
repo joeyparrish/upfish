@@ -28,9 +28,14 @@ export class DynamicValues {
    * @param {!Array<!AudioParam>} audioParams
    * @param {!HTMLMediaElement} mediaElement
    * @param {!UpFish} upfish
-   * @param {UpFishGainConfig} config
+   * @param {UpFishGainConfig|number} config
    */
   constructor(name, audioParams, mediaElement, upfish, config) {
+    if (typeof config == 'number') {
+      const singleGainValue = config;
+      config = {default: singleGainValue};
+    }
+
     /**
      * @type {string}
      *

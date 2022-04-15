@@ -307,6 +307,12 @@ export default class UpFish {
       }
     });
 
+    this.listen(this.mediaElement, 'volumechange', () => {
+      for (const extra of this.extraAudio) {
+        extra.element.volume = this.mediaElement.volume;
+      }
+    });
+
     this.listen(this.mediaElement, 'timeupdate', () => {
       for (const extra of this.extraAudio) {
         this.syncElements(extra.element);

@@ -382,7 +382,7 @@ export default class UpFish {
     const extraTime = extraElement.currentTime;
     const targetExtraTime = mediaTime - input.offset + input.skip;
 
-    if (targetExtraTime > extraElement.duration) {
+    if (targetExtraTime > (input.duration || extraElement.duration)) {
       // We're past where the end of this element should be.
       return 0;
     }

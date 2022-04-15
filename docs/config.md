@@ -141,11 +141,15 @@ duplicate the input's contents into both left and right channels in stereo
 mode.  Without this flag, mono inputs will only appear in the left channel of
 stereo content.
 
-The `offset` and `skip` fields are used to use subsets of clips and to position
-them in specific places on the main content.  For example, an `offset` of 100
-means that the extra audio will not start playing until the main content
-reaches 1 minute and 40 seconds.  A `skip` of 20 means that the first 20
-seconds of the _extra_ audio will be skipped when it starts playing.
+The `offset` field allows you to place the extra audio at an arbitrary location
+in the main content.  For example, an `offset` of 100 means that the extra
+audio will not start playing until the main content reaches 1 minute and 40
+seconds.
+
+The `skip` and `duration` fields allow you to use a clip of the extra audio.
+A `skip` of 20 means that the first 20 seconds of the extra audio will be
+skipped when it starts playing.  A `duration` setting will override the full
+duration of the clip.  Content beyond that time will not be played.
 
 Extra input settings:
 
@@ -158,6 +162,7 @@ Extra input settings:
 |mono     |false                  |
 |offset   |0                      |
 |skip     |0                      |
+|duration |(duration of url)      |
 
 
 ## Other notes

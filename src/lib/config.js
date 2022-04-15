@@ -42,6 +42,8 @@ const defaultStereoExtraInputConfig = {
   },
   'mix': [0, 1],
   'mono': false,
+  'offset': 0,
+  'skip': 0,
 };
 
 /** @const {UpFishExtraInputConfig} */
@@ -50,6 +52,8 @@ const defaultSurroundExtraInputConfig = {
     'default': 1.0,
   },
   'mix': [2, 2],
+  'offset': 0,
+  'skip': 0,
 };
 
 /**

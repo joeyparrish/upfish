@@ -11,7 +11,7 @@ UpFish is a Chrome extension that allows you to modify the audio of your
 streaming movies.  Out of the box, it offers the following configurations:
 
   - Perform a generic karaoke filter, which removes commonalities between left
-    and right stereo channels, which will usually remove vocals from music
+    and right stereo channels, can remove most vocals from music
   - Turn "[Harry Potter and the Sorcerer's Stone][]" into
     "[Wizard People, Dear Reader][]", in which Harry and friends swear and
     drink a lot

@@ -137,6 +137,12 @@ duplicate the input's contents into both left and right channels in stereo
 mode.  Without this flag, mono inputs will only appear in the left channel of
 stereo content.
 
+The `offset` and `skip` fields are used to use subsets of clips and to position
+them in specific places on the main content.  For example, an `offset` of 100
+means that the extra audio will not start playing until the main content
+reaches 1 minute and 40 seconds.  A `skip` of 20 means that the first 20
+seconds of the _extra_ audio will be skipped when it starts playing.
+
 Extra input settings:
 
 |setting  |default                |
@@ -146,6 +152,8 @@ Extra input settings:
 |mix      |[0, 1] in stereo mode  |
 |mix      |[2, 2] in surround mode|
 |mono     |false                  |
+|offset   |0                      |
+|skip     |0                      |
 
 
 ## Other notes

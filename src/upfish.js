@@ -246,7 +246,10 @@ export default class UpFish {
       splitter.connect(gain);
       gain.connect(this.merger, input.mix);
 
+      this.syncElements(input, element);
+
       this.extraAudio.push({
+        input,
         element,
         source,
         gain,
@@ -290,7 +293,7 @@ export default class UpFish {
 
     this.listen(this.mediaElement, 'seeking', () => {
       for (const extra of this.extraAudio) {
-        extra.element.currentTime = this.mediaElement.currentTime;
+        this.syncElements(extra.input, extra.element);
 
         // The extra media could be paused because it has ended earlier than
         // the main content.  In this case, we should sync the paused states,
@@ -303,7 +306,7 @@ export default class UpFish {
 
     this.listen(this.mediaElement, 'ratechange', () => {
       for (const extra of this.extraAudio) {
-        extra.element.playbackRate = this.mediaElement.playbackRate;
+        this.syncElements(extra.input, extra.element);
       }
     });
 
@@ -315,7 +318,7 @@ export default class UpFish {
 
     this.listen(this.mediaElement, 'timeupdate', () => {
       for (const extra of this.extraAudio) {
-        this.syncElements(extra.element);
+        this.syncElements(extra.input, extra.element);
       }
     });
   }
@@ -340,44 +343,71 @@ export default class UpFish {
    * Will adjust playback rate to keep closely in sync.  If the elements are
    * too far out of sync, the extra audio element will seek instead.
    *
+   * @param {UpFishExtraInputConfig} input
    * @param {!HTMLMediaelement} extraElement
    */
-  syncElements(extraElement) {
-    const diff =
-        this.mediaElement.currentTime - extraElement.currentTime;
-    const seeking = this.mediaElement.seeking || extraElement.seeking;
+  syncElements(input, extraElement) {
+    const playbackRateMultiplier =
+        this.computePlaybackRateMultiplier(input, extraElement);
+    extraElement.playbackRate =
+        this.mediaElement.playbackRate * playbackRateMultiplier;
+  }
 
-    // Exclude positive diffs if the extra element content has ended.
-    // In such a case, we would naturally appear to be "behind", but seeking or
-    // increasing playback rate would not be appropriate.
-    if (diff > 0 && extraElement.ended) {
-      return;
+  /**
+   * Compute the playback rate multiplier for an extra audio element, to sync
+   * it with the main element.  May also initiate a seek on the extra element,
+   * if necessary.
+   *
+   * @param {UpFishExtraInputConfig} input
+   * @param {!HTMLMediaelement} extraElement
+   * @return {number}
+   */
+  computePlaybackRateMultiplier(input, extraElement) {
+    const seeking = this.mediaElement.seeking || extraElement.seeking;
+    const ended = this.mediaElement.ended || extraElement.ended;
+
+    // Pause extra element playback during a seek or if either content has
+    // ended.
+    if (seeking || ended) {
+      return 0;
     }
 
-    let playbackRate = 1;
+    const mediaTime = this.mediaElement.currentTime;
+    if (mediaTime < input.offset) {
+      // Not time to play this element yet.  Cue it up and pause it.
+      extraElement.currentTime = input.skip;
+      return 0;
+    }
 
-    if (diff > 1 && !seeking) {
+    const extraTime = extraElement.currentTime;
+    const targetExtraTime = mediaTime - input.offset + input.skip;
+
+    if (targetExtraTime > extraElement.duration) {
+      // We're past where the end of this element should be.
+      return 0;
+    }
+
+    const diff = targetExtraTime - extraTime;
+    if (diff > 1) {
       // Shouldn't happen, but just in case: seek to sync up again.
       console.warn('Whoops!  Way behind.', diff);
-      extraElement.currentTime = this.mediaElement.currentTime;
-      playbackRate = 1;
+      extraElement.currentTime = targetExtraTime;
+      return 0;
     } else if (diff > 0.2) {
-      playbackRate = 1.02;
+      return 1.02;
     } else if (diff > 0.1) {
-      playbackRate = 1.01;
-    } else if (diff < -1 && !seeking) {
+      return 1.01;
+    } else if (diff < -1) {
       // Shouldn't happen, but just in case: seek to sync up again.
       console.warn('Whoops!  Way ahead.', diff);
-      extraElement.currentTime = this.mediaElement.currentTime;
-      playbackRate = 1;
+      extraElement.currentTime = targetExtraTime;
+      return 0;
     } else if (diff < -0.2) {
-      playbackRate = 0.98;
+      return 0.98;
     } else if (diff < -0.1) {
-      playbackRate = 0.99;
-    } else {
-      playbackRate = 1;
+      return 0.99;
     }
 
-    extraElement.playbackRate = this.mediaElement.playbackRate * playbackRate;
+    return 1;
   }
 }

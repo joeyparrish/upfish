@@ -77,15 +77,24 @@ function normalize(config, defaults) {
  * Normalize an "extraInputs" config array by filling in defaults for any
  * missing keys within the items of the array.
  *
+ * @param {!Object<string, UpFishSoundBankEntry>} soundBank
  * @param {!Array<!Object>} extraInputs
  * @param {UpFishExtraInputConfig} defaults
  */
-function normalizeExtraInputs(extraInputs, defaults) {
+function normalizeExtraInputs(soundBank, extraInputs, defaults) {
   if (!extraInputs) {
     return;
   }
 
   for (const extra of extraInputs) {
+    if (extra.sound) {
+      if (soundBank && soundBank[extra.sound]) {
+        normalize(extra, soundBank[extra.sound]);
+      } else {
+        console.warn(`Unable to locate sound ${extra.sound} in sound bank!`);
+      }
+    }
+
     normalize(extra, defaults);
   }
 }
@@ -107,8 +116,10 @@ export function normalizeConfig(config) {
   normalize(config.stereo, defaultStereoConfig);
   normalize(config.surround, defaultSurroundConfig);
   normalizeExtraInputs(
+      config.stereo.soundBank,
       config.stereo.extraInputs, defaultStereoExtraInputConfig);
   normalizeExtraInputs(
+      config.surround.soundBank,
       config.surround.extraInputs, defaultSurroundExtraInputConfig);
   return config;
 }

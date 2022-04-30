@@ -89,7 +89,14 @@ export class DynamicValues {
     // Normalize the override values.  Single numbers will be converted into an
     // array of values per channel.
     for (const override of this.map) {
+      if (typeof override.value != 'number') {
+        throw new Error(
+          `Missing override "value" in ${this.name}: ` +
+          JSON.stringify(config));
+      }
+
       override.value = this.convertValueToArray(override.value);
+
       if (override.value.length != this.audioParams.length) {
         throw new Error(`Wrong number of values in ${this.name} config map`);
       }

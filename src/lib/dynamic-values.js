@@ -113,15 +113,16 @@ export class DynamicValues {
       // Adding this listener through the UpFish instance means it will be
       // properly cleaned up when UpFish is disabled or has its configuration
       // changed.  Using addEventListener directly could create a memory leak.
-      upfish.listen(this.mediaElement, 'timeupdate', () => {
+      const changeListener = (event) => {
         const time = this.mediaElement.currentTime;
+        const immediate = event.type == 'seeking';
 
         for (let i = 0; i < this.map.length; ++i) {
           const override = this.map[i];
           if (override.start <= time && time < override.end) {
             // We found an override!
             if (this.currentMapIndex != i) {
-              this.setParams(override.value);
+              this.setParams(override.value, immediate);
               this.currentMapIndex = i;
             }
             return;
@@ -132,10 +133,13 @@ export class DynamicValues {
 
         // Fall back to defaults.
         if (this.currentMapIndex != -1) {
-          this.setParams(this.defaults);
+          this.setParams(this.defaults, immediate);
           this.currentMapIndex = -1;
         }
-      });
+      };
+
+      upfish.listen(this.mediaElement, 'timeupdate', changeListener);
+      upfish.listen(this.mediaElement, 'seeking', changeListener);
     } // if (this.map.length)
   }
 
@@ -149,15 +153,19 @@ export class DynamicValues {
     return this.audioParams.map((audioParam) => audioParam.value);
   }
 
-  /** @param {!Array<number>} values */
-  setParams(values) {
+  /**
+   * @param {!Array<number>} values
+   * @param {boolean} immediate
+   */
+  setParams(values, immediate) {
+    const delay = immediate ? 0 : 1;
     for (let i = 0; i < this.audioParams.length; ++i) {
       // Exponentially ramp the desired value.  This sounds better than a
       // linear ramp or a hard switch.
       // Note that 0 is not supported for an exponential ramp, so we replace 0
       // with a very small number instead.
       this.audioParams[i].exponentialRampToValueAtTime(
-          values[i] || 1e-6, this.context.currentTime + 1);
+          values[i] || 1e-6, this.context.currentTime + delay);
     }
   }
 

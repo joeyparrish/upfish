@@ -1,0 +1,855 @@
+{
+  "stereo": {
+    "soundBankComment": "See https://storage.googleapis.com/upfish/fartigo/farts.md for details",
+    "soundBank": {
+      "fly": {
+        "mono": true,
+        "url": "https://storage.googleapis.com/upfish/fartigo/27133__zippi1__fart0.mp4"
+      },
+      "mid-short": {
+        "mono": true,
+        "url": "https://storage.googleapis.com/upfish/fartigo/27134__zippi1__fart1.mp4"
+      },
+      "soft-short": {
+        "mono": true,
+        "url": "https://storage.googleapis.com/upfish/fartigo/27135__zippi1__fart2.mp4"
+      },
+      "soft-long": {
+        "mono": true,
+        "url": "https://storage.googleapis.com/upfish/fartigo/27136__zippi1__fart3.mp4"
+      },
+      "high-short": {
+        "mono": true,
+        "url": "https://storage.googleapis.com/upfish/fartigo/27137__zippi1__fart4.mp4"
+      },
+      "high-long": {
+        "mono": true,
+        "url": "https://storage.googleapis.com/upfish/fartigo/27138__zippi1__fart5.mp4"
+      },
+
+      "hard-short": {
+        "mono": true,
+        "skip": 0.5,
+        "duration": 0.85,
+        "url": "https://storage.googleapis.com/upfish/fartigo/241000__dsisstudios__short-fart-01.mp4"
+      },
+      "buzzy-short": {
+        "mono": true,
+        "skip": 1.09,
+        "duration": 1.65,
+        "url": "https://storage.googleapis.com/upfish/fartigo/117606__mefrancis13__squeaky-fart.mp4"
+      },
+      "forceful-mid": {
+        "mono": true,
+        "url": "https://storage.googleapis.com/upfish/fartigo/553479__samsterbirdies__fart-2.mp4"
+      },
+      "low-short": {
+        "mono": true,
+        "url": "https://storage.googleapis.com/upfish/fartigo/523467__tv-ling__perfect-fart.mp4"
+      },
+
+      "very-long1": {
+        "mono": true,
+        "url": "https://storage.googleapis.com/upfish/fartigo/58836__opposit__longfart1.mp4"
+      },
+      "rising-end": {
+        "mono": true,
+        "skip": 14,
+        "url": "https://storage.googleapis.com/upfish/fartigo/58836__opposit__longfart1.mp4"
+      },
+
+      "very-long2": {
+        "mono": true,
+        "url": "https://storage.googleapis.com/upfish/fartigo/58837__opposit__longfart2.mp4"
+      },
+      "stutter-end": {
+        "mono": true,
+        "skip": 16,
+        "url": "https://storage.googleapis.com/upfish/fartigo/58837__opposit__longfart2.mp4"
+      },
+      "stutter-end-short": {
+        "mono": true,
+        "skip": 17.8,
+        "url": "https://storage.googleapis.com/upfish/fartigo/58837__opposit__longfart2.mp4"
+      }
+    },
+
+    "karaokeGain": 0,
+    "nonKaraokeGain": {
+      "default": 1,
+      "map": [
+        {
+          "start": 3087.7,
+          "end": 3100.5,
+          "value": 0.2,
+          "comment": "The phone is too loud!"
+        }
+      ]
+    },
+
+    "extraInputs": [
+      {
+        "offset": 82,
+        "sound": "rising-end",
+        "inputGain": 0.5
+      },
+      {
+        "offset": 198,
+        "sound": "buzzy-short"
+      },
+
+
+      {
+        "offset": 221,
+        "inputGain": 0.2,
+        "sound": "low-short"
+      },
+      {
+        "offset": 222,
+        "inputGain": 0.3,
+        "sound": "buzzy-short"
+      },
+      {
+        "offset": 222.8,
+        "inputGain": 0.3,
+        "sound": "hard-short"
+      },
+      {
+        "offset": 223.8,
+        "inputGain": 0.3,
+        "sound": "high-short"
+      },
+      {
+        "offset": 263,
+        "inputGain": 0.1,
+        "sound": "low-short"
+      },
+      {
+        "offset": 265,
+        "inputGain": 0.3,
+        "sound": "forceful-mid"
+      },
+      {
+        "offset": 266,
+        "inputGain": 0.3,
+        "sound": "high-short"
+      },
+      {
+        "offset": 268,
+        "inputGain": 0.3,
+        "sound": "stutter-end"
+      },
+      {
+        "offset": 277,
+        "inputGain": 0.3,
+        "sound": "hard-short"
+      },
+      {
+        "offset": 287,
+        "inputGain": 0.3,
+        "sound": "buzzy-short"
+      },
+      {
+        "offset": 296.1,
+        "skip": 16.5,
+        "inputGain": 0.2,
+        "sound": "stutter-end"
+      },
+
+
+      {
+        "offset": 668,
+        "skip": 8,
+        "inputGain": 0.1,
+        "sound": "very-long1"
+      },
+
+
+      {
+        "offset": 762,
+        "inputGain": 0.2,
+        "sound": "high-short"
+      },
+      {
+        "offset": 764.6,
+        "inputGain": 0.2,
+        "sound": "buzzy-short"
+      },
+      {
+        "offset": 778,
+        "inputGain": 0.1,
+        "sound": "forceful-mid"
+      },
+      {
+        "offset": 823,
+        "inputGain": 0.1,
+        "sound": "high-short"
+      },
+      {
+        "offset": 835,
+        "inputGain": 0.3,
+        "sound": "stutter-end-short"
+      },
+      {
+        "offset": 860,
+        "inputGain": 0.1,
+        "sound": "rising-end"
+      },
+      {
+        "offset": 917,
+        "inputGain": 0.1,
+        "sound": "rising-end"
+      },
+      {
+        "offset": 919,
+        "inputGain": 0.1,
+        "sound": "stutter-end-short"
+      },
+      {
+        "offset": 960.5,
+        "inputGain": 0.3,
+        "sound": "soft-long"
+      },
+      {
+        "offset": 984,
+        "inputGain": 0.1,
+        "sound": "rising-end"
+      },
+
+
+      {
+        "offset": 1745.5,
+        "inputGain": 0.20,
+        "sound": "buzzy-short"
+      },
+      {
+        "offset": 1745.9,
+        "inputGain": 0.20,
+        "sound": "mid-short"
+      },
+      {
+        "offset": 1746.3,
+        "inputGain": 0.15,
+        "sound": "buzzy-short"
+      },
+      {
+        "offset": 1746.7,
+        "inputGain": 0.15,
+        "sound": "mid-short"
+      },
+      {
+        "offset": 1747.1,
+        "inputGain": 0.10,
+        "sound": "buzzy-short"
+      },
+      {
+        "offset": 1747.5,
+        "inputGain": 0.10,
+        "sound": "high-short"
+      },
+      {
+        "offset": 1747.9,
+        "inputGain": 0.07,
+        "sound": "soft-short"
+      },
+      {
+        "offset": 1748.3,
+        "inputGain": 0.07,
+        "sound": "high-short"
+      },
+      {
+        "offset": 1748.7,
+        "inputGain": 0.05,
+        "sound": "soft-short"
+      },
+      {
+        "offset": 1749.1,
+        "inputGain": 0.05,
+        "sound": "high-short"
+      },
+      {
+        "offset": 1749.5,
+        "inputGain": 0.05,
+        "sound": "soft-short"
+      },
+      {
+        "offset": 1750.0,
+        "inputGain": 0.05,
+        "sound": "high-short"
+      },
+      {
+        "offset": 1750.8,
+        "inputGain": 0.10,
+        "sound": "forceful-mid"
+      },
+
+
+      {
+        "offset": 1894.1,
+        "inputGain": 0.04,
+        "sound": "buzzy-short"
+      },
+      {
+        "offset": 1894.5,
+        "inputGain": 0.04,
+        "sound": "high-short"
+      },
+      {
+        "offset": 1895.7,
+        "inputGain": 0.08,
+        "sound": "hard-short"
+      },
+      {
+        "offset": 1898,
+        "skip": 14.4,
+        "inputGain": 0.1,
+        "sound": "rising-end"
+      },
+
+
+      {
+        "offset": 2579,
+        "inputGain": 0.5,
+        "sound": "rising-end"
+      },
+      {
+        "offset": 2585.5,
+        "inputGain": 0.5,
+        "sound": "hard-short"
+      },
+      {
+        "offset": 2625,
+        "inputGain": 0.2,
+        "sound": "high-short"
+      },
+      {
+        "offset": 2627.5,
+        "inputGain": 0.2,
+        "sound": "buzzy-short"
+      },
+      {
+        "offset": 2631.6,
+        "skip": 17,
+        "inputGain": 0.1,
+        "sound": "stutter-end"
+      },
+
+
+      {
+        "offset": 2642,
+        "inputGain": 0.1,
+        "sound": "rising-end"
+      },
+      {
+        "offset": 2647,
+        "inputGain": 0.05,
+        "sound": "hard-short"
+      },
+      {
+        "offset": 2802.5,
+        "inputGain": 0.05,
+        "sound": "hard-short"
+      },
+      {
+        "offset": 2865.9,
+        "inputGain": 0.05,
+        "sound": "rising-end"
+      },
+      {
+        "offset": 2940,
+        "inputGain": 0.1,
+        "sound": "high-short"
+      },
+      {
+        "offset": 2942,
+        "skip": 17,
+        "inputGain": 0.05,
+        "sound": "stutter-end"
+      },
+      {
+        "offset": 2945,
+        "inputGain": 0.1,
+        "sound": "rising-end"
+      },
+      {
+        "offset": 2949,
+        "inputGain": 0.05,
+        "sound": "high-short"
+      },
+      {
+        "offset": 2958.3,
+        "inputGain": 0.05,
+        "sound": "forceful-mid"
+      },
+      {
+        "offset": 2971.5,
+        "inputGain": 0.05,
+        "sound": "forceful-mid"
+      },
+      {
+        "offset": 3011,
+        "inputGain": 0.05,
+        "sound": "high-short"
+      },
+      {
+        "offset": 3088,
+        "inputGain": 0.05,
+        "sound": "rising-end"
+      },
+      {
+        "offset": 3088,
+        "skip": 13.5,
+        "inputGain": 0.05,
+        "sound": "stutter-end"
+      },
+
+
+      {
+        "offset": 3383,
+        "skip": 15.5,
+        "inputGain": 0.05,
+        "sound": "stutter-end"
+      },
+      {
+        "offset": 3411,
+        "inputGain": 0.15,
+        "sound": "high-short"
+      },
+
+
+      {
+        "offset": 3613,
+        "inputGain": 0.05,
+        "sound": "high-short"
+      },
+      {
+        "offset": 3671,
+        "inputGain": 0.05,
+        "sound": "forceful-mid"
+      },
+      {
+        "offset": 3673,
+        "skip": 1.05,
+        "inputGain": 0.05,
+        "sound": "buzzy-short"
+      },
+      {
+        "offset": 3674.7,
+        "inputGain": 0.05,
+        "sound": "high-short"
+      },
+      {
+        "offset": 3676,
+        "skip": 15.5,
+        "inputGain": 0.10,
+        "sound": "stutter-end"
+      },
+      {
+        "offset": 3680,
+        "skip": 13.5,
+        "inputGain": 0.10,
+        "sound": "rising-end"
+      },
+      {
+        "offset": 3687.5,
+        "inputGain": 0.15,
+        "sound": "forceful-mid"
+      },
+      {
+        "offset": 3690.7,
+        "inputGain": 0.15,
+        "sound": "soft-long"
+      },
+      {
+        "offset": 3696,
+        "inputGain": 0.15,
+        "sound": "high-short"
+      },
+
+
+      {
+        "offset": 4569,
+        "inputGain": 0.5,
+        "sound": "soft-long"
+      },
+      {
+        "offset": 4579,
+        "inputGain": 0.5,
+        "sound": "high-long"
+      },
+      {
+        "offset": 4582.5,
+        "inputGain": 0.5,
+        "sound": "high-short"
+      },
+
+      {
+        "offset": 4591,
+        "inputGain": 0.3,
+        "sound": "soft-short"
+      },
+      {
+        "offset": 4591.5,
+        "inputGain": 0.3,
+        "sound": "mid-short"
+      },
+      {
+        "offset": 4592,
+        "inputGain": 0.3,
+        "sound": "buzzy-short"
+      },
+      {
+        "offset": 4592.5,
+        "inputGain": 0.2,
+        "sound": "mid-short"
+      },
+      {
+        "offset": 4593,
+        "inputGain": 0.2,
+        "sound": "buzzy-short"
+      },
+      {
+        "offset": 4593.5,
+        "inputGain": 0.1,
+        "sound": "high-short"
+      },
+      {
+        "offset": 4594,
+        "inputGain": 0.1,
+        "sound": "soft-short"
+      },
+      {
+        "offset": 4594.5,
+        "inputGain": 0.05,
+        "sound": "high-short"
+      },
+
+      {
+        "offset": 4610,
+        "inputGain": 0.4,
+        "sound": "high-long"
+      },
+      {
+        "offset": 4622.2,
+        "inputGain": 1.0,
+        "sound": "soft-short"
+      },
+      {
+        "offset": 4629,
+        "duration": 15,
+        "inputGain": {
+          "default": 0.3,
+          "map": [
+            {
+              "start": 11.3,
+              "end": 15,
+              "value": 0.02,
+              "comment": "Cut away to the yard, reduce volume"
+            }
+          ]
+        },
+        "sound": "very-long1"
+      },
+      {
+        "offset": 4644,
+        "inputGain": 0.1,
+        "skip": 14,
+        "sound": "very-long2"
+      },
+
+      {
+        "offset": 4746,
+        "inputGain": 0.1,
+        "sound": "soft-short"
+      },
+      {
+        "offset": 4820,
+        "inputGain": 0.1,
+        "sound": "soft-short"
+      },
+      {
+        "offset": 4827,
+        "inputGain": 0.1,
+        "sound": "soft-long"
+      },
+      {
+        "offset": 4858,
+        "inputGain": 0.1,
+        "sound": "soft-short"
+      },
+      {
+        "offset": 4859,
+        "inputGain": 0.1,
+        "sound": "soft-long"
+      },
+      {
+        "offset": 4868,
+        "inputGain": 0.2,
+        "sound": "soft-long"
+      },
+      {
+        "offset": 4876.6,
+        "inputGain": 0.3,
+        "sound": "soft-short"
+      },
+
+      {
+        "offset": 5048,
+        "inputGain": 0.3,
+        "sound": "soft-short"
+      },
+      {
+        "offset": 5051,
+        "inputGain": 0.3,
+        "sound": "soft-long"
+      },
+      {
+        "offset": 5060,
+        "inputGain": 0.3,
+        "sound": "rising-end"
+      },
+      {
+        "offset": 5122,
+        "inputGain": 0.5,
+        "sound": "stutter-end"
+      },
+
+      {
+        "offset": 5154,
+        "inputGain": 0.1,
+        "sound": "forceful-mid"
+      },
+      {
+        "offset": 5172,
+        "inputGain": 0.3,
+        "sound": "fly"
+      },
+      {
+        "offset": 5198.4,
+        "inputGain": 0.1,
+        "sound": "mid-short"
+      },
+      {
+        "offset": 5200,
+        "inputGain": 0.1,
+        "sound": "high-short"
+      },
+      {
+        "offset": 5217.5,
+        "inputGain": 0.05,
+        "sound": "high-long"
+      },
+      {
+        "offset": 5243,
+        "inputGain": 0.2,
+        "sound": "soft-long"
+      },
+
+      {
+        "offset": 5464,
+        "inputGain": 0.5,
+        "sound": "soft-long"
+      },
+      {
+        "offset": 5481.5,
+        "inputGain": 0.05,
+        "sound": "low-short"
+      },
+      {
+        "offset": 5577,
+        "inputGain": 0.2,
+        "sound": "high-long"
+      },
+      {
+        "offset": 5643.5,
+        "inputGain": 0.05,
+        "sound": "high-short"
+      },
+
+      {
+        "offset": 5694.4,
+        "inputGain": 0.1,
+        "sound": "mid-short"
+      },
+      {
+        "offset": 5697,
+        "inputGain": 0.1,
+        "sound": "soft-short"
+      },
+      {
+        "offset": 5806.5,
+        "inputGain": 0.1,
+        "sound": "soft-long"
+      },
+
+      {
+        "offset": 6163,
+        "inputGain": 0.2,
+        "sound": "soft-long"
+      },
+      {
+        "offset": 6274.2,
+        "inputGain": 0.3,
+        "sound": "soft-long"
+      },
+      {
+        "offset": 6278.4,
+        "inputGain": 0.1,
+        "sound": "rising-end"
+      },
+      {
+        "offset": 6287.2,
+        "inputGain": 0.1,
+        "sound": "high-long"
+      },
+      {
+        "offset": 6320,
+        "inputGain": 0.1,
+        "sound": "stutter-end"
+      },
+
+      {
+        "offset": 6500.5,
+        "inputGain": 0.05,
+        "sound": "forceful-mid"
+      },
+
+      {
+        "offset": 6616.3,
+        "inputGain": 0.1,
+        "sound": "high-long"
+      },
+      {
+        "offset": 6655,
+        "inputGain": 0.1,
+        "sound": "mid-short"
+      },
+      {
+        "offset": 6663.5,
+        "inputGain": 0.05,
+        "sound": "low-short"
+      },
+      {
+        "offset": 6668,
+        "inputGain": 0.05,
+        "sound": "high-short"
+      },
+      {
+        "offset": 6677,
+        "inputGain": 0.05,
+        "sound": "high-long"
+      },
+      {
+        "offset": 6702,
+        "inputGain": 0.05,
+        "sound": "rising-end"
+      },
+
+      {
+        "offset": 6801,
+        "inputGain": 0.05,
+        "sound": "stutter-end"
+      },
+      {
+        "offset": 6806,
+        "inputGain": 0.05,
+        "sound": "rising-end"
+      },
+      {
+        "offset": 6944,
+        "inputGain": 0.5,
+        "sound": "fly"
+      },
+
+      {
+        "offset": 7068,
+        "inputGain": 0.1,
+        "sound": "high-short"
+      },
+      {
+        "offset": 7071.2,
+        "inputGain": 0.05,
+        "sound": "low-short"
+      },
+      {
+        "offset": 7099.9,
+        "inputGain": 0.1,
+        "sound": "mid-short"
+      },
+
+      {
+        "offset": 7210,
+        "inputGain": 0.5,
+        "sound": "soft-long"
+      },
+      {
+        "offset": 7224,
+        "inputGain": 0.5,
+        "sound": "high-long"
+      },
+      {
+        "offset": 7272.5,
+        "inputGain": 0.3,
+        "sound": "soft-short"
+      },
+      {
+        "offset": 7277,
+        "inputGain": 0.1,
+        "sound": "high-short"
+      },
+      {
+        "offset": 7291,
+        "inputGain": 0.3,
+        "sound": "soft-long"
+      },
+      {
+        "offset": 7305,
+        "inputGain": 0.2,
+        "sound": "buzzy-short"
+      },
+      {
+        "offset": 7317.5,
+        "sound": "fly"
+      },
+      {
+        "offset": 7320.7,
+        "inputGain": 0.1,
+        "sound": "forceful-mid"
+      },
+
+      {
+        "offset": 7353.4,
+        "inputGain": 0.1,
+        "sound": "mid-short"
+      },
+      {
+        "offset": 7356.3,
+        "inputGain": 0.2,
+        "sound": "soft-short"
+      },
+
+      {
+        "offset": 7398.5,
+        "inputGain": 0.5,
+        "sound": "high-long"
+      },
+      {
+        "offset": 7415.7,
+        "inputGain": 0.2,
+        "sound": "rising-end"
+      },
+
+      {
+        "offset": 7660,
+        "inputGain": 0.2,
+        "sound": "high-short"
+      },
+
+      {
+        "offset": 7690,
+        "inputGain": 0.3,
+        "sound": "stutter-end"
+      }
+    ]
+  }
+}

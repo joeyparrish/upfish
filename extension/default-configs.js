@@ -48,7 +48,12 @@ const DEFAULT_CONFIGS = [
     name: 'Wizard People, Dear Reader (2004, v1)',
     editable: false,
   },
-  // TODO: We need at least two movies up in here
+  {
+    id: 4,
+    url: 'configs/Faritgo.json',
+    name: 'Fartigo',
+    editable: false,
+  },
 ];
 
 export default DEFAULT_CONFIGS;

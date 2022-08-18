@@ -20,15 +20,13 @@
 
 const gulp = require('gulp');
 
-const crx = require('gulp-crx-pack');
 const del = require('del');
 const eslint = require('gulp-eslint');
-const fs = require('fs');
-const path = require('path');
 const rename = require('gulp-rename');
 const {rollup} = require('rollup');
 const svg2img = require('svg2img');
 const transform = require('gulp-transform');
+const zip = require('gulp-zip');
 
 /**
  * Remove everything that we built.
@@ -194,39 +192,29 @@ function generateActivePng() {
 }
 
 /**
- * Package the Chrome extension into a crx file.
+ * Package the Chrome extension as a zip file.
  *
- * Expects "privkey.pem" to contain your private key, to sign the extension,
- * and "EXPECTED_TOKEN" in an environment variable, to prevent casual spam in
- * the analytics.
+ * Expects "EXPECTED_TOKEN" in an environment variable, to prevent casual spam
+ * in the analytics.
  *
- * For obvious reasons, we don't put those things in the repo.
+ * For obvious reasons, we don't put that in the repo.
  *
- * @return {!Stream|!Promise}
+ * @return {!Stream}
  */
 function packageExtension() {
-  const privKeyPath = path.join(__dirname, 'privkey.pem');
-  if (!process.env.EXPECTED_TOKEN || !fs.existsSync(privKeyPath)) {
-    // These are required for the official package.
-    return Promise.resolve();
-  }
-
-  return gulp.src([
-    'dist/',
-  ])
-  .pipe(crx({
-    // To generate, use "openssl genrsa -out privkey.pem 2048"
-    privateKey: fs.readFileSync('privkey.pem', 'utf8'),
-    filename: 'upfish.crx',
-  }))
-  .pipe(gulp.dest('./'));
+  return gulp.src(['dist/**'])
+      .pipe(rename((path) => {
+        path.dirname = `upfish/${path.dirname}`;
+      }))
+      .pipe(zip('upfish.zip'))
+      .pipe(gulp.dest('./'));
 }
 
 /**
  * The "build" task: clean, then execute all build steps in parallel.
  *
  * Only creates an "unpacked" extension in the "dist/" folder.
- * Does not package the extension as a crx file.
+ * Does not package the extension as a zip file.
  *
  * @type {!TaskFunction}
  */
@@ -241,10 +229,16 @@ const build = exports.build = gulp.series(
         generateActivePng));
 
 /**
- * The "all" task: lint and build in parallel, then package the extension.
+ * By default, lint and build in parallel.
  * @type {!TaskFunction}
  */
-const all = exports.all = gulp.series(
+exports.default = gulp.parallel(lint, build);
+
+/**
+ * The "release" task: lint and build in parallel, then package the extension.
+ * @type {!TaskFunction}
+ */
+exports.release = gulp.series(
     gulp.parallel(lint, build),
     packageExtension);
 
@@ -259,9 +253,3 @@ exports.clean = clean;
  * @type {!TaskFunction}
  */
 exports.lint = lint;
-
-/**
- * By default, run the "all" task.
- * @type {!TaskFunction}
- */
-exports.default = all;

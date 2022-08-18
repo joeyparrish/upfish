@@ -1,5 +1,4 @@
 dist/
 media/
 node_modules/
-upfish.crx
-privkey.pem
+upfish.zip

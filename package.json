@@ -1,19 +1,20 @@
 {
   "private": true,
   "scripts": {
+    "lint": "gulp lint",
     "build": "gulp build",
-    "start": "node session-counter/index.js",
-    "lint": "gulp lint"
+    "release": "gulp release",
+    "start": "node session-counter/index.js"
   },
   "devDependencies": {
     "del": "^6.0.0",
     "eslint": "^7.22.0",
     "eslint-config-google": "^0.14.0",
     "gulp": "^4.0.2",
-    "gulp-crx-pack": "^1.0.2",
     "gulp-eslint": "^6.0.0",
     "gulp-rename": "^2.0.0",
     "gulp-transform": "^3.0.5",
+    "gulp-zip": "^5.1.0",
     "rollup": "^2.41.4",
     "svg2img": "^0.9.1"
   },

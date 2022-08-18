@@ -91,8 +91,8 @@ export class DynamicValues {
     for (const override of this.map) {
       if (typeof override.value != 'number') {
         throw new Error(
-          `Missing override "value" in ${this.name}: ` +
-          JSON.stringify(config));
+            `Missing override "value" in ${this.name}: ` +
+            JSON.stringify(config));
       }
 
       override.value = this.convertValueToArray(override.value);

@@ -37,8 +37,8 @@
       <form id="editForm">
         <input id="editId" type="hidden" value="foo" />
         <div>
-          <label for="editUrl">URL (https:// required)</label>
-          <input id="editUrl" type="text" required pattern="^https?://.+" />
+          <label for="editUrl">URL (https:// or localhost required)</label>
+          <input id="editUrl" type="text" required pattern="^(https://.+|http://localhost[:/]|http://127.0.0.1[:/]|http://\[::1\][:/]).*$" />
         </div>
         <div>
           <label for="editName">Name</label>

@@ -2,3 +2,4 @@ dist/
 media/
 node_modules/
 upfish.zip
+.staging

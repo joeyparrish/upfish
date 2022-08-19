@@ -17,56 +17,55 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+const onStatusResponse = (response) => {
+  // Response may come back null if the content script isn't loaded in a
+  // certain tab.
+  const active = response && response.active;
+
+  chrome.action.setIcon({
+    path: active ? 'upfish.active.png' : 'upfish.png',
+  });
+};
+
+// Update the icon status when the active tab changes.
+chrome.tabs.onActivated.addListener((activeInfo) => {
+  chrome.tabs.sendMessage(activeInfo.tabId, {
+    type: 'UpFishStatus',
+  }, /* options */ null, onStatusResponse);
+});
+
+// Also update when the active window changes.
+chrome.windows.onFocusChanged.addListener(async (windowId) => {
+  const [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+
+  if (!tab) {
+    // This happens when we focus a window that isn't a normal window with
+    // tabs, such as the debugger window.
+    return;
+  }
+
+  chrome.tabs.sendMessage(tab.id, {
+    type: 'UpFishStatus',
+  }, /* options */ null, onStatusResponse);
+});
+
 import EXPECTED_TOKEN from './token.js';
 
-(() => {
-  const onStatusResponse = (response) => {
-    // Response may come back null if the content script isn't loaded in a
-    // certain tab.
-    const active = response && response.active;
-
-    chrome.action.setIcon({
-      path: active ? 'upfish.active.png' : 'upfish.png',
-    });
-  };
-
-  // Update the icon status when the active tab changes.
-  chrome.tabs.onActivated.addListener((activeInfo) => {
-    chrome.tabs.sendMessage(activeInfo.tabId, {
-      type: 'UpFishStatus',
-    }, /* options */ null, onStatusResponse);
-  });
-
-  // Also update when the active window changes.
-  chrome.windows.onFocusChanged.addListener(async (windowId) => {
-    const [tab] = await chrome.tabs.query({
-      active: true,
-      currentWindow: true,
-    });
-
-    if (!tab) {
-      // This happens when we focus a window that isn't a normal window with
-      // tabs, such as the debugger window.
-      return;
+if (EXPECTED_TOKEN) {
+  // When the extension is first installed or updated, log this event to
+  // analytics.
+  chrome.runtime.onInstalled.addListener(async (details) => {
+    const reason = details.reason;
+    if (reason == 'install' || reason == 'update') {
+      await fetch('https://upfish-session-counter.herokuapp.com/install-counter', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({token: EXPECTED_TOKEN}),
+      });
     }
-
-    chrome.tabs.sendMessage(tab.id, {
-      type: 'UpFishStatus',
-    }, /* options */ null, onStatusResponse);
   });
-
-  if (EXPECTED_TOKEN) {
-    // When the extension is first installed or updated, log this event to
-    // analytics.
-    chrome.runtime.onInstalled.addListener(async (details) => {
-      const reason = details.reason;
-      if (reason == 'install' || reason == 'update') {
-        await fetch('https://upfish-session-counter.herokuapp.com/install-counter', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({token: EXPECTED_TOKEN}),
-        });
-      }
-    });
-  }
-})();
+}

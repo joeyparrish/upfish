@@ -78,6 +78,36 @@ async function bundleUpFish() {
 }
 
 /**
+ * Create a bundle for UpFish's service worker.
+ *
+ * When the service worker is loaded by the extension, it is not loaded as an
+ * ES module.  So the service worker and its imports must be bundled together.
+ *
+ * @return {!Promise}
+ */
+async function bundleServiceWorker() {
+  await new Promise((resolve, reject) => {
+    gulp.src([
+      'extension/service-worker.js',
+      'dist/token.js',
+    ])
+    .pipe(gulp.dest('.staging/'))
+    .on('finish', resolve)
+    .on('error', reject);
+  });
+
+  const bundle = await rollup({
+    input: '.staging/service-worker.js',
+  });
+
+  await bundle.write({
+    file: 'dist/service-worker.js',
+    format: 'iife',
+    name: 'ServiceWorker',
+  });
+}
+
+/**
  * Copy all extension files to the output folder.
  *
  * @return {!Stream}
@@ -87,6 +117,7 @@ function copyExtensionFiles() {
     'src/lib/karaoke-worklet.js',
     'extension/*',
     '!extension/token.js',
+    '!extension/service-worker.js',
     'README.md',
     'LICENSE.md',
   ])
@@ -224,7 +255,7 @@ const build = exports.build = gulp.series(
         bundleUpFish,
         copyExtensionFiles,
         copyConfigs,
-        generateTokenFile,
+        gulp.series(generateTokenFile, bundleServiceWorker),
         generatePng,
         generateActivePng));
 

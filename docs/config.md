@@ -12,9 +12,9 @@
 
 ## Overview
 
-An UpFish config file has two main sections, one for stereo (called
-`"stereo"`), and one for 5.1 surround sound (called `"surround"`).  These are
-described in more detail below.
+An UpFish JSON config file has a `"name"` field and two main sections, one for
+stereo (called `"stereo"`), and one for 5.1 surround sound (called
+`"surround"`).  These are described in more detail below.
 
 Most settings are just changing the gain of various audio channels.  All gain
 settings follow the same format, which is described below.  Gain can be
@@ -52,6 +52,7 @@ Example:
 
 ```json
 {
+  "name": "Sample Config To Explain Gain Settings",
   "stereo": {
     "inputGain": {
       "default": 0.2,
@@ -178,6 +179,7 @@ This is a verbose example config with every field demonstrated.
 
 ```json
 {
+  "name": "Sample Config With Every Field",
   "surround": {
     "inputGain": {
       "default": [1, 1, 0, 1, 1, 1]

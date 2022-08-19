@@ -258,8 +258,9 @@ on the cloud storage provider of your choice, or even on
 To add a custom config to UpFish, open the extension and click the "Add" button.
 ![The "add" button](custom-add.png)
 
-Next, fill in a name and the URL of the config file (from your local web server
-or from a more permanent location), then click "Save".
+Next, fill in the URL of the config file (from your local web server or from a
+more permanent location).  If the config can be loaded, the name field will be
+automatically populated from the config file.  Then click "Save".
 ![The "edit" dialog](custom-edit.png)
 
 Your custom config will now show up in the list of configs.

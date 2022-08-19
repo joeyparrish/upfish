@@ -42,9 +42,9 @@ const editForm = document.getElementById('editForm');
 /** @type {!HTMLInputElement} */
 const editId = document.getElementById('editId');
 /** @type {!HTMLInputElement} */
-const editName = document.getElementById('editName');
-/** @type {!HTMLInputElement} */
 const editUrl = document.getElementById('editUrl');
+/** @type {!HTMLInputElement} */
+const editName = document.getElementById('editName');
 /** @type {!HTMLButtonElement} */
 const cancelEditsButton = document.getElementById('cancelEditsButton');
 /** @type {!HTMLButtonElement} */
@@ -207,6 +207,19 @@ function createNewOptionElement(config) {
 }
 
 /**
+ * @param {string} url
+ * @return {UpFishConfig}
+ */
+async function fetchConfig(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error('Failed to load JSON config!');
+  }
+  const configJson = await response.json();
+  return configJson;
+}
+
+/**
  * Select the specified config.
  *
  * @param {UpFishConfigOption} config
@@ -226,11 +239,7 @@ async function selectOption(config, div) {
   selectionElement.open = false;
 
   if (config.url) {
-    const response = await fetch(config.url);
-    if (!response.ok) {
-      throw new Error('Failed to load JSON config!');
-    }
-    const configJson = await response.json();
+    const configJson = await fetchConfig(config.url);
 
     chrome.tabs.sendMessage(tab.id, {
       type: 'UpFishConfig',
@@ -301,6 +310,25 @@ async function deleteOption(config, div) {
  */
 function checkFormValidity() {
   saveEditsButton.disabled = !editForm.checkValidity();
+}
+
+/**
+ * Load a config name from the config contents.
+ */
+async function loadNameFromUrl() {
+  if (editName.value != '') {
+    return;
+  }
+
+  editForm.checkValidity();
+  if (!editUrl.validity.valid) {
+    return;
+  }
+
+  const url = editUrl.value;
+  const configJson = await fetchConfig(editUrl.value);
+  editName.value = configJson.name;
+  checkFormValidity();
 }
 
 /**
@@ -429,10 +457,11 @@ async function loadCurrentTabStatus() {
   });
 
   // Check validity of the form on every change.
-  editName.addEventListener('input', checkFormValidity);
-  editName.addEventListener('change', checkFormValidity);
   editUrl.addEventListener('input', checkFormValidity);
   editUrl.addEventListener('change', checkFormValidity);
+  editName.addEventListener('input', checkFormValidity);
+  editName.addEventListener('change', checkFormValidity);
+  editName.addEventListener('focus', loadNameFromUrl);
 
   // Go back to the selection view on cancel.
   cancelEditsButton.addEventListener('click', openSelectionView);

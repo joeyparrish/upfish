@@ -37,12 +37,12 @@
       <form id="editForm">
         <input id="editId" type="hidden" value="foo" />
         <div>
-          <label for="editName">Name</label>
-          <input id="editName" type="text" required />
+          <label for="editUrl">URL (https:// required)</label>
+          <input id="editUrl" type="text" required pattern="^https?://.+" />
         </div>
         <div>
-          <label for="editUrl">URL (https:// required)</label>
-          <input id="editUrl" type="text" required pattern="^https://.+" />
+          <label for="editName">Name</label>
+          <input id="editName" type="text" required />
         </div>
         <div id="editActions">
           <!-- type="button" indicates not to "submit" the form" -->

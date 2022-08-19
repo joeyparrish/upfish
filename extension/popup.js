@@ -326,8 +326,10 @@ async function loadNameFromUrl() {
   }
 
   const url = editUrl.value;
-  const configJson = await fetchConfig(editUrl.value);
-  editName.value = configJson.name;
+  try {
+    const configJson = await fetchConfig(editUrl.value);
+    editName.value = configJson.name;
+  } catch (error) {}
   checkFormValidity();
 }
 
@@ -402,8 +404,13 @@ async function loadCurrentTabStatus() {
     chrome.tabs.sendMessage(tab.id, {
       type: 'UpFishStatus',
     }, /* options */ null, (response) => {
+      // If you don't at least access lastError, errors here are seen as
+      // "unhandled", even though we handle them by checking response below.
+      chrome.runtime.lastError;
+
       if (!response) {
-        reject(new Error('No response to status query'));
+        resolve();
+        return;
       }
 
       // Find the matching config in the options.

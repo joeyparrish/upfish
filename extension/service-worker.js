@@ -19,6 +19,10 @@
  */
 
 const onStatusResponse = (response) => {
+  // If you don't at least access lastError, errors here are seen as
+  // "unhandled", even though we handle them by checking response below.
+  chrome.runtime.lastError;
+
   // Response may come back null if the content script isn't loaded in a
   // certain tab.
   const active = response && response.active;

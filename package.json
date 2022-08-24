@@ -4,9 +4,11 @@
     "lint": "gulp lint",
     "build": "gulp build",
     "release": "gulp release",
+    "site": "eleventy",
     "start": "node session-counter/index.js"
   },
   "devDependencies": {
+    "@11ty/eleventy": "^1.0.2",
     "del": "^6.0.0",
     "eslint": "^7.22.0",
     "eslint-config-google": "^0.14.0",

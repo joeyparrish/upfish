@@ -33,9 +33,9 @@ If you can write a little JSON, you can make UpFish do other things, too!
 
 ## Quick Links
 
- - [Install via Chrome WebStore](#)
+ - Install via Chrome WebStore - Pending review by Google!
  - [Source code on GitHub](https://github.com/joeyparrish/upfish/)
- - [Contribute!](#)
+ - [Contribute!](https://github.com/joeyparrish/upfish/blob/main/CONTRIBUTE.md)
 
 
 ## Why is it called "UpFish"?

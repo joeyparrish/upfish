@@ -1,0 +1,53 @@
+# UpFish - dynamically making fun of your movies
+# Copyright (C) 2021 Joey Parrish
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Set version number
+        run: |
+          cat extension/manifest.json \
+              | jq ".version = \"${{ github.ref_name }}\"" \
+              > extension/manifest.json.new
+          mv extension/manifest.json{.new,}
+
+      - name: Build release zip
+        env:
+          EXPECTED_TOKEN: ${{ secrets.EXPECTED_TOKEN }}
+        run: npm run release
+
+      - name: Publish to Web Store
+        run:
+          ACCESS_TOKEN=$(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${{ secrets.OAUTH_CLIENT_ID }}&client_secret=${{ secrets.OAUTH_CLIENT_SECRET }}&refresh_token=${{ secrets.OAUTH_REFRESH_TOKEN }}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)
+          curl \
+            -H "Authorization: Bearer $ACCESS_TOKEN"  \
+            -H "x-goog-api-version: 2" \
+            -X PUT \
+            -T upfish.zip
+            https://www.googleapis.com/upload/chromewebstore/v1.1/items/${{ secrets.ITEM_ID }}

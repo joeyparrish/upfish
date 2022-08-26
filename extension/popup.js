@@ -325,11 +325,13 @@ async function loadNameFromUrl() {
     return;
   }
 
-  const url = editUrl.value;
   try {
     const configJson = await fetchConfig(editUrl.value);
     editName.value = configJson.name;
-  } catch (error) {}
+  } catch (error) {
+    // Ignore errors.  In case of error, we don't set the value.
+  }
+
   checkFormValidity();
 }
 

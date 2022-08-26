@@ -166,7 +166,24 @@ Extra input settings:
 |duration |(duration of url)      |
 
 
-## Other notes
+## Sound Banks
+
+If you have extra inputs that are frequently repeated, you can factor out URLs
+and other settings into a sound bank.
+
+To create a sound bank, add a `"soundBank"` field inside `"stereo"` or
+`"surround"` or both.  `"soundBank"` is a dictionary mapping names to partial
+input descriptors.  These are as described in ["Extra Inputs"](#extra-inputs)
+above, except that all fields are optional.  The fields in `"soundBank"`
+entries will be merged with corresponding entries in `"extraInputs"`.
+
+To use a sound bank sound, add the field `"sound"` to your input descriptor,
+with a value of the name you want to use from the `"soundBank"` dictionary.
+If a field appears in both the input descriptor and the sound bank entry, the
+values in the input descriptor will override those from the sound bank.
+
+
+## Other Notes
 
 Changing gain values at particular times in the movie allows "ducking" to
 silence voices that are not removed by the karaoke filter, or as an alternative
@@ -226,6 +243,18 @@ This is a verbose example config with every field demonstrated.
     "nonKaraokeGain": {
       "default": 0
     },
+    "soundBank": {
+      "loud-noise": {
+        "url": "very-long-url-for-noise.mp3",
+        "inputGain": 2.5,
+        "mono": true
+      },
+      "quiet-noise": {
+        "url": "very-long-url-for-noise.mp3",
+        "inputGain": 0.2,
+        "mono": true
+      }
+    },
     "extraInputs": [
       {
         "url": "WizardPeople.mp3",
@@ -234,6 +263,20 @@ This is a verbose example config with every field demonstrated.
           "default": 1.0
         },
         "mix": [0, 1]
+      },
+      {
+        "sound": "loud-noise",
+        "offset": 123.45
+      },
+      {
+        "sound": "quiet-noise",
+        "offset": 867.5309
+      },
+      {
+        "sound": "loud-noise",
+        "offset": 999,
+        "skip": 1,
+        "duration": 5
       }
     ]
   }

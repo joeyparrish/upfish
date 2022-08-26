@@ -92,8 +92,7 @@ For instructions to build the extension from source, see
 
 ## Logo
 
-The UpFish logo is based on:
-
- - ["Fish Outline SVG Vector"](https://www.svgrepo.com/svg/31355/fish-outline)
- - By: ["SVG Repo"](https://www.svgrepo.com/)
- - License: [CC0](https://www.svgrepo.com/page/licensing)
+The UpFish logo is based on
+["Fish Outline SVG Vector"](https://www.svgrepo.com/svg/31355/fish-outline)
+by ["SVG Repo"](https://www.svgrepo.com/)
+(License: [CC0](https://www.svgrepo.com/page/licensing))

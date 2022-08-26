@@ -68,7 +68,7 @@ We will log the following data:
  - A count of the number of installations
  - A count of the number of sessions
 
-_**No** personally identifiable information will be stored._
+_**No** personally identifiable information will be read, collected, or stored._
 
 The count of installations and sessions is publicly visible as dynamic badge at
 the top of this README.

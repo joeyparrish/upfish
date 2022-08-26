@@ -1,13 +1,26 @@
 const fs = require('fs');
 
-function dataUri(path, mimeType) {
-  const data = fs.readFileSync(path).toString("base64");
-  return "data:" + mimeType + ";base64," + data;
+function readFile(path) {
+  return fs.readFileSync(path);
+}
+
+function stripComments(data) {
+  return data.toString()
+      .replace(/\/\*[\s\S]*?\*\//gm, "")
+      .replace(/<!--[\s\S]*?-->/gm, "");
+}
+
+function dataUri(data, mimeType) {
+  return "data:" + mimeType + ";base64," + Buffer.from(data).toString("base64");
 }
 
 module.exports = function(eleventyConfig) {
   eleventyConfig.addLiquidFilter(
-      "svgDataUri", (path) => dataUri(path, "image/svg+xml"));
+      "readFile", (path) => readFile(path));
+  eleventyConfig.addLiquidFilter(
+      "stripComments", (data) => stripComments(data));
+  eleventyConfig.addLiquidFilter(
+      "svgDataUri", (data) => dataUri(data, "image/svg+xml"));
 
   return {
     dir: {

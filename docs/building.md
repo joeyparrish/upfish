@@ -8,7 +8,7 @@ git clone https://github.com/joeyparrish/upfish
 # Enter the source directory
 cd upfish
 # Install the dependencies
-npm install
+npm ci
 # Build the extension from source
 npm run build
 ```

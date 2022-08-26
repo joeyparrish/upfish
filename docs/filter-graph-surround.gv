@@ -21,8 +21,8 @@ digraph {
   splitter -> gain4 [label="side-left"];
   splitter -> gain5 [label="side-right"];
 
-  splitter2 [label="split"];
-  extra -> splitter2 [label="stereo or mono"];
+  splitter2 [label="split stereo /\nduplicate mono"];
+  "extra inputs\n(0 or more)" -> splitter2 [label="stereo or mono"];
   splitter2 -> gain6 [label="left"];
   splitter2 -> gain7 [label="right"];
 
@@ -32,8 +32,8 @@ digraph {
   gain3 -> merger;
   gain4 -> merger;
   gain5 -> merger;
-  gain6 -> merger;
-  gain7 -> merger;
+  gain6 -> merger [label="center"];
+  gain7 -> merger [label="center"];
 
   merger -> output;
 }

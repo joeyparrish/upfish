@@ -86,7 +86,8 @@ function loadConfigsFromStorage() {
 
     chrome.storage.sync.get(['configs'], (result) => {
       if (result.configs && result.configs.length) {
-        configs = result.configs;
+        // We only store/load custom configs, and merge with the defaults.
+        configs = DEFAULT_CONFIGS.concat(result.configs);
       }
       resolve();
     });
@@ -100,7 +101,10 @@ function loadConfigsFromStorage() {
  */
 function saveConfigsToStorage() {
   return new Promise((resolve) => {
-    chrome.storage.sync.set({configs}, resolve);
+    chrome.storage.sync.set({
+      // Only store non-default configs.  That way, we can update the defaults.
+      configs: configs.filter((config) => config.id > 0),
+    }, resolve);
   });
 }
 

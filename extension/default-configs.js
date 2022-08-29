@@ -25,32 +25,32 @@
  */
 const DEFAULT_CONFIGS = [
   {
-    id: null,
+    id: 0,
     url: null,
     name: 'Off',
     editable: false,
   },
   {
-    id: 1,
+    id: -1,
     url: 'configs/GenericKaraoke.json',
     name: 'Generic Karaoke Filter',
     editable: false,
   },
   {
-    id: 2,
+    id: -2,
     url: 'configs/WizardPeople-v2.json',
     name: 'Wizard People, Dear Reader (2005, v2)',
     editable: false,
   },
   {
-    id: 3,
+    id: -3,
     url: 'configs/WizardPeople-v1.json',
     name: 'Wizard People, Dear Reader (2004, v1)',
     editable: false,
   },
   {
-    id: 4,
-    url: 'configs/Faritgo.json',
+    id: -4,
+    url: 'configs/Fartigo.json',
     name: 'Fartigo',
     editable: false,
   },

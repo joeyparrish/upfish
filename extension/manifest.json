@@ -6,8 +6,7 @@
   "permissions": [
     "activeTab",
     "declarativeNetRequest",
-    "storage",
-    "scripting"
+    "storage"
   ],
   "declarative_net_request": {
     "rule_resources": [{

@@ -49,5 +49,5 @@ jobs:
             -H "Authorization: Bearer $ACCESS_TOKEN"  \
             -H "x-goog-api-version: 2" \
             -X PUT \
-            -T upfish.zip
+            -T upfish.zip \
             https://www.googleapis.com/upload/chromewebstore/v1.1/items/${{ secrets.ITEM_ID }}

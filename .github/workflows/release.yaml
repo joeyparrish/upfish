@@ -50,4 +50,4 @@ jobs:
             -H "x-goog-api-version: 2" \
             -X PUT \
             -T upfish.zip \
-            https://www.googleapis.com/upload/chromewebstore/v1.1/items/${{ secrets.ITEM_ID }}
+            https://www.googleapis.com/upload/chromewebstore/v1.1/items/${{ secrets.WEBSTORE_ITEM_ID }}

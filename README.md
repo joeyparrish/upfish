@@ -96,3 +96,19 @@ The UpFish logo is based on
 ["Fish Outline SVG Vector"](https://www.svgrepo.com/svg/31355/fish-outline)
 by ["SVG Repo"](https://www.svgrepo.com/)
 (License: [CC0](https://www.svgrepo.com/page/licensing))
+
+
+## Wizard People, Dear Reader
+
+Extra audio by [Brad Neely](https://www.creasedcomics.com/).
+
+UpFish config written by Joey Parrish.
+
+
+## Fartigo
+
+Audio credits: [https://storage.googleapis.com/upfish/fartigo/farts.md](https://storage.googleapis.com/upfish/fartigo/farts.md)
+
+UpFish config written by Joey Parrish.
+
+Handmade, no less, with love, by a warrior of the wind.

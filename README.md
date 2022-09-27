@@ -11,7 +11,9 @@
 ## What is UpFish?
 
 UpFish is a Chrome extension that allows you to modify the audio of your
-streaming movies.
+streaming movies.  It was designed to bring the DVD-era magic of
+"[Wizard People, Dear Reader][]" back to life on the streaming site of your
+choice.  (But I didn't stop there.)
 
 
 ## What can UpFish do?
@@ -20,9 +22,10 @@ Out of the box, UpFish can:
 
   - Turn "[Harry Potter and the Sorcerer's Stone][]" into
     "[Wizard People, Dear Reader][]", in which Harry and friends swear and
-    drink a lot
+    drink a lot [(preview)](https://www.youtube.com/watch?v=MvW-Qh8VW4M)
   - Turn "[Vertigo][]" into "Fartigo", in which Jimmy Stewart farts a lot
-  - Perform a generic karaoke filter
+    [(preview)](https://www.youtube.com/watch?v=WqjrHzIr4VQ)
+  - Karaoke any music video (remove vocals from the center)
 
 If you can write a little JSON, you can make UpFish do other things, too!
 
@@ -36,6 +39,7 @@ If you can write a little JSON, you can make UpFish do other things, too!
  - [Install via Chrome WebStore](https://chrome.google.com/webstore/detail/upfish/cjjgmbadhgclcfblcmoamgkbldmcbpbl)
  - [Source code on GitHub](https://github.com/joeyparrish/upfish/)
  - [Contribute!](https://github.com/joeyparrish/upfish/blob/main/CONTRIBUTE.md)
+ - As seen at [Demuxed 2022](https://2022.demuxed.com/)
 
 
 ## Why is it called "UpFish"?
@@ -63,7 +67,7 @@ For details on customization, see documentation on the config file format in
 
 ## Analytics & privacy
 
-We will log the following data:
+UpFish will log the following data:
 
  - A count of the number of installations
  - A count of the number of sessions

@@ -37,7 +37,11 @@ export class Gain {
   constructor(name, numNodes, mediaElement, upfish, config) {
     this.nodes = [];
     for (let i = 0; i < numNodes; ++i) {
-      this.nodes.push(upfish.context.createGain());
+      this.nodes.push(new GainNode(upfish.context, {
+        channelCount: 1,
+        channelCountMode: 'explicit',
+        channelInterpretation: 'discrete',
+      }));
     }
 
     this.dynamicValues = new DynamicValues(

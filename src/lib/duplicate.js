@@ -42,7 +42,7 @@ export class Duplicate {
     }
 
     for (const node of destination.nodes) {
-      this.original.node.connect(node);
+      this.original.node.connect(node, 0, 0);
     }
   }
 }

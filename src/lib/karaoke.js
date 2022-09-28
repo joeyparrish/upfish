@@ -74,7 +74,7 @@ export class Karaoke {
       throw new Error(`Invalid karaoke destination ${destination}`);
     }
 
-    this.node.connect(destination.node);
+    this.node.connect(destination.node, 0, 0);
   }
 }
 

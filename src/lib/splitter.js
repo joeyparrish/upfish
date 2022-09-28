@@ -29,7 +29,12 @@ export class Splitter {
    */
   constructor(context, channels) {
     this.channels = channels;
-    this.node = context.createChannelSplitter(channels);
+    this.node = new ChannelSplitterNode(context, {
+      numberOfOutputs: channels,
+      channelCount: channels, // per input
+      channelCountMode: 'explicit',
+      channelInterpretation: 'discrete',
+    });
   }
 
   /**
@@ -41,7 +46,7 @@ export class Splitter {
     }
 
     for (let i = 0; i < this.channels; ++i) {
-      this.node.connect(destination.nodes[i], i);
+      this.node.connect(destination.nodes[i], i, 0);
     }
   }
 }

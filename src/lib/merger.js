@@ -29,7 +29,12 @@ export class Merger {
    */
   constructor(context, channels) {
     this.channels = channels;
-    this.node = context.createChannelMerger(channels);
+    this.node = new ChannelMergerNode(context, {
+      numberOfInputs: channels,
+      channelCount: 1, // per input
+      channelCountMode: 'explicit',
+      channelInterpretation: 'discrete',
+    });
   }
 
   /**
@@ -40,6 +45,6 @@ export class Merger {
       throw new Error(`Invalid mixer destination ${destination}`);
     }
 
-    this.node.connect(destination.node);
+    this.node.connect(destination.node, 0, 0);
   }
 }

@@ -93,6 +93,7 @@
     },
     "extraInputs": [
       {
+        "mono": true,
         "url": "https://storage.googleapis.com/upfish/wizard-people/WizardPeople-v1-noise-reduced-mono.mp4"
       }
     ]
@@ -202,6 +203,7 @@
     },
     "extraInputs": [
       {
+        "mono": true,
         "url": "https://storage.googleapis.com/upfish/wizard-people/WizardPeople-v1-noise-reduced-mono.mp4"
       }
     ]

@@ -36,7 +36,8 @@ If you can write a little JSON, you can make UpFish do other things, too!
 
 ## Quick Links
 
- - [Install via Chrome WebStore](https://chrome.google.com/webstore/detail/upfish/cjjgmbadhgclcfblcmoamgkbldmcbpbl)
+ - [Extension in Chrome Web Store](https://chrome.google.com/webstore/detail/upfish/cjjgmbadhgclcfblcmoamgkbldmcbpbl)
+ - [Usage instructions](https://github.com/joeyparrish/upfish/blob/main/docs/usage.md)
  - [Source code on GitHub](https://github.com/joeyparrish/upfish/)
  - [Contribute!](https://github.com/joeyparrish/upfish/blob/main/CONTRIBUTE.md)
  - As seen at [Demuxed 2022](https://2022.demuxed.com/)

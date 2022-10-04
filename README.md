@@ -37,9 +37,9 @@ If you can write a little JSON, you can make UpFish do other things, too!
 ## Quick Links
 
  - [Extension in Chrome Web Store](https://chrome.google.com/webstore/detail/upfish/cjjgmbadhgclcfblcmoamgkbldmcbpbl)
- - [Usage instructions](https://github.com/joeyparrish/upfish/blob/main/docs/usage.md)
+ - [Usage instructions](https://github.com/joeyparrish/upfish/blob/main/docs/usage.md#readme)
  - [Source code on GitHub](https://github.com/joeyparrish/upfish/)
- - [Contribute!](https://github.com/joeyparrish/upfish/blob/main/CONTRIBUTE.md)
+ - [Contribute!](https://github.com/joeyparrish/upfish/blob/main/CONTRIBUTE.md#readme)
  - As seen at [Demuxed 2022](https://2022.demuxed.com/)
 
 
@@ -63,7 +63,7 @@ you want.  You can:
  - Adjust volume and mixing dynamically over time
 
 For details on customization, see documentation on the config file format in
-[docs/config.md](https://github.com/joeyparrish/upfish/blob/main/docs/config.md).
+[docs/config.md](https://github.com/joeyparrish/upfish/blob/main/docs/config.md#readme).
 
 
 ## Analytics & privacy
@@ -92,7 +92,7 @@ UpFish is licensed under the
 ## Building and installing from source
 
 For instructions to build the extension from source, see
-[docs/building.md](https://github.com/joeyparrish/upfish/blob/main/docs/building.md).
+[docs/building.md](https://github.com/joeyparrish/upfish/blob/main/docs/building.md#readme).
 
 
 ## Logo

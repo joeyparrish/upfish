@@ -22,9 +22,11 @@ Out of the box, UpFish can:
 
   - Turn "[Harry Potter and the Sorcerer's Stone][]" into
     "[Wizard People, Dear Reader][]", in which Harry and friends swear and
-    drink a lot [(preview)](https://www.youtube.com/watch?v=MvW-Qh8VW4M)
+    drink a lot
+    [(preview 1)](https://youtu.be/NbWnwUn9zA0)
+    [(preview 2)](https://youtu.be/MvW-Qh8VW4M)
   - Turn "[Vertigo][]" into "Fartigo", in which Jimmy Stewart farts a lot
-    [(preview)](https://www.youtube.com/watch?v=WqjrHzIr4VQ)
+    [(preview)](https://youtu.be/WqjrHzIr4VQ)
   - Karaoke any music video (remove vocals from the center)
 
 If you can write a little JSON, you can make UpFish do other things, too!

@@ -2,7 +2,7 @@
   "name": "Wizard People, Dear Reader (2004, v1)",
   "stereo": {
     "karaokeGain": {
-      "default": "0.5",
+      "default": 0.5,
       "comment": "The map below is to deal with many instances of off-center voices or digital noise created by the karaoke filter.",
       "map": [
         {

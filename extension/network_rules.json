@@ -7,7 +7,8 @@
       "responseHeaders": [
         { "header": "content-security-policy", "operation": "remove" },
         { "header": "content-security-policy-report-only", "operation": "remove" },
-        { "header": "x-webkit-csp", "operation": "remove" }
+        { "header": "x-webkit-csp", "operation": "remove" },
+        { "header": "x-frame-options", "operation": "remove" }
       ]
     },
     "condition": { "resourceTypes": ["main_frame", "sub_frame"] }

@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import DEFAULT_CONFIGS from './default-configs.js';
-import EXPECTED_TOKEN from './token.js';
 
 /**
  * The current configs for UpFish.
@@ -254,15 +253,6 @@ async function selectOption(config, div) {
     chrome.action.setIcon({
       path: 'upfish.active.png',
     });
-
-    if (EXPECTED_TOKEN) {
-      // When a new session starts, log this event to analytics.
-      await fetch('https://upfish-session-counter.herokuapp.com/session-counter', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({token: EXPECTED_TOKEN}),
-      });
-    }
   } else {
     chrome.tabs.sendMessage(tab.id, {
       type: 'UpFishOff',

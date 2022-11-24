@@ -4,8 +4,7 @@
     "lint": "gulp lint",
     "build": "gulp build",
     "release": "gulp release",
-    "site": "eleventy",
-    "start": "node session-counter/index.js"
+    "site": "eleventy"
   },
   "devDependencies": {
     "@11ty/eleventy": "^1.0.2",
@@ -19,9 +18,5 @@
     "gulp-zip": "^5.1.0",
     "rollup": "^2.41.4",
     "svg2img": "^0.9.1"
-  },
-  "dependencies": {
-    "express": "^4.17.1",
-    "promise-mysql": "^5.0.3"
   }
 }

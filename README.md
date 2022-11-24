@@ -2,11 +2,6 @@
 
 <img id="logo" title="UpFish logo" src="upfish.svg" width="25%">
 
-<div id="installs">
-  <img title="Install counter" src="https://upfish-session-counter.herokuapp.com/num-installs">
-  <img title="Session counter" src="https://upfish-session-counter.herokuapp.com/num-sessions">
-</div>
-
 
 ## What is UpFish?
 
@@ -70,19 +65,11 @@ For details on customization, see documentation on the config file format in
 
 ## Analytics & privacy
 
-UpFish will log the following data:
+_**No** information will be read, collected, or stored **at all**._
 
- - A count of the number of installations
- - A count of the number of sessions
-
-_**No** personally identifiable information will be read, collected, or stored._
-
-The count of installations and sessions is publicly visible as dynamic badge at
-the top of this README.
-
-If you do not wish to participate in this, you can build the extension and
-install it yourself.  Only the official version in the Chrome WebStore will
-have analytics enabled.
+Before version 1.0.3, we tracked the number of installations and the number of
+sessions over time, but this was removed.  The code for it can still be found
+in the repo history if you are curious.
 
 
 ## License

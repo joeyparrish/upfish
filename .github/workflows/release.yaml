@@ -38,8 +38,6 @@ jobs:
           mv extension/manifest.json{.new,}
 
       - name: Build release zip
-        env:
-          EXPECTED_TOKEN: ${{ secrets.EXPECTED_TOKEN }}
         run: npm run release
 
       - name: Publish to Web Store

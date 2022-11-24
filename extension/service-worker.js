@@ -56,20 +56,3 @@ chrome.windows.onFocusChanged.addListener(async (windowId) => {
     type: 'UpFishStatus',
   }, /* options */ null, onStatusResponse);
 });
-
-import EXPECTED_TOKEN from './token.js';
-
-if (EXPECTED_TOKEN) {
-  // When the extension is first installed or updated, log this event to
-  // analytics.
-  chrome.runtime.onInstalled.addListener(async (details) => {
-    const reason = details.reason;
-    if (reason == 'install' || reason == 'update') {
-      await fetch('https://upfish-session-counter.herokuapp.com/install-counter', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({token: EXPECTED_TOKEN}),
-      });
-    }
-  });
-}

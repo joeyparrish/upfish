@@ -13,9 +13,9 @@ npm ci
 npm run build
 ```
 
-Now the `dist/` folder contains an unpacked version of the extension, without
-our analytics enabled.  To install this locally in Chrome, follow these
-instructions.  (Taken from Chrome extension documentation at
+Now the `dist/` folder contains an unpacked version of the extension.  To
+install this locally in Chrome, follow these instructions.  (Taken from Chrome
+extension documentation at
 https://developer.chrome.com/docs/extensions/mv3/getstarted/ under
 [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/).)
 

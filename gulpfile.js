@@ -89,7 +89,6 @@ async function bundleServiceWorker() {
   await new Promise((resolve, reject) => {
     gulp.src([
       'extension/service-worker.js',
-      'dist/token.js',
     ])
     .pipe(gulp.dest('.staging/'))
     .on('finish', resolve)
@@ -116,7 +115,6 @@ function copyExtensionFiles() {
   return gulp.src([
     'src/lib/karaoke-worklet.js',
     'extension/*',
-    '!extension/token.js',
     '!extension/service-worker.js',
     'README.md',
     'LICENSE.md',
@@ -134,29 +132,6 @@ function copyConfigs() {
     'configs/*',
   ])
   .pipe(gulp.dest('dist/configs/'));
-}
-
-/**
- * Generate the token file, which contains the access token for our analytics.
- * Not actual security, but prevents casual or accidental spam.
- *
- * @return {!Stream}
- */
-function generateTokenFile() {
-  return gulp.src([
-    'extension/token.js',
-  ])
-  .pipe(transform('utf8', (content, file) => {
-    const EXPECTED_TOKEN = process.env.EXPECTED_TOKEN;
-    if (EXPECTED_TOKEN) {
-      // Official builds.
-      return `// Please be kind.\nexport default '${EXPECTED_TOKEN}';\n`;
-    } else {
-      // For local use as an unpacked extension.
-      return content;
-    }
-  }))
-  .pipe(gulp.dest('dist/'));
 }
 
 /**
@@ -225,11 +200,6 @@ function generateActivePng() {
 /**
  * Package the Chrome extension as a zip file.
  *
- * Expects "EXPECTED_TOKEN" in an environment variable, to prevent casual spam
- * in the analytics.
- *
- * For obvious reasons, we don't put that in the repo.
- *
  * @return {!Stream}
  */
 function packageExtension() {
@@ -255,7 +225,7 @@ const build = exports.build = gulp.series(
         bundleUpFish,
         copyExtensionFiles,
         copyConfigs,
-        gulp.series(generateTokenFile, bundleServiceWorker),
+        bundleServiceWorker,
         generatePng,
         generateActivePng));
 

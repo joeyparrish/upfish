@@ -7,7 +7,7 @@
     "site": "eleventy"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^1.0.2",
+    "@11ty/eleventy": "^2.0.1",
     "del": "^6.0.0",
     "eslint": "^7.22.0",
     "eslint-config-google": "^0.14.0",

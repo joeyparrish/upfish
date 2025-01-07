@@ -39,7 +39,7 @@ jobs:
       - name: Build site
         run: npm run site
 
-      - uses: actions/upload-pages-artifact@v1
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: .eleventy/output/README
 

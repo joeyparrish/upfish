@@ -37,7 +37,7 @@ If you can write a little JSON, you can make UpFish do other things, too!
  - [Usage instructions](https://github.com/joeyparrish/upfish/blob/main/docs/usage.md#readme)
  - [Source code on GitHub](https://github.com/joeyparrish/upfish/)
  - [Contribute!](https://github.com/joeyparrish/upfish/blob/main/CONTRIBUTE.md#readme)
- - As seen at [Demuxed 2022](https://2022.demuxed.com/)
+ - As seen at [Demuxed 2022](https://2022.demuxed.com/) ([recorded presentation](https://www.youtube.com/watch?v=Q9U1m7ReFPU))
 
 
 ## Why is it called "UpFish"?

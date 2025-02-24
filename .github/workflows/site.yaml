@@ -22,6 +22,8 @@ on:
       - main
     paths:
       - README.md
+      - package.json
+      - package-lock.json
       - upfish.svg
       - .eleventy.js
       - .eleventy/**

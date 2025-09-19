@@ -6,6 +6,7 @@
     "release": "gulp release",
     "site": "eleventy"
   },
+  "type": "module",
   "devDependencies": {
     "@11ty/eleventy": "^2.0.1",
     "del": "^6.0.0",
